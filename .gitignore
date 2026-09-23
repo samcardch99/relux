@@ -26,3 +26,7 @@ pnpm-debug.log*
 # renders y diagnosticos del PoC 3D: son salidas regenerables con
 # scripts/escena.py, scripts/comparar.py y scripts/sondas.py, y suman 54 MB
 3d/renders/
+
+# autobackups de Blender
+*.blend1
+*.blend2
