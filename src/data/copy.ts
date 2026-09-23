@@ -451,11 +451,11 @@ export const PROCESS = [
 ] as const;
 
 /**
- * Enlace de respaldo al perfil de Google. Si la Places API devuelve
- * `googleMapsUri` se usa ese, que apunta a la ficha exacta.
+ * Respaldo por si reviews.json no trae `mapsUrl`. Forma por CID: es la mas
+ * corta y estable para identificar una ficha de Google. Una URL de /maps/search
+ * NO sirve — abre una busqueda, no el negocio.
  */
-export const REVIEWS_URL =
-  "https://www.google.com/maps/search/RE-LUX+Construction+Miami+Gardens";
+export const REVIEWS_URL = "https://maps.google.com/?cid=12488415478177387112";
 
 export const VALUES = [
   { n: "01", titleKey: "v1Title", descKey: "v1Desc" },
