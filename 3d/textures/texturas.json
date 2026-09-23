@@ -1,0 +1,70 @@
+{
+  "onix_fondo": {
+    "ancho_m": 3.0,
+    "alto_m": 1.95,
+    "px": [
+      720,
+      468
+    ],
+    "px_por_m": 240,
+    "cobertura": 1.0
+  },
+  "nogal_columna": {
+    "ancho_m": 2.39,
+    "alto_m": 2.94,
+    "px": [
+      574,
+      706
+    ],
+    "px_por_m": 240,
+    "cobertura": 0.5947
+  },
+  "nogal_isla": {
+    "ancho_m": 2.98,
+    "alto_m": 0.86,
+    "px": [
+      834,
+      241
+    ],
+    "px_por_m": 280,
+    "cobertura": 1.0
+  },
+  "piedra_encim": {
+    "ancho_m": 2.2,
+    "alto_m": 0.9,
+    "px": [
+      660,
+      270
+    ],
+    "px_por_m": 300,
+    "cobertura": 1.0
+  },
+  "suelo": {
+    "ancho_m": 3.5,
+    "alto_m": 1.75,
+    "px": [
+      770,
+      385
+    ],
+    "px_por_m": 220,
+    "cobertura": 0.4931
+  },
+  "nogal_albedo": {
+    "lado_m": 0.8333,
+    "origen": "nogal_columna",
+    "px": [
+      512,
+      512
+    ],
+    "desiluminado": true
+  },
+  "onix_albedo": {
+    "lado_m": 0.6667,
+    "origen": "onix_fondo",
+    "px": [
+      512,
+      512
+    ],
+    "desiluminado": true
+  }
+}

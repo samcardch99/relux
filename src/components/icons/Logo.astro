@@ -1,0 +1,17 @@
+---
+/**
+ * RE-LUX wordmark, traced from the brand manual (Manual de marca_RELUX.pdf,
+ * "Versión Principal"). Inlined rather than linked so the fill can follow
+ * `currentColor`, and so the most visible element on the page costs no request.
+ */
+import raw from "../../assets/relux-logo.svg?raw";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const svg = className ? raw.replace("<svg", `<svg class="${className}"`) : raw;
+---
+
+<Fragment set:html={svg} />

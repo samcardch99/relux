@@ -1,0 +1,181 @@
+---
+import ContactForm from "./ContactForm.jsx";
+import { COPY, FOUNDERS, INSTAGRAM } from "../data/copy";
+
+const en = COPY.en;
+---
+
+<section class="contact" id="contact">
+  <div class="contact__inner">
+    <div class="contact__left">
+      <h2 class="contact__title">
+        <span data-i18n="contactTitle">GET IN</span><br />
+        <em data-i18n="contactTitleEm">TOUCH</em>
+      </h2>
+
+      <div class="contact__info">
+        {
+          FOUNDERS.map((f) => (
+            <div class="contact__item">
+              <span class="field-label">{f.name}</span>
+              <a href={`tel:${f.tel}`} class="contact__value">
+                {f.phone}
+              </a>
+            </div>
+          ))
+        }
+
+        <div class="contact__item">
+          <span class="field-label">Instagram</span>
+          <a
+            href={INSTAGRAM.url}
+            target="_blank"
+            rel="noopener"
+            class="contact__value">{INSTAGRAM.handle}</a
+          >
+        </div>
+
+        <div class="contact__item">
+          <span class="field-label" data-i18n="labelLocation">Location</span>
+          <span class="contact__value" data-i18n="location">{en.location}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact__form">
+      {/* idle, not visible: the island carries its own translated labels, so
+          it must hydrate before the visitor scrolls it into view */}
+      <ContactForm client:idle />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding: 120px var(--gutter) 0;
+    background: var(--color-ink);
+  }
+
+  .contact__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 80px;
+  }
+
+  .contact__left {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  .contact__title {
+    font-size: var(--fs-h2-lg);
+    font-weight: 300;
+    line-height: 1.06;
+    color: var(--color-cream);
+  }
+  .contact__title em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-stone);
+  }
+
+  .contact__info {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .contact__item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .contact__value {
+    font-size: var(--fs-quote);
+    font-weight: 300;
+    color: var(--color-cream);
+  }
+  a.contact__value:hover {
+    color: var(--color-gold);
+  }
+
+  @media (max-width: 900px) {
+    .contact__inner {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+<style is:global>
+  /* Form primitives — global because the form renders in a React island,
+     which Astro's scoped styles do not reach. */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .form__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input {
+    width: 100%;
+    padding: 8px 0 12px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(239 226 196 / 0.18);
+    border-radius: 0;
+    color: var(--color-cream);
+    font-size: var(--fs-body);
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.35s ease;
+  }
+  .input:focus {
+    border-bottom-color: var(--color-stone);
+  }
+
+  .input--select {
+    appearance: none;
+    color: rgb(239 226 196 / 0.7);
+  }
+  .input--select option {
+    background: var(--color-ink-2);
+    color: var(--color-cream);
+  }
+
+  .input--area {
+    resize: none;
+    line-height: 1.6;
+  }
+
+  .field__error {
+    font-size: var(--fs-label);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: #d98b7a;
+  }
+
+  .form__submit {
+    align-self: flex-start;
+  }
+  .form__submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 560px) {
+    .form__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

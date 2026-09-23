@@ -1,0 +1,62 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "RE-LUX Construction — Designed & Built | Miami",
+  description = "Interior remodeling and custom woodwork for homes and businesses across Miami. Kitchens, closets, bathrooms and complete interiors, designed and built by our own team.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#060505" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* Scales the whole page so the 1512px design keeps its proportions at any
+        desktop width — inline and synchronous so it lands before first paint. */}
+    <script is:inline>
+      (function () {
+        var DESIGN = 1512; // 14" MacBook Pro — the reference canvas
+        var BREAK = 1081; // below this the responsive layout takes over
+        var FLOOR = 0.85; // scaling past this makes 10px labels unreadable
+        var root = document.documentElement;
+        function apply() {
+          var w = root.clientWidth || window.innerWidth;
+          var z = w >= BREAK ? Math.max(FLOOR, w / DESIGN) : 1;
+          root.style.setProperty("--zoom", z);
+          root.style.zoom = z === 1 ? "" : z;
+        }
+        apply();
+        window.addEventListener("resize", apply, { passive: true });
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+    <script>
+      import "../scripts/site";
+    </script>
+  </body>
+</html>

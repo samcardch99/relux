@@ -1,0 +1,503 @@
+---
+import { COPY, IMG } from "../data/copy";
+import { MAT_ORDER, MATERIALS, REGIONS } from "../data/materials";
+
+const en = COPY.en as unknown as Record<string, string>;
+---
+
+<section class="materials" id="materials">
+  <div class="sec-head materials__head">
+    <h2 class="sec-head__title">
+      <span data-i18n="matTitle">THE</span><br />
+      <em data-i18n="matTitleEm">MATERIALS</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="matIntro">{en.matIntro}</p>
+  </div>
+
+  <div class="materials__body">
+    <div class="materials__main">
+      <div class="mat-stage" id="mat-stage">
+        <img
+          class="mat-stage__base"
+          src={IMG.materialKitchen}
+          alt="A RE-LUX kitchen, used to identify each material"
+          draggable="false"
+        />
+        <div class="mat-stage__veil"></div>
+
+        {
+          /* One clipped copy of the render per polygon. Hidden until its
+             material is active, then lifted and lit in place. */
+          REGIONS.map((r) => (
+            <div
+              class="mat-region"
+              data-mat-wrap={r.mat}
+              data-lift={r.lift ? "" : null}
+              style={`transform-origin:${r.origin}`}
+            >
+              <div
+                class="mat-region__clip"
+                data-mat={r.mat}
+                style={`clip-path:polygon(${r.clipPath})`}
+              >
+                <img src={IMG.materialKitchen} alt="" draggable="false" />
+              </div>
+            </div>
+          ))
+        }
+
+        <div class="mat-cursor" id="mat-cursor" aria-hidden="true">
+          <span class="mat-cursor__dot"></span>
+          <span class="mat-cursor__label" data-i18n="matCursor">View material</span>
+        </div>
+      </div>
+
+      <div class="mat-tabs">
+        {
+          MAT_ORDER.map((key) => (
+            <button type="button" class="mat-tab" data-mat-btn={key}>
+              <span class="mat-tab__n">{MATERIALS[key].index}</span>
+              <span class="mat-tab__label" data-i18n={MATERIALS[key].labelKey}>
+                {en[MATERIALS[key].labelKey]}
+              </span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <aside class="mat-panel">
+      <div class="mat-panel__block" id="mat-active" hidden>
+        <span class="mat-panel__index"><span id="mat-index">01</span> / 05</span>
+        <div class="mat-panel__head">
+          <h3 class="mat-panel__name" id="mat-name"></h3>
+          <span class="mat-panel__cat" id="mat-category"></span>
+        </div>
+        <div class="mat-panel__swatch" id="mat-swatch"></div>
+        <dl class="mat-panel__specs">
+          <div>
+            <dt data-i18n="matFinish">Finish</dt>
+            <dd id="mat-finish"></dd>
+          </div>
+          <div>
+            <dt data-i18n="matApplication">Application</dt>
+            <dd id="mat-application"></dd>
+          </div>
+        </dl>
+        <p class="mat-panel__desc" id="mat-description"></p>
+      </div>
+
+      <div class="mat-panel__block mat-panel__block--idle" id="mat-idle">
+        <span class="mat-panel__index">— / 05</span>
+        <h3 class="mat-panel__idle-title" data-i18n="matIdleTitle">
+          {en.matIdleTitle}
+        </h3>
+        <p class="mat-panel__desc" data-i18n="matIdleText">{en.matIdleText}</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .materials {
+    padding: 128px var(--gutter) 0;
+    background: var(--color-ink);
+  }
+
+  .materials__head {
+    margin-bottom: 56px;
+  }
+
+  .materials__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .materials__main {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-width: 0;
+  }
+
+  /* ── Stage ── */
+  .mat-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-ink-3);
+    user-select: none;
+  }
+  .mat-stage__base {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .mat-stage__veil {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: rgb(6 5 4 / 0.7);
+    opacity: 0;
+    transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .mat-stage.is-active .mat-stage__veil {
+    opacity: 1;
+  }
+
+  .mat-region {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    transform: scale(1);
+    /* `filter` is deliberately NOT transitioned: animating a drop-shadow
+       re-rasterises the whole layer every frame, and up to 8 regions light
+       at once. Measured at ~50ms/frame with it, ~8ms without. */
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .mat-region__clip {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: none;
+    pointer-events: auto;
+    transition:
+      opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.42s ease;
+  }
+  .mat-region__clip > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  /* The design stacks four drop-shadows here. Each one is a separate raster
+     pass over a stage-sized layer, so the cost scales with how many there are
+     (measured: 1 → 8ms/frame, 2 → 16ms, 4 → 50ms) and onyx lights 8 regions
+     at once. One warm shadow carries the rim and the halo together; the lit
+     look comes from the brightness lift below plus the veil behind. */
+  .mat-region.is-on {
+    z-index: 3;
+    filter: drop-shadow(0 0 6px rgb(245 232 204 / 0.9));
+  }
+  /* The floor is a full-width plane — scaling it would just crop the edges */
+  .mat-region.is-on[data-lift] {
+    transform: scale(1.06);
+  }
+  /* Cheap (no blur), so this one can still animate — it does the "lit" work */
+  .mat-region.is-on .mat-region__clip {
+    opacity: 1;
+    filter: brightness(1.12) saturate(1.06);
+  }
+
+  .mat-cursor {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.25s ease;
+  }
+  .mat-cursor__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    border: 1px solid var(--color-cream);
+  }
+  .mat-cursor__label {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgb(6 5 4 / 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-cream);
+  }
+
+  /* ── Tabs ── */
+  .mat-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 30px;
+  }
+  .mat-tab {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 6px 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    font: inherit;
+    color: rgb(239 226 196 / 0.62);
+    transition:
+      color 0.35s ease,
+      border-color 0.35s ease;
+  }
+  .mat-tab__n {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--color-stone);
+  }
+  .mat-tab__label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  .mat-tab.is-on {
+    color: var(--color-cream);
+    border-bottom-color: var(--color-cream);
+  }
+
+  /* ── Panel ── */
+  .mat-panel {
+    position: relative;
+    min-height: 420px;
+    padding-top: 26px;
+    border-top: 1px solid rgb(239 226 196 / 0.14);
+  }
+  .mat-panel__block {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .mat-panel__block[hidden] {
+    display: none;
+  }
+  .mat-panel__block--idle {
+    gap: 18px;
+  }
+
+  .mat-panel__index {
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: var(--color-stone);
+  }
+  .mat-panel__head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mat-panel__name {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.16;
+    letter-spacing: 0.01em;
+    color: var(--color-cream);
+  }
+  .mat-panel__cat {
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+  }
+
+  /* background image/size/position are set per material by the script */
+  .mat-panel__swatch {
+    width: 100%;
+    height: 120px;
+    background-color: var(--color-ink-3);
+    background-repeat: no-repeat;
+  }
+
+  .mat-panel__specs {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    border-top: 1px solid rgb(239 226 196 / 0.14);
+  }
+  .mat-panel__specs > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgb(239 226 196 / 0.14);
+  }
+  .mat-panel__specs dt {
+    font-size: var(--fs-label-sm);
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgb(239 226 196 / 0.4);
+  }
+  .mat-panel__specs dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--color-cream);
+  }
+
+  .mat-panel__desc {
+    font-size: var(--fs-sm);
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgb(239 226 196 / 0.55);
+  }
+  .mat-panel__idle-title {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.3;
+    color: var(--color-cream);
+  }
+
+  @media (max-width: 900px) {
+    .materials__body {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 36px;
+    }
+    .mat-panel {
+      min-height: 0;
+    }
+  }
+</style>
+
+<script>
+  import { MATERIALS, swatchCrop, type MaterialKey } from "../data/materials";
+  import { IMG } from "../data/copy";
+
+  const stageEl = document.getElementById("mat-stage");
+  const cursorEl = document.getElementById("mat-cursor");
+  const activeEl = document.getElementById("mat-active");
+  const idleEl = document.getElementById("mat-idle");
+
+  if (stageEl && cursorEl && activeEl && idleEl) {
+    const stage = stageEl;
+    const cursor = cursorEl;
+    const active = activeEl;
+    const idle = idleEl;
+
+    const regions = [...stage.querySelectorAll<HTMLElement>("[data-mat-wrap]")];
+    const tabs = [...document.querySelectorAll<HTMLElement>("[data-mat-btn]")];
+    const field = (id: string) => document.getElementById(id);
+
+    let current: MaterialKey | null = null;
+    let pinned = false;
+
+    const lang = () => (document.documentElement.lang === "es" ? "es" : "en");
+
+    /** `zoom` scales in-element px but not pointer coordinates. */
+    const zoom = () =>
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--zoom")
+      ) || 1;
+
+    const keyAt = (target: EventTarget | null): MaterialKey | null => {
+      const el = (target as Element | null)?.closest?.("[data-mat]");
+      return (el?.getAttribute("data-mat") as MaterialKey) ?? null;
+    };
+
+    const fill = (key: MaterialKey) => {
+      const m = MATERIALS[key];
+      const c = m[lang()] ?? m.en;
+      const set = (id: string, v: string) => {
+        const el = field(id);
+        if (el) el.textContent = v;
+      };
+      set("mat-index", m.index);
+      set("mat-name", c.name);
+      set("mat-category", c.category);
+      set("mat-finish", c.finish);
+      set("mat-application", c.application);
+      set("mat-description", c.description);
+
+      const swatch = field("mat-swatch");
+      if (swatch) {
+        const crop = swatchCrop(m.sample);
+        swatch.style.backgroundImage = `url(${IMG.materialKitchen})`;
+        swatch.style.backgroundSize = crop.size;
+        swatch.style.backgroundPosition = crop.position;
+      }
+    };
+
+    const setMat = (key: MaterialKey | null) => {
+      if (key === current) return;
+      current = key;
+
+      stage.classList.toggle("is-active", !!key);
+      regions.forEach((r) =>
+        r.classList.toggle("is-on", r.getAttribute("data-mat-wrap") === key)
+      );
+      tabs.forEach((t) =>
+        t.classList.toggle("is-on", t.getAttribute("data-mat-btn") === key)
+      );
+
+      if (key) fill(key);
+      active.hidden = !key;
+      idle.hidden = !!key;
+      if (!key) cursor.style.opacity = "0";
+    };
+
+    stage.addEventListener("mouseover", (e) => {
+      const k = keyAt(e.target);
+      if (k) setMat(k);
+      else if (!pinned) setMat(null);
+    });
+
+    stage.addEventListener("mousemove", (e: MouseEvent) => {
+      const r = stage.getBoundingClientRect();
+      const z = zoom();
+      cursor.style.left = `${(e.clientX - r.left) / z + 62}px`;
+      cursor.style.top = `${(e.clientY - r.top) / z}px`;
+      cursor.style.opacity = keyAt(e.target) ? "1" : "0";
+    });
+
+    stage.addEventListener("mouseleave", () => {
+      pinned = false;
+      setMat(null);
+    });
+
+    stage.addEventListener("click", (e) => {
+      const k = keyAt(e.target);
+      pinned = !!k;
+      setMat(k);
+    });
+
+    tabs.forEach((tab) => {
+      const k = tab.getAttribute("data-mat-btn") as MaterialKey;
+      tab.addEventListener("mouseenter", () => setMat(k));
+      tab.addEventListener("mouseleave", () => {
+        if (!pinned) setMat(null);
+      });
+      tab.addEventListener("click", () => {
+        pinned = true;
+        setMat(k);
+      });
+    });
+
+    // Clicking anywhere else releases a pinned material
+    document.addEventListener("click", (e) => {
+      if (!current) return;
+      const t = e.target as Element | null;
+      if (stage.contains(t) || t?.closest?.("[data-mat-btn]")) return;
+      pinned = false;
+      setMat(null);
+    });
+
+    // The panel copy is per-language, so refill it when the toggle fires
+    window.addEventListener("relux:lang", () => {
+      if (current) fill(current);
+    });
+  }
+</script>

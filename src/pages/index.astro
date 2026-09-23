@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Cursor from "../components/Cursor.astro";
+import Navbar from "../components/Navbar.astro";
+import Hero from "../components/Hero.astro";
+import Story from "../components/Story.astro";
+import Services from "../components/Services.astro";
+import Materials from "../components/Materials.astro";
+import Projects from "../components/Projects.astro";
+import Process from "../components/Process.astro";
+import CTA from "../components/CTA.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
+import WorkView from "../components/views/WorkView.astro";
+import AboutView from "../components/views/AboutView.astro";
+import DetailView from "../components/views/DetailView.astro";
+---
+
+<Layout>
+  <Cursor />
+  <Navbar />
+
+  <main>
+    <Hero />
+    <Story />
+    <Services />
+    <Materials />
+    <Projects />
+    <Process />
+    <CTA />
+    <Contact />
+  </main>
+
+  <Footer />
+
+  <!-- Full-screen views, opened from the grid and the About button -->
+  <WorkView />
+  <AboutView />
+  <DetailView />
+</Layout>

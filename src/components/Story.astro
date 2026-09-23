@@ -1,0 +1,146 @@
+---
+import { IMG, FOUNDERS } from "../data/copy";
+import ArrowUpRight from "./icons/ArrowUpRight.astro";
+---
+
+<section class="story" id="about">
+  <div class="story__figure">
+    <div class="media story__portrait">
+      <img
+        src={IMG.owners}
+        alt="Enmanuel and Randy Cagigas, founders of RE-LUX Construction"
+        loading="lazy"
+      />
+    </div>
+  </div>
+
+  <div class="story__body">
+    <p class="kicker story__kicker" data-i18n="storyKicker">About Us</p>
+
+    <h2 class="story__title">
+      <span data-i18n="storyTitle1">Built on</span>
+      <em data-i18n="storyTitleEm">Detail,</em><br />
+      <span data-i18n="storyTitle2">Not Shortcuts</span>
+    </h2>
+
+    <p class="lead story__lead" data-i18n="storyLead">
+      RE-LUX Construction is a Miami firm working on high-end residential and
+      commercial interiors — founded and run by two brothers who are on site
+      with the crew.
+    </p>
+
+    <p class="quote story__quote" data-i18n="storyQuote">
+      &ldquo;Tu proyecto, nuestro compromiso de lujo.&rdquo;
+    </p>
+
+    <ul class="story__founders">
+      {
+        FOUNDERS.map((f) => (
+          <li>
+            <span class="story__name">{f.name}</span>
+            <span class="story__role" data-i18n="founderRole">
+              Founder
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <button type="button" class="btn btn--ghost story__btn" data-open="about">
+      <span data-i18n="aboutBtn">More about us</span>
+      <ArrowUpRight />
+    </button>
+  </div>
+</section>
+
+<style>
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    background: var(--color-ink-2);
+  }
+
+  .story__figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 96px 72px;
+  }
+  .story__portrait {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 4 / 5;
+  }
+
+  .story__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    padding: 96px 72px;
+  }
+
+  .story__kicker {
+    letter-spacing: 0.36em;
+  }
+
+  .story__title {
+    font-size: var(--fs-h2-sm);
+    font-weight: 300;
+    line-height: 1.14;
+    color: var(--color-cream);
+  }
+  .story__title em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-stone);
+  }
+
+  .story__lead,
+  .story__quote {
+    max-width: 460px;
+  }
+
+  .story__founders {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .story__founders li {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .story__founders li + li {
+    padding-left: 28px;
+    border-left: 1px solid rgb(239 226 196 / 0.18);
+  }
+  .story__name {
+    font-size: var(--fs-body);
+    font-weight: 400;
+    color: var(--color-cream);
+  }
+  .story__role {
+    font-size: var(--fs-label-sm);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgb(239 226 196 / 0.42);
+  }
+
+  .story__btn {
+    align-self: flex-start;
+  }
+
+  @media (max-width: 900px) {
+    .story {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .story__figure {
+      padding-bottom: 0;
+    }
+  }
+</style>

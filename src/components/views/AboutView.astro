@@ -1,0 +1,192 @@
+---
+import { COPY, VALUES, FOUNDERS, IMG, FOCUS } from "../../data/copy";
+import ArrowBack from "../icons/ArrowBack.astro";
+import ArrowUpRight from "../icons/ArrowUpRight.astro";
+
+const en = COPY.en;
+const founderPhotos = [IMG.founder1, IMG.founder2];
+---
+
+<div class="view" id="view-about" role="dialog" aria-modal="true" aria-label="About RE-LUX" hidden>
+  <div class="view__bar">
+    <button type="button" class="btn btn--ghost btn--back" data-close="about">
+      <ArrowBack />
+      <span data-i18n="workBack">Back</span>
+    </button>
+    <span class="view__bar-meta" data-i18n="sinceLine">{en.sinceLine}</span>
+  </div>
+
+  <div class="sec-head aboutview__head">
+    <h2 class="sec-head__title">
+      <span data-i18n="aboutTitle">About</span><br />
+      <em data-i18n="aboutTitleEm">RE-LUX</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="aboutIntro">{en.aboutIntro}</p>
+  </div>
+
+  <div class="media aboutview__band">
+    <img
+      src={IMG.ownersWide}
+      alt="A RE-LUX kitchen build"
+      loading="lazy"
+      style={`object-position:${FOCUS.ownersWide}`}
+    />
+  </div>
+
+  <div class="aboutview__text">
+    <div class="aboutview__text-lead">
+      <h3 class="aboutview__h3" data-i18n="aboutH1">{en.aboutH1}</h3>
+      <p class="quote" data-i18n="storyQuote">
+        &ldquo;Tu proyecto, nuestro compromiso de lujo.&rdquo;
+      </p>
+    </div>
+    <div class="aboutview__paras">
+      <p data-i18n="aboutP1">{en.aboutP1}</p>
+      <p data-i18n="aboutP2">{en.aboutP2}</p>
+      <p data-i18n="aboutP3">{en.aboutP3}</p>
+    </div>
+  </div>
+
+  <ul class="cell-grid aboutview__values">
+    {
+      VALUES.map((v) => (
+        <li class="cell">
+          <span class="num">{v.n}</span>
+          <h4 class="cell__title" data-i18n={v.titleKey}>
+            {en[v.titleKey]}
+          </h4>
+          <p class="body-sm" data-i18n={v.descKey}>
+            {en[v.descKey]}
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="aboutview__founders">
+    {
+      FOUNDERS.map((f, i) => (
+        <div class="founder">
+          <div class="media founder__photo">
+            <img src={founderPhotos[i]} alt={f.name} loading="lazy" />
+          </div>
+          <div class="founder__meta">
+            <span class="founder__name">{f.name}</span>
+            <span class="founder__role" data-i18n="founderRole">
+              Founder
+            </span>
+            <a href={`tel:${f.tel}`} class="founder__tel">
+              {f.phone}
+            </a>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="view__foot aboutview__foot">
+    <p data-i18n="aboutFoot">{en.aboutFoot}</p>
+    <button type="button" class="btn btn--solid" data-close="about" data-goto="contact">
+      <span data-i18n="workCta">Request a Quote</span>
+      <ArrowUpRight />
+    </button>
+  </div>
+</div>
+
+<style>
+  .aboutview__head {
+    padding: 88px var(--gutter) 56px;
+  }
+
+  .aboutview__band {
+    height: 460px;
+    margin-bottom: 88px;
+  }
+
+  .aboutview__text {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 72px;
+    padding: 0 var(--gutter) 88px;
+  }
+  .aboutview__text-lead {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .aboutview__h3 {
+    font-size: var(--fs-h3-lg);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--color-cream);
+  }
+  .aboutview__paras {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .aboutview__paras p {
+    font-size: var(--fs-body);
+    font-weight: 300;
+    line-height: 1.82;
+    color: rgb(239 226 196 / 0.66);
+  }
+
+  /* The design gives the values grid roomier cells than the process one */
+  .aboutview__values :global(.cell) {
+    padding: 44px 44px 48px;
+  }
+
+  .aboutview__founders {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding: 88px var(--gutter) 0;
+  }
+  .founder {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .founder__photo {
+    aspect-ratio: 3 / 4;
+  }
+  .founder__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .founder__name {
+    font-size: var(--fs-h3-sm);
+    font-weight: 400;
+    color: var(--color-cream);
+  }
+  .founder__role {
+    font-size: var(--fs-label-sm);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+  }
+  .founder__tel {
+    margin-top: 6px;
+    font-size: var(--fs-body);
+    font-weight: 300;
+    color: rgb(239 226 196 / 0.66);
+  }
+
+  .aboutview__foot {
+    padding-top: 96px;
+  }
+
+  @media (max-width: 860px) {
+    .aboutview__text {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+    .aboutview__founders {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 36px;
+    }
+  }
+</style>

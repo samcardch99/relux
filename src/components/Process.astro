@@ -1,0 +1,113 @@
+---
+import { PROCESS, COPY, IMG, FOCUS } from "../data/copy";
+
+const en = COPY.en;
+---
+
+<section class="process" id="process">
+  <div class="sec-head process__head">
+    <h2 class="sec-head__title sec-head__title--inverted">
+      <span data-i18n="procTitle">HOW WE</span><br />
+      <em data-i18n="procTitleEm">WORK</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="procIntro">{en.procIntro}</p>
+  </div>
+
+  <div class="media process__band">
+    <img
+      src={IMG.processBand}
+      alt=""
+      loading="lazy"
+      aria-hidden="true"
+      style={`object-position:${FOCUS.processBand}`}
+    />
+    <div class="process__band-scrim"></div>
+  </div>
+
+  <ol class="cell-grid process__steps">
+    {
+      PROCESS.map((step) => (
+        <li class="cell">
+          <span class="num">{step.n}</span>
+          <h3 class="cell__title" data-i18n={step.titleKey}>
+            {en[step.titleKey]}
+          </h3>
+          <p class="body-sm" data-i18n={step.descKey}>
+            {en[step.descKey]}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .process {
+    background: var(--color-ink);
+  }
+
+  .process__head {
+    padding: 120px var(--gutter) 52px;
+  }
+
+  .process__band {
+    height: 420px;
+  }
+  .process__band-scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgb(6 5 4 / 0.35) 0%,
+      rgb(6 5 4 / 0.1) 45%,
+      rgb(6 5 4 / 0.85) 100%
+    );
+  }
+
+  .process__steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>
+
+<style is:global>
+  /* Hairline cell grid — shared with the values grid in the About view.
+     A 1px gap over a tinted background draws the rules, so the lines stay
+     correct at every column count without per-cell border rules. */
+  .cell-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: rgb(239 226 196 / 0.1);
+    border-top: 1px solid rgb(239 226 196 / 0.1);
+    border-bottom: 1px solid rgb(239 226 196 / 0.1);
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 40px 40px 44px;
+    background: var(--color-ink);
+  }
+
+  .cell__title {
+    font-size: var(--fs-h3);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-cream);
+  }
+
+  @media (max-width: 900px) {
+    .cell-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .cell-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

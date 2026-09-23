@@ -1,0 +1,251 @@
+---
+import { IMG } from "../data/copy";
+import ArrowUpRight from "./icons/ArrowUpRight.astro";
+---
+
+<section class="hero" id="top">
+  <img class="hero__bg" src={IMG.kitchenDining} alt="" aria-hidden="true" />
+
+  <!-- Spring-driven vignette that follows the pointer: the beam squeezes while
+       the cursor travels and opens back up when it stops. -->
+  <div class="hero__overlay" id="hero-overlay"></div>
+
+  <div class="hero__inner">
+    <p class="hero__eyebrow" data-i18n="heroEyebrow">Miami Premier Construction</p>
+
+    <div class="hero__cols">
+      <div class="hero__lead">
+        <h1 class="hero__title" data-i18n="heroTitle">DESIGNED &amp; BUILT</h1>
+        <p class="hero__sub" data-i18n="heroSub">
+          Interior remodeling and custom woodwork for homes and businesses
+          across Miami.
+        </p>
+      </div>
+
+      <div class="hero__aside">
+        <p class="hero__note" data-i18n="heroLead">
+          We design the entire job before the first cut — so what you pictured
+          is exactly what gets built.
+        </p>
+        <a href="#contact" class="btn btn--solid">
+          <span data-i18n="heroCta">Start a Project</span>
+          <ArrowUpRight />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    /* Divided by the page zoom, so the scaled result still fills the viewport
+       exactly. Viewport units are immune to `zoom`, hence the compensation. */
+    height: calc(100svh / var(--zoom, 1));
+    overflow: hidden;
+    background: var(--color-ink);
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Repainted each frame by the script; this is the at-rest state. */
+    background: radial-gradient(
+      circle 380px at 50% 50%,
+      rgb(0 0 0 / 0.18) 0%,
+      rgb(0 0 0 / 0.82) 100%
+    );
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 20;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 var(--gutter) 76px;
+  }
+
+  .hero__eyebrow {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.46em;
+    text-transform: uppercase;
+    color: rgb(239 226 196 / 0.9);
+  }
+
+  .hero__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 48px;
+  }
+
+  .hero__lead {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 460px;
+  }
+  .hero__title {
+    font-size: var(--fs-hero);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--color-cream);
+  }
+  .hero__sub {
+    max-width: 340px;
+    font-size: var(--fs-body);
+    font-weight: 300;
+    line-height: 1.62;
+    color: rgb(239 226 196 / 0.66);
+  }
+
+  .hero__aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 26px;
+  }
+  .hero__note {
+    max-width: 380px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgb(239 226 196 / 0.62);
+  }
+
+  /* Below the zoom range the hero is unscaled, so it needs a floor again */
+  @media (max-width: 1080px) {
+    .hero {
+      min-height: 620px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .hero__cols {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+    .hero__aside {
+      align-items: flex-start;
+    }
+    .hero__note {
+      text-align: left;
+    }
+    .hero__eyebrow {
+      top: auto;
+      bottom: calc(100% + 0px);
+      position: static;
+      transform: none;
+      text-align: left;
+      margin-bottom: 24px;
+      letter-spacing: 0.32em;
+    }
+    .hero__inner {
+      justify-content: flex-end;
+    }
+  }
+</style>
+
+<script>
+  const hero = document.querySelector(".hero") as HTMLElement | null;
+  const overlay = document.getElementById("hero-overlay");
+
+  if (hero && overlay) {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const STIFFNESS = 0.04;
+    const DAMPING = 0.48;
+
+    // Radii are fixed to the 1512px design canvas, so the page zoom scales the
+    // beam along with everything else instead of it growing on wide monitors.
+    const RADIUS_BASE = () => 378; // 25% of 1512
+    const RADIUS_SQUEEZE = () => 220; // 14.58%
+    const RADIUS_EXPAND = () => 425; // 28.13%
+
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight / 2;
+
+    let lx = targetX;
+    let ly = targetY;
+    let vx = 0;
+    let vy = 0;
+    let currentR = RADIUS_BASE();
+    let vr = 0;
+
+    const paint = (r: number, x: string, y: string) => {
+      overlay.style.background =
+        `radial-gradient(circle ${r.toFixed(1)}px at ${x} ${y}, ` +
+        "rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.82) 100%)";
+    };
+
+    if (reduced) {
+      paint(RADIUS_BASE(), "50%", "50%");
+      window.addEventListener("resize", () => paint(RADIUS_BASE(), "50%", "50%"));
+    } else {
+      hero.addEventListener("mouseleave", () => {
+        const rect = hero.getBoundingClientRect();
+        targetX = rect.left + rect.width / 2;
+        targetY = rect.top + rect.height / 2;
+      });
+
+      hero.addEventListener("mousemove", (e: MouseEvent) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+      });
+
+      const tick = () => {
+        const rect = hero.getBoundingClientRect();
+
+        // Spring toward target
+        const fx = (targetX - lx) * STIFFNESS;
+        const fy = (targetY - ly) * STIFFNESS;
+        vx = (vx + fx) * DAMPING;
+        vy = (vy + fy) * DAMPING;
+        lx += vx;
+        ly += vy;
+
+        // Speed drives radius continuously: fast = squeeze, stopped = expand
+        const speed = Math.sqrt(vx * vx + vy * vy);
+        const t = Math.min(speed / 16, 1); // 0 = stopped, 1 = fast
+        const rExpand = RADIUS_EXPAND();
+        const rSqueeze = RADIUS_SQUEEZE();
+        const targetR = rExpand + (rSqueeze - rExpand) * t;
+
+        const fr = (targetR - currentR) * 0.06;
+        vr = (vr + fr) * 0.72;
+        currentR += vr;
+
+        // Convert to % relative to the hero box
+        const px = (((lx - rect.left) / rect.width) * 100).toFixed(2) + "%";
+        const py = (((ly - rect.top) / rect.height) * 100).toFixed(2) + "%";
+
+        paint(currentR, px, py);
+
+        requestAnimationFrame(tick);
+      };
+
+      tick();
+    }
+  }
+</script>

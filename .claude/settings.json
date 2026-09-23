@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk curl *)",
+      "Bash(rtk grep *)",
+      "Bash(rtk wc *)",
+      "Read(//private/tmp/**)",
+      "Bash(python3)",
+      "Bash(python3 -c \"import sys; content = sys.stdin.read\\(\\); print\\(content[content.find\\('we'\\):content.find\\('we'\\)+500] if 'we' in content else 'not found'\\)\")",
+      "Bash(rtk find *)",
+      "Bash(npm install *)",
+      "Bash(rtk ls *)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}

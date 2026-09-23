@@ -1,0 +1,132 @@
+---
+import { SERVICES, COPY } from "../data/copy";
+
+const en = COPY.en;
+---
+
+<section class="services" id="services">
+  <div class="sec-head services__head">
+    <h2 class="sec-head__title">
+      <span data-i18n="servicesKicker">OUR</span><br />
+      <em data-i18n="servicesWord">SERVICES</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="servicesIntro">
+      {en.servicesIntro}
+    </p>
+  </div>
+
+  <div class="services__strip">
+    {
+      SERVICES.map((s) => (
+        <article
+          class="panel"
+          style={`--flex-base:${s.grow};--flex-hover:${s.hover}`}
+        >
+          <img src={s.img} alt="" loading="lazy" aria-hidden="true" />
+          <div class="panel__scrim" />
+          <div class="panel__body">
+            <span class="num">{s.n}</span>
+            <h3 class="panel__title" data-i18n={s.titleKey}>
+              {en[s.titleKey]}
+            </h3>
+            <p class="panel__desc" data-i18n={s.descKey}>
+              {en[s.descKey]}
+            </p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .services {
+    position: relative;
+    padding: 128px 0 0;
+    background: var(--color-ink);
+  }
+
+  .services__head {
+    padding: 0 var(--gutter) 56px;
+  }
+
+  .services__strip {
+    display: flex;
+    gap: 4px;
+    height: 560px;
+    padding: 0 4px;
+  }
+
+  .panel {
+    position: relative;
+    flex: var(--flex-base) 1 0;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--color-ink-3);
+    transition: flex 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .panel > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .panel__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgb(6 5 4 / 0.9) 0%,
+      rgb(6 5 4 / 0.15) 58%,
+      rgb(6 5 4 / 0.33) 100%
+    );
+  }
+  .panel__body {
+    position: absolute;
+    left: 32px;
+    right: 32px;
+    bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .panel__title {
+    font-size: var(--fs-h3-lg);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: var(--color-cream);
+  }
+  .panel__desc {
+    max-width: 340px;
+    font-size: var(--fs-xs);
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgb(239 226 196 / 0.6);
+  }
+
+  @media (hover: hover) {
+    .panel:hover {
+      flex: var(--flex-hover) 1 0;
+    }
+  }
+
+  /* Stack into full-width cards once the strip gets too tight to read */
+  @media (max-width: 900px) {
+    .services__strip {
+      flex-direction: column;
+      height: auto;
+      gap: 4px;
+    }
+    .panel {
+      flex: none;
+      aspect-ratio: 16 / 10;
+    }
+  }
+  @media (max-width: 560px) {
+    .panel {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

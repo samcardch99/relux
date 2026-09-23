@@ -1,0 +1,53 @@
+---
+import { PROJECTS, COPY, INSTAGRAM } from "../../data/copy";
+import ProjectCard from "../ProjectCard.astro";
+import ArrowBack from "../icons/ArrowBack.astro";
+import ArrowUpRight from "../icons/ArrowUpRight.astro";
+
+const en = COPY.en;
+---
+
+<div class="view" id="view-work" role="dialog" aria-modal="true" aria-label="All projects" hidden>
+  <div class="view__bar">
+    <button type="button" class="btn btn--ghost btn--back" data-close="work">
+      <ArrowBack />
+      <span data-i18n="workBack">Back</span>
+    </button>
+    <a
+      href={INSTAGRAM.url}
+      target="_blank"
+      rel="noopener"
+      class="view__bar-meta">{INSTAGRAM.handle}</a
+    >
+  </div>
+
+  <div class="sec-head workview__head">
+    <h2 class="sec-head__title">
+      <span data-i18n="workTitle">All</span><br />
+      <em data-i18n="workTitleEm">Projects</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="workIntro">{en.workIntro}</p>
+  </div>
+
+  <div class="grid-3 workview__grid">
+    {PROJECTS.map((p) => <ProjectCard project={p} />)}
+  </div>
+
+  <div class="view__foot">
+    <p data-i18n="workFoot">{en.workFoot}</p>
+    <button type="button" class="btn btn--solid" data-close="work" data-goto="contact">
+      <span data-i18n="workCta">Request a Quote</span>
+      <ArrowUpRight />
+    </button>
+  </div>
+</div>
+
+<style>
+  .workview__head {
+    padding: 88px var(--gutter) 56px;
+  }
+
+  .workview__grid {
+    padding: 0 var(--gutter) 96px;
+  }
+</style>

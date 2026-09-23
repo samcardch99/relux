@@ -1,0 +1,86 @@
+---
+import { IMG, FOCUS } from "../data/copy";
+import ArrowUpRight from "./icons/ArrowUpRight.astro";
+---
+
+<section class="cta">
+  <img
+    class="cta__bg"
+    src={IMG.ctaBand}
+    alt=""
+    loading="lazy"
+    aria-hidden="true"
+    style={`object-position:${FOCUS.ctaBand}`}
+  />
+  <div class="cta__overlay"></div>
+
+  <div class="cta__inner">
+    <p class="cta__kicker" data-i18n="ctaKicker">Ready to start?</p>
+    <h2 class="cta__title">
+      <span data-i18n="ctaTitle">Let&rsquo;s build the space</span><br />
+      <em data-i18n="ctaTitleEm">you&rsquo;ve been picturing</em>
+    </h2>
+    <a href="#contact" class="btn btn--solid">
+      <span data-i18n="ctaButton">Start Your Project</span>
+      <ArrowUpRight />
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 520px;
+    overflow: hidden;
+    background: var(--color-ink-3);
+  }
+
+  .cta__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cta__overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: rgb(6 5 4 / 0.66);
+  }
+
+  .cta__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+    padding: 0 40px;
+    text-align: center;
+  }
+
+  .cta__kicker {
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgb(239 226 196 / 0.7);
+  }
+
+  .cta__title {
+    max-width: 900px;
+    font-size: var(--fs-h2-lg);
+    font-weight: 300;
+    line-height: 1.12;
+    color: var(--color-cream);
+  }
+  .cta__title em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-sand);
+  }
+</style>

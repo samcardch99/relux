@@ -1,0 +1,66 @@
+---
+import { PROJECTS, COPY } from "../data/copy";
+import ProjectCard from "./ProjectCard.astro";
+import ArrowUpRight from "./icons/ArrowUpRight.astro";
+
+const en = COPY.en;
+const featured = PROJECTS.slice(0, 6);
+---
+
+<section class="projects" id="projects">
+  <div class="sec-head projects__head">
+    <h2 class="sec-head__title">
+      <span data-i18n="projTitle">Our</span><br />
+      <em data-i18n="projTitleEm">Work</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="projIntro">{en.projIntro}</p>
+  </div>
+
+  <div class="grid-3">
+    {featured.map((p) => <ProjectCard project={p} />)}
+  </div>
+
+  <div class="projects__more">
+    <button type="button" class="btn btn--ghost" data-open="work">
+      <span data-i18n="projLink">See all projects</span>
+      <ArrowUpRight />
+    </button>
+  </div>
+</section>
+
+<style>
+  .projects {
+    padding: 128px var(--gutter);
+    background: var(--color-ink);
+  }
+
+  .projects__head {
+    margin-bottom: 56px;
+  }
+
+  .projects__more {
+    display: flex;
+    justify-content: center;
+    margin-top: 56px;
+  }
+</style>
+
+<style is:global>
+  /* Shared by the homepage grid and the all-projects view */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .grid-3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .grid-3 {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,404 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────────
+   RE-LUX brand tokens
+   Palette and type scale transcribed from the Claude Design file
+   "Relux Web". Desktop sizes are the design's own px values,
+   anchored to a 1440px canvas and expressed as clamp() so the
+   page holds up from phone to 4K.
+   ────────────────────────────────────────────────────────────── */
+@theme {
+  --color-ink: #060505;
+  --color-ink-2: #0a0908;
+  --color-ink-3: #0c0b0a;
+  --color-cream: #efe2c4;
+  --color-sand: #e8d5ac;
+  --color-gold: #c9a45c;
+  --color-stone: #847f78;
+
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  /* ── Proportional desktop scaling ──────────────────────────────
+     Every desktop value below is the design's own px at a 1512px
+     canvas (a 14" MacBook Pro). Above the mobile breakpoint the page
+     is scaled as a whole with `zoom`, so the layout never reflows or
+     stretches — it only gets bigger or smaller, keeping the design's
+     proportions exactly. `--zoom` is set by the inline script in
+     Layout.astro and is only needed here to compensate viewport
+     units, which `zoom` does not affect. */
+  --design-w: 1512;
+  --zoom: 1;
+
+  /* Horizontal page gutter — 56px on the design canvas */
+  --gutter: 56px;
+
+  /* Type scale */
+  --fs-hero: 64px;
+  --fs-h2-lg: 50px;
+  --fs-h2: 46px;
+  --fs-h2-sm: 40px;
+  --fs-h3-lg: 26px;
+  --fs-h3: 22px;
+  --fs-h3-sm: 21px;
+  --fs-quote: 22px;
+  --fs-body: 15px;
+  --fs-sm: 13px;
+  --fs-xs: 12px;
+  --fs-nav: 11px; /* fixed, per the design */
+  --fs-label: 10px;
+  --fs-label-sm: 9px;
+
+  /* Navbar geometry, pinned to the design's fixed px at desktop.
+     The design's logo sits in a 230×96 slot but the author zoomed it to
+     s=2.716, so the mark actually reads at 137×37 — that is the size to
+     match, while the 96px slot is what makes the header 124px tall.
+     `--header-h` also offsets anchor scrolling and the top of every view. */
+  --header-h: 124px;
+  --logo-w: 137px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Locks background scrolling while a full-screen view is open */
+body.is-locked {
+  overflow: hidden;
+}
+
+a {
+  color: var(--color-cream);
+  text-decoration: none;
+  transition: color 0.35s ease;
+}
+a:hover {
+  color: var(--color-stone);
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink-2);
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+}
+input::placeholder,
+textarea::placeholder {
+  color: rgb(239 226 196 / 0.28);
+}
+
+img {
+  display: block;
+}
+
+/* On-brand keyboard focus ring, in place of the UA default */
+:focus-visible {
+  outline: 1px solid var(--color-stone);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* ── Custom cursor: hide the native one on pointer devices only ── */
+html,
+body,
+a,
+button,
+input,
+textarea,
+select,
+label {
+  cursor: none;
+}
+@media (hover: none) {
+  html,
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label {
+    cursor: auto;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Shared primitives
+   ────────────────────────────────────────────────────────────── */
+
+/* Pill button — solid (sand) and ghost (hairline) variants */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 999px;
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
+}
+.btn svg {
+  display: block;
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.btn--solid {
+  background: var(--color-sand);
+  color: var(--color-ink-2);
+}
+.btn--solid:hover {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid rgb(239 226 196 / 0.3);
+  color: var(--color-cream);
+}
+.btn--ghost:hover {
+  border-color: var(--color-stone);
+  color: var(--color-stone);
+}
+
+/* Back button sits tighter on its leading icon */
+.btn--back {
+  padding: 0 22px 0 18px;
+}
+
+/* Small uppercase labels */
+.kicker {
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-stone);
+}
+
+.field-label {
+  font-size: var(--fs-label-sm);
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgb(239 226 196 / 0.4);
+}
+
+/* Step / item numbers (01, 02, …) — no uppercase transform needed */
+.num {
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: var(--color-stone);
+}
+
+/* Section header: big title left, intro paragraph right */
+.sec-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 48px;
+}
+.sec-head__title {
+  font-size: var(--fs-h2-lg);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: 0.01em;
+  color: var(--color-stone);
+}
+.sec-head__title em {
+  display: inline;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--color-cream);
+}
+/* Inverted pairing — cream first line, stone emphasis */
+.sec-head__title--inverted {
+  color: var(--color-cream);
+}
+.sec-head__title--inverted em {
+  color: var(--color-stone);
+}
+.sec-head__intro {
+  margin-bottom: 10px;
+  max-width: 440px;
+  justify-self: end;
+  font-size: var(--fs-body);
+  font-weight: 300;
+  line-height: 1.68;
+  color: rgb(239 226 196 / 0.6);
+}
+
+.lead {
+  font-size: var(--fs-body);
+  font-weight: 300;
+  line-height: 1.78;
+  color: rgb(239 226 196 / 0.62);
+}
+
+.body-sm {
+  font-size: var(--fs-sm);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgb(239 226 196 / 0.55);
+}
+
+.quote {
+  font-size: var(--fs-quote);
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--color-stone);
+}
+
+/* Image frame — keeps a tonal block behind every photo so a missing
+   or still-loading asset never renders as a broken box. */
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-ink-3);
+  background-image: linear-gradient(
+    135deg,
+    rgb(239 226 196 / 0.04) 0%,
+    rgb(239 226 196 / 0) 55%
+  );
+}
+.media > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+img[data-failed] {
+  opacity: 0;
+}
+
+/* Hairline dividers used by the process / values grids */
+.rule-t {
+  border-top: 1px solid rgb(239 226 196 / 0.1);
+}
+.rule-b {
+  border-bottom: 1px solid rgb(239 226 196 / 0.1);
+}
+
+/* ── Full-screen views (All projects, About, Project detail) ── */
+.view {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: var(--color-ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: var(--header-h);
+}
+.view[hidden] {
+  display: none;
+}
+.view--detail {
+  z-index: 95;
+}
+.view__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px var(--gutter);
+  border-bottom: 1px solid rgb(239 226 196 / 0.1);
+}
+.view__bar-meta {
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgb(239 226 196 / 0.5);
+}
+.view__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 0 var(--gutter) 110px;
+  text-align: center;
+}
+.view__foot p {
+  max-width: 520px;
+  font-size: var(--fs-body);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgb(239 226 196 / 0.6);
+}
+
+@media (max-width: 860px) {
+  .sec-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .sec-head__intro {
+    justify-self: start;
+    margin-bottom: 0;
+  }
+}
+
+/* The design has no small-screen spec; shrink the fixed header below the
+   width where the nav collapses into the burger. */
+@media (max-width: 1080px) {
+  :root {
+    --header-h: 84px;
+    --logo-w: 124px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
