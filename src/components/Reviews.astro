@@ -235,19 +235,20 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
     color: var(--color-stone);
   }
   .reviews__text.is-l {
-    font-size: 24px;
+    font-size: 21px;
   }
   .reviews__text.is-xl {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.55;
   }
   .reviews__text {
     max-width: 820px;
-    /* Alto reservado para la reseña mas larga del lote: sin esto la seccion
-       pega un salto cada vez que se pasa de una corta a una larga. */
-    min-height: 268px;
+    /* Alto reservado para la reseña mas larga del lote (medido: 223px a 18px
+       de cuerpo): sin esto la seccion pega un salto al pasar de una corta a
+       una larga. Si cambian las reseñas hay que volver a medirlo. */
+    min-height: 228px;
     margin: 0;
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 300;
     line-height: 1.45;
     color: var(--color-cream);
@@ -348,7 +349,7 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
       padding: 72px var(--gutter);
     }
     .reviews__text {
-      font-size: 24px;
+      font-size: 20px;
       min-height: 0;
     }
     .reviews__num {
