@@ -11,6 +11,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Los repos nuevos nacen con default_workflow_permissions=read, asi que el
+    # GITHUB_TOKEN no puede escribir la rama 'build' (403 al hacer push).
+    # Se concede aqui, y solo aqui, en vez de abrir permisos a todo el repo.
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
 
