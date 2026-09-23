@@ -53,7 +53,11 @@ function applyLang(next: Lang) {
 
   document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
     const value = t[el.dataset.i18n ?? ""];
-    if (typeof value === "string") el.textContent = value;
+    if (typeof value !== "string") return;
+    // `{n}` lo rellena el propio nodo con su data-n (numero de reseñas de Google)
+    el.textContent = el.dataset.n
+      ? value.replace("{n}", el.dataset.n)
+      : value;
   });
 
   document
@@ -284,6 +288,69 @@ burger?.addEventListener("click", () => {
   burger.setAttribute("aria-expanded", String(!open));
   menu?.classList.toggle("is-open", !open);
 });
+
+/* ── Client reviews slider ── */
+
+/**
+ * Las reseñas son reales y vienen de la Places API, asi que su texto NO se
+ * traduce: se muestra tal y como lo escribio quien la dejo, con su `lang` para
+ * que el navegador lo lea bien. Solo cambian de idioma los rotulos de alrededor,
+ * que si estan en COPY.
+ */
+
+type Review = {
+  text: string;
+  lang: string | null;
+  name: string;
+  avatar: string;
+  when: string;
+};
+
+const revRoot = document.getElementById("reviews");
+const revList: Review[] = (() => {
+  try {
+    return JSON.parse(revRoot?.dataset.reviews ?? "[]");
+  } catch {
+    return [];
+  }
+})();
+
+if (revRoot && revList.length > 1) {
+  const revText = document.getElementById("review-text");
+  const revName = document.getElementById("review-name");
+  const revWhen = document.getElementById("review-when");
+  const revNum = document.getElementById("review-num");
+  const revAvatar = document.getElementById("review-avatar");
+
+  let revIndex = 0;
+
+  const renderReview = () => {
+    const r = revList[revIndex];
+    if (revText) {
+      revText.textContent = r.text;
+      if (r.lang) revText.setAttribute("lang", r.lang);
+      else revText.removeAttribute("lang");
+    }
+    if (revName) revName.textContent = r.name;
+    if (revWhen) revWhen.textContent = r.when;
+    if (revNum) revNum.textContent = String(revIndex + 1).padStart(2, "0");
+    if (revAvatar instanceof HTMLImageElement && r.avatar) {
+      revAvatar.src = r.avatar;
+    }
+  };
+
+  const stepReview = (delta: number) => {
+    revIndex = (revIndex + delta + revList.length) % revList.length;
+    renderReview();
+  };
+
+  document
+    .getElementById("review-prev")
+    ?.addEventListener("click", () => stepReview(-1));
+  document
+    .getElementById("review-next")
+    ?.addEventListener("click", () => stepReview(1));
+}
 
 /* ── Go ── */
 

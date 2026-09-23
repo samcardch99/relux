@@ -150,6 +150,10 @@ export const COPY = {
     w6Desc:
       "We walk the finished space together and correct anything before we hand it over.",
 
+    revKicker: "Client reviews",
+    revBasis: "Average rating across {n} Google reviews.",
+    revLink: "All Google reviews",
+
     ctaKicker: "Ready to start?",
     ctaTitle: "Let's build the space",
     ctaTitleEm: "you've been picturing",
@@ -332,6 +336,10 @@ export const COPY = {
     w6Desc:
       "Recorremos juntos el espacio terminado y corregimos cualquier detalle antes de entregarlo.",
 
+    revKicker: "Reseñas de clientes",
+    revBasis: "Valoración media de {n} reseñas en Google.",
+    revLink: "Ver todas en Google",
+
     ctaKicker: "¿Listo para empezar?",
     ctaTitle: "Construyamos el espacio",
     ctaTitleEm: "que tienes en mente",
@@ -437,6 +445,13 @@ export const PROCESS = [
   { n: "05", titleKey: "w5Title", descKey: "w5Desc" },
   { n: "06", titleKey: "w6Title", descKey: "w6Desc" },
 ] as const;
+
+/**
+ * Enlace de respaldo al perfil de Google. Si la Places API devuelve
+ * `googleMapsUri` se usa ese, que apunta a la ficha exacta.
+ */
+export const REVIEWS_URL =
+  "https://www.google.com/maps/search/RE-LUX+Construction+Miami+Gardens";
 
 export const VALUES = [
   { n: "01", titleKey: "v1Title", descKey: "v1Desc" },
