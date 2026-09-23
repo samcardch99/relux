@@ -73,6 +73,7 @@ function applyLang(next: Lang) {
   });
 
   if (openDetail !== null) renderDetail(openDetail);
+  refreshReview?.();
 
   try {
     localStorage.setItem(STORAGE_KEY, next);
@@ -303,7 +304,7 @@ type Review = {
   lang: string | null;
   name: string;
   avatar: string;
-  when: string;
+  monthsAgo: number;
 };
 
 const revRoot = document.getElementById("reviews");
@@ -314,6 +315,8 @@ const revList: Review[] = (() => {
     return [];
   }
 })();
+
+let refreshReview: (() => void) | undefined;
 
 if (revRoot && revList.length > 1) {
   const revText = document.getElementById("review-text");
@@ -328,11 +331,21 @@ if (revRoot && revList.length > 1) {
     const r = revList[revIndex];
     if (revText) {
       revText.textContent = r.text;
+      // mismo escalado por longitud que aplica Astro en el primer render
+      revText.classList.remove("is-l", "is-xl");
+      if (r.text.length > 460) revText.classList.add("is-xl");
+      else if (r.text.length > 260) revText.classList.add("is-l");
       if (r.lang) revText.setAttribute("lang", r.lang);
       else revText.removeAttribute("lang");
     }
     if (revName) revName.textContent = r.name;
-    if (revWhen) revWhen.textContent = r.when;
+    if (revWhen) {
+      const c = COPY[lang] as unknown as Record<string, string>;
+      revWhen.textContent =
+        r.monthsAgo === 1
+          ? c.revAgo1
+          : c.revAgo.replace("{n}", String(r.monthsAgo));
+    }
     if (revNum) revNum.textContent = String(revIndex + 1).padStart(2, "0");
     if (revAvatar instanceof HTMLImageElement && r.avatar) {
       revAvatar.src = r.avatar;
@@ -343,6 +356,8 @@ if (revRoot && revList.length > 1) {
     revIndex = (revIndex + delta + revList.length) % revList.length;
     renderReview();
   };
+
+  refreshReview = renderReview;
 
   document
     .getElementById("review-prev")

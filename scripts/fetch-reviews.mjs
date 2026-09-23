@@ -10,10 +10,11 @@
  *
  *   GOOGLE_PLACES_API_KEY=...  GOOGLE_PLACE_ID=...  node scripts/fetch-reviews.mjs
  *
- * Sin credenciales no rompe el build: deja el fichero vacio y la seccion no se
- * renderiza. Preferible a publicar reseñas inventadas.
+ * Sin credenciales NO borra lo que haya: si el fichero ya trae reseñas (por
+ * ejemplo la instantanea manual que esta versionada) las respeta. Solo escribe
+ * el fichero vacio cuando no hay nada, para que el build no falle.
  */
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
 const SALIDA = "src/data/reviews.json";
@@ -24,9 +25,17 @@ const vacio = { rating: null, total: 0, mapsUrl: null, reviews: [], fetchedAt: n
 
 async function main() {
   if (!KEY || !PLACE_ID) {
+    const actual = await leerActual();
+    if (actual?.reviews?.length) {
+      console.log(
+        `[reviews] Sin credenciales: se conserva la instantanea de ${SALIDA} ` +
+          `(${actual.reviews.length} reseñas, ${actual.source ?? "origen sin marcar"}).`,
+      );
+      return;
+    }
     console.warn(
-      "[reviews] Sin GOOGLE_PLACES_API_KEY o GOOGLE_PLACE_ID: se deja " +
-        "reviews.json vacio y la seccion no se muestra.",
+      "[reviews] Sin GOOGLE_PLACES_API_KEY ni instantanea previa: " +
+        "reviews.json queda vacio y la seccion no se muestra.",
     );
     return escribir(vacio);
   }
@@ -61,6 +70,14 @@ async function main() {
     reviews: reviews.filter((r) => r.text && r.name),
     fetchedAt: new Date().toISOString(),
   });
+}
+
+async function leerActual() {
+  try {
+    return JSON.parse(await readFile(SALIDA, "utf8"));
+  } catch {
+    return null;
+  }
 }
 
 async function escribir(payload) {

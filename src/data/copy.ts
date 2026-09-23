@@ -152,6 +152,8 @@ export const COPY = {
 
     revKicker: "Client reviews",
     revBasis: "Average rating across {n} Google reviews.",
+    revAgo: "{n} months ago",
+    revAgo1: "a month ago",
     revLink: "All Google reviews",
 
     ctaKicker: "Ready to start?",
@@ -338,6 +340,8 @@ export const COPY = {
 
     revKicker: "Reseñas de clientes",
     revBasis: "Valoración media de {n} reseñas en Google.",
+    revAgo: "hace {n} meses",
+    revAgo1: "hace un mes",
     revLink: "Ver todas en Google",
 
     ctaKicker: "¿Listo para empezar?",

@@ -1,7 +1,66 @@
 {
-  "rating": null,
-  "total": 0,
-  "mapsUrl": null,
-  "reviews": [],
-  "fetchedAt": null
+  "source": "google-maps-manual",
+  "note": "Instantanea tomada a mano de la ficha de Google el 2026-09-23, orden 'Mas relevantes'. Textos LITERALES, sin editar. Si se configura GOOGLE_PLACES_API_KEY el build la sustituye por datos frescos de la API.",
+  "place": "Re-Lux Construction",
+  "rating": 5.0,
+  "total": 52,
+  "mapsUrl": "https://www.google.com/maps/place/Re-Lux+Construction/@25.9190251,-80.2906796,17z/data=!4m8!3m7!1s0x88d9a5cc432b7025:0xad4fc3b60040d268!9m1!1b1!16s%2Fg%2F11yqr0d2m7",
+  "fetchedAt": "2026-09-23",
+  "reviews": [
+    {
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2twYU0xTXRiV0pLYUhvMmFtZFdaRFp0U1ZGcE1rRRAB",
+      "name": "Arianna Falcon",
+      "stars": 5,
+      "monthsAgo": 3,
+      "lang": "es",
+      "localGuide": false,
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocI08y-HZn8NcfC-OE29VZ7ulmsnmeMQD0T4ZkU_PFQaVVMXtQ=w72-h72-p-rp-mo-br100",
+      "profile": "https://www.google.com/maps/contrib/116484741435379563590/reviews",
+      "text": "Quiero agradecerles por el excelente trabajo que realizaron en nuestra casa. Desde el primer día demostraron profesionalismo, responsabilidad y atención a cada detalle. Estamos muy felices con el resultado final y con la calidad de su trabajo.\n\nSiempre fueron puntuales, respetuosos y estuvieron dispuestos a responder nuestras preguntas y asegurarse de que todo quedara perfecto. Sin duda los recomendaría a cualquier persona que esté buscando un servicio confiable y de calidad.\n\n¡Muchas gracias por ayudarnos a hacer de nuestra casa un hogar aún más hermoso!"
+    },
+    {
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT2xkb1oySmFTVzExZGt4V1psVjVVVEZCVGtZME1rRRAB",
+      "name": "Yomarly Felipe",
+      "stars": 5,
+      "monthsAgo": 8,
+      "lang": "es",
+      "localGuide": false,
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLQ6Tv_TGH9bXwp-_K1EacEGYgLt87mw6OCh0RzEnZuZPajig=w72-h72-p-rp-mo-br100",
+      "profile": "https://www.google.com/maps/contrib/105308147441257480176/reviews",
+      "text": "Estoy sumamente feliz y agradecida con el trabajo realizado. Mi cocina quedó hermosa, moderna y exactamente como la soñaba. Desde el inicio fueron muy profesionales, atentos a cada detalle y siempre dispuestos a escuchar lo que yo quería. La calidad de los materiales, el acabado y el diseño superaron mis expectativas. Los recomiendo 100% a cualquiera que esté buscando una compañía responsable, con buen gusto y que realmente se preocupe por dejar al cliente satisfecho. Gracias por hacer mi cocina un espacio tan especial!!!"
+    },
+    {
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT25kSldrbE1XbmRVVFdablVGTXRhRTgyYmt4dU5rRRAB",
+      "name": "Linet Hernández Marrero",
+      "stars": 5,
+      "monthsAgo": 7,
+      "lang": "es",
+      "localGuide": true,
+      "avatar": "https://lh3.googleusercontent.com/a-/ALV-UjVcCF1WBTP1aSeZuE1Xyhcq72RpnQft8l6izUJ0jIV-pdD_OVU=w72-h72-p-rp-mo-ba12-br100",
+      "profile": "https://www.google.com/maps/contrib/112108261312057607907/reviews",
+      "text": "Estoy súper feliz con el trabajo que hicieron en mi cocina nueva. Desde el primer día fueron muy profesionales, puntuales y atentos a cada detalle. Escucharon exactamente lo que yo quería y lo convirtieron en una realidad incluso mejor de lo que imaginaba.\n\nLa calidad de los materiales y los acabados es excelente, todo quedó limpio, bien instalado y con un diseño hermoso y funcional. Además, la comunicación durante todo el proceso fue clara y respetuosa.\n\nLos recomiendo totalmente a cualquiera que quiera renovar su cocina con un equipo responsable y comprometido. ¡Gracias por transformar uno de los espacios más importantes de mi casa!"
+    },
+    {
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT21wbVFqQlFXVkZ4UldkelQweGlXR3RLTmpsTFkwRRAB",
+      "name": "Rolando Pérez González",
+      "stars": 5,
+      "monthsAgo": 8,
+      "lang": "es",
+      "localGuide": true,
+      "avatar": "https://lh3.googleusercontent.com/a-/ALV-UjX36hNCup9kjrgM0yriY8vAhJiaprw2CvymL-jbAG1Rts1HML6UOA=w72-h72-p-rp-mo-ba12-br100",
+      "profile": "https://www.google.com/maps/contrib/103009190604245735438/reviews",
+      "text": "El mejor servicio con excelentes precios.. Calidad al máximo nivel. No existen muchos lugares como este, donde te tratan como familia y atienden a todas las llamadas. Me llevo la mejor de las experiencias con su trabajo esmerado y profesional. Gracias y sigan así siempre. Los mejores 💪😁✌️"
+    },
+    {
+      "id": "Ci9DQUlRQUNvZENodHljRjlvT25ORk5HbG5aalV6ZVhoSVZ6RkJUekZzZFd0c1RWRRAB",
+      "name": "ayrovis guadarramas",
+      "stars": 5,
+      "monthsAgo": 9,
+      "lang": "es",
+      "localGuide": true,
+      "avatar": "https://lh3.googleusercontent.com/a-/ALV-UjUb5K2qFng7Q8fzJCL8Pbwt0ksoh4JjOKQJen4gX3OYCF14e12y=w72-h72-p-rp-mo-ba12-br100",
+      "profile": "https://www.google.com/maps/contrib/104725078842146027699/reviews",
+      "text": "Sin duda los mejor gracias por tan hermoso trabajo aqui les muestro enantes y el despues"
+    }
+  ]
 }
