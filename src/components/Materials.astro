@@ -1,8 +1,21 @@
 ---
 import { COPY, IMG } from "../data/copy";
-import { MAT_ORDER, MATERIALS, REGIONS } from "../data/materials";
+import { MATERIALS, regionsFor, type Scene } from "../data/materials";
 
 const en = COPY.en as unknown as Record<string, string>;
+
+/* Both scenes are in the markup; CSS shows the kitchen above 720px and the
+   bathroom below, and the script reads the same breakpoint. */
+const scenes: { scene: Scene; img: string }[] = [
+  { scene: "kitchen", img: IMG.materialKitchen },
+  { scene: "bath", img: IMG.materialBath },
+];
+
+const tab = (key: "glass" | "floor") => ({
+  key,
+  n: MATERIALS[key].index,
+  label: MATERIALS[key].labelKey,
+});
 ---
 
 <section class="materials" id="materials">
@@ -11,39 +24,48 @@ const en = COPY.en as unknown as Record<string, string>;
       <span data-i18n="matTitle">THE</span><br />
       <em data-i18n="matTitleEm">MATERIALS</em>
     </h2>
-    <p class="sec-head__intro" data-i18n="matIntro">{en.matIntro}</p>
+    <p class="sec-head__intro">
+      <span class="only-wide" data-i18n="matIntro">{en.matIntro}</span>
+      <span class="only-phone" data-i18n="matIntroBath">{en.matIntroBath}</span>
+    </p>
   </div>
 
   <div class="materials__body">
     <div class="materials__main">
       <div class="mat-stage" id="mat-stage">
-        <img
-          class="mat-stage__base"
-          src={IMG.materialKitchen}
-          alt="A RE-LUX kitchen, used to identify each material"
-          draggable="false"
-        />
+        <picture>
+          <source media="(max-width: 720px)" srcset={IMG.materialBath} />
+          <img
+            class="mat-stage__base"
+            src={IMG.materialKitchen}
+            alt="A RE-LUX interior, used to identify each material"
+            draggable="false"
+          />
+        </picture>
         <div class="mat-stage__veil"></div>
 
         {
           /* One clipped copy of the render per polygon. Hidden until its
              material is active, then lifted and lit in place. */
-          REGIONS.map((r) => (
-            <div
-              class="mat-region"
-              data-mat-wrap={r.mat}
-              data-lift={r.lift ? "" : null}
-              style={`transform-origin:${r.origin}`}
-            >
+          scenes.map(({ scene, img }) =>
+            regionsFor(scene).map((r) => (
               <div
-                class="mat-region__clip"
-                data-mat={r.mat}
-                style={`clip-path:polygon(${r.clipPath})`}
+                class="mat-region"
+                data-scene={scene}
+                data-mat-wrap={r.mat}
+                data-lift={r.lift ? "" : null}
+                style={`transform-origin:${r.origin}`}
               >
-                <img src={IMG.materialKitchen} alt="" draggable="false" />
+                <div
+                  class="mat-region__clip"
+                  data-mat={r.mat}
+                  style={`clip-path:polygon(${r.clipPath})`}
+                >
+                  <img src={img} alt="" draggable="false" loading="lazy" />
+                </div>
               </div>
-            </div>
-          ))
+            ))
+          )
         }
 
         <div class="mat-cursor" id="mat-cursor" aria-hidden="true">
@@ -53,12 +75,33 @@ const en = COPY.en as unknown as Record<string, string>;
       </div>
 
       <div class="mat-tabs">
+        <div class="mat-tabs__group">
+          <button type="button" class="mat-tab" data-mat-btn="wood" data-mat-group="wood">
+            <span class="mat-tab__n">01</span>
+            <span class="mat-tab__label" data-i18n="matWood">{en.matWood}</span>
+          </button>
+          {/* Walnut and cashmere are both wood; phones only have walnut */}
+          <span class="mat-tabs__subs">
+            <button type="button" class="mat-sub" data-mat-btn="wood" data-i18n="matWalnut">
+              {en.matWalnut}
+            </button>
+            <span class="mat-tabs__dot" aria-hidden="true">·</span>
+            <button type="button" class="mat-sub" data-mat-btn="cashmere" data-i18n="matCashmere">
+              {en.matCashmere}
+            </button>
+          </span>
+        </div>
+        <button type="button" class="mat-tab" data-mat-btn="onyx">
+          <span class="mat-tab__n">02</span>
+          <span class="mat-tab__label only-wide" data-i18n="matOnyx">{en.matOnyx}</span>
+          <span class="mat-tab__label only-phone" data-i18n="matMarble">{en.matMarble}</span>
+        </button>
         {
-          MAT_ORDER.map((key) => (
-            <button type="button" class="mat-tab" data-mat-btn={key}>
-              <span class="mat-tab__n">{MATERIALS[key].index}</span>
-              <span class="mat-tab__label" data-i18n={MATERIALS[key].labelKey}>
-                {en[MATERIALS[key].labelKey]}
+          [tab("glass"), tab("floor")].map((t) => (
+            <button type="button" class="mat-tab" data-mat-btn={t.key}>
+              <span class="mat-tab__n">{t.n}</span>
+              <span class="mat-tab__label" data-i18n={t.label}>
+                {en[t.label]}
               </span>
             </button>
           ))
@@ -68,12 +111,14 @@ const en = COPY.en as unknown as Record<string, string>;
 
     <aside class="mat-panel">
       <div class="mat-panel__block" id="mat-active" hidden>
-        <span class="mat-panel__index"><span id="mat-index">01</span> / 05</span>
+        <span class="mat-panel__index"><span id="mat-index">01</span> / 04</span>
         <div class="mat-panel__head">
           <h3 class="mat-panel__name" id="mat-name"></h3>
           <span class="mat-panel__cat" id="mat-category"></span>
         </div>
-        <div class="mat-panel__swatch" id="mat-swatch"></div>
+        <div class="mat-panel__swatch">
+          <img id="mat-swatch" alt="" />
+        </div>
         <dl class="mat-panel__specs">
           <div>
             <dt data-i18n="matFinish">Finish</dt>
@@ -88,7 +133,7 @@ const en = COPY.en as unknown as Record<string, string>;
       </div>
 
       <div class="mat-panel__block mat-panel__block--idle" id="mat-idle">
-        <span class="mat-panel__index">— / 05</span>
+        <span class="mat-panel__index">— / 04</span>
         <h3 class="mat-panel__idle-title" data-i18n="matIdleTitle">
           {en.matIdleTitle}
         </h3>
@@ -264,9 +309,52 @@ const en = COPY.en as unknown as Record<string, string>;
     letter-spacing: 0.24em;
     text-transform: uppercase;
   }
-  .mat-tab.is-on {
+  .mat-tab.is-on,
+  .mat-sub.is-on {
     color: var(--color-cream);
     border-bottom-color: var(--color-cream);
+  }
+
+  /* "Wood" plus its two sub-options, walnut · cashmere */
+  .mat-tabs__group {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .mat-tabs__subs {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-left: 14px;
+    border-left: 1px solid rgb(239 226 196 / 0.18);
+  }
+  .mat-tabs__dot {
+    font-size: 10px;
+    color: rgb(239 226 196 / 0.3);
+  }
+  .mat-sub {
+    display: flex;
+    align-items: baseline;
+    padding: 6px 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgb(239 226 196 / 0.62);
+    transition:
+      color 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  /* ── Scene switch: kitchen above 720px, bathroom below ── */
+  .only-phone,
+  .mat-region[data-scene="bath"] {
+    display: none;
   }
 
   /* ── Panel ── */
@@ -314,12 +402,20 @@ const en = COPY.en as unknown as Record<string, string>;
     color: var(--color-stone);
   }
 
-  /* background image/size/position are set per material by the script */
+  /* A photographed sample per material; the script sets the src */
   .mat-panel__swatch {
+    position: relative;
     width: 100%;
     height: 120px;
+    overflow: hidden;
     background-color: var(--color-ink-3);
-    background-repeat: no-repeat;
+  }
+  .mat-panel__swatch img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .mat-panel__specs {
@@ -362,20 +458,39 @@ const en = COPY.en as unknown as Record<string, string>;
     color: var(--color-cream);
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1080px) {
     .materials__body {
       grid-template-columns: minmax(0, 1fr);
-      gap: 36px;
+      gap: 40px;
     }
     .mat-panel {
       min-height: 0;
     }
   }
+
+  @media (max-width: 720px) {
+    .materials {
+      padding-top: 80px;
+    }
+    .mat-stage {
+      aspect-ratio: 8 / 9;
+    }
+    .only-wide,
+    .mat-region[data-scene="kitchen"],
+    .mat-tabs__subs {
+      display: none;
+    }
+    .only-phone {
+      display: inline;
+    }
+    .mat-region[data-scene="bath"] {
+      display: block;
+    }
+  }
 </style>
 
 <script>
-  import { MATERIALS, swatchCrop, type MaterialKey } from "../data/materials";
-  import { IMG } from "../data/copy";
+  import { SCENES, type MaterialKey, type Scene } from "../data/materials";
 
   const stageEl = document.getElementById("mat-stage");
   const cursorEl = document.getElementById("mat-cursor");
@@ -388,9 +503,15 @@ const en = COPY.en as unknown as Record<string, string>;
     const active = activeEl;
     const idle = idleEl;
 
-    const regions = [...stage.querySelectorAll<HTMLElement>("[data-mat-wrap]")];
+    const allRegions = [...stage.querySelectorAll<HTMLElement>("[data-mat-wrap]")];
     const tabs = [...document.querySelectorAll<HTMLElement>("[data-mat-btn]")];
     const field = (id: string) => document.getElementById(id);
+
+    /** Same breakpoint the CSS uses to swap the kitchen for the bathroom. */
+    const phone = window.matchMedia("(max-width: 720px)");
+    const scene = (): Scene => (phone.matches ? "bath" : "kitchen");
+    const mats = () => SCENES[scene()].mats;
+    let regions = allRegions.filter((r) => r.dataset.scene === scene());
 
     let current: MaterialKey | null = null;
     let pinned = false;
@@ -409,7 +530,8 @@ const en = COPY.en as unknown as Record<string, string>;
     };
 
     const fill = (key: MaterialKey) => {
-      const m = MATERIALS[key];
+      const m = mats()[key];
+      if (!m) return;
       const c = m[lang()] ?? m.en;
       const set = (id: string, v: string) => {
         const el = field(id);
@@ -422,32 +544,83 @@ const en = COPY.en as unknown as Record<string, string>;
       set("mat-application", c.application);
       set("mat-description", c.description);
 
-      const swatch = field("mat-swatch");
-      if (swatch) {
-        const crop = swatchCrop(m.sample);
-        swatch.style.backgroundImage = `url(${IMG.materialKitchen})`;
-        swatch.style.backgroundSize = crop.size;
-        swatch.style.backgroundPosition = crop.position;
-      }
+      const swatch = field("mat-swatch") as HTMLImageElement | null;
+      if (swatch && swatch.getAttribute("src") !== m.swatch) swatch.src = m.swatch;
     };
 
     const setMat = (key: MaterialKey | null) => {
+      if (key && !mats()[key]) key = null;
       if (key === current) return;
       current = key;
+
+      const group = key ? (mats()[key]?.group ?? key) : null;
 
       stage.classList.toggle("is-active", !!key);
       regions.forEach((r) =>
         r.classList.toggle("is-on", r.getAttribute("data-mat-wrap") === key)
       );
-      tabs.forEach((t) =>
-        t.classList.toggle("is-on", t.getAttribute("data-mat-btn") === key)
-      );
+      // The "Wood" tab stays lit for either of its sub-options
+      tabs.forEach((t) => {
+        const g = t.getAttribute("data-mat-group");
+        t.classList.toggle(
+          "is-on",
+          g ? g === group : t.getAttribute("data-mat-btn") === key
+        );
+      });
 
       if (key) fill(key);
       active.hidden = !key;
       idle.hidden = !!key;
       if (!key) cursor.style.opacity = "0";
     };
+
+    /* ── Phone demo: once, when the stage comes into view, step through the
+       materials so it is obvious the render can be tapped. Any touch on the
+       stage or the tabs stops it for good. ── */
+    let demoDone = false;
+    let touched = false;
+    let demoTimer = 0;
+
+    const stopDemo = () => {
+      touched = true;
+      clearTimeout(demoTimer);
+    };
+
+    const startDemo = () => {
+      if (demoDone || touched || !phone.matches) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      demoDone = true;
+      const seq: MaterialKey[] = ["wood", "onyx", "glass", "floor", "wood"];
+      let i = 0;
+      const step = () => {
+        if (touched) return;
+        setMat(seq[i++]);
+        if (i < seq.length) demoTimer = window.setTimeout(step, 1800);
+        else pinned = true;
+      };
+      demoTimer = window.setTimeout(step, 350);
+    };
+
+    stage.addEventListener("touchstart", stopDemo, { passive: true });
+    stage.addEventListener("pointerdown", stopDemo);
+    tabs.forEach((t) => t.addEventListener("pointerdown", stopDemo));
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting && e.intersectionRatio > 0.5))
+            startDemo();
+        },
+        { threshold: [0.5] }
+      ).observe(stage);
+    }
+
+    phone.addEventListener("change", () => {
+      pinned = false;
+      setMat(null);
+      regions.forEach((r) => r.classList.remove("is-on"));
+      regions = allRegions.filter((r) => r.dataset.scene === scene());
+    });
 
     stage.addEventListener("mouseover", (e) => {
       const k = keyAt(e.target);

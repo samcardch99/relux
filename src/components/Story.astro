@@ -135,12 +135,23 @@ import ArrowUpRight from "./icons/ArrowUpRight.astro";
     align-self: flex-start;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1080px) {
     .story {
       grid-template-columns: minmax(0, 1fr);
     }
     .story__figure {
-      padding-bottom: 0;
+      padding: 64px 32px 0;
+    }
+    .story__body {
+      padding: 72px 32px;
+    }
+  }
+  @media (max-width: 720px) {
+    .story__figure {
+      padding: 56px 20px 0;
+    }
+    .story__body {
+      padding: 56px 20px;
     }
   }
 </style>

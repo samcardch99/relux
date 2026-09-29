@@ -41,7 +41,11 @@ export const COPY = {
     matTitleEm: "MATERIALS",
     matIntro:
       "Every surface in a RE-LUX kitchen is specified with the client. Move across the render to see what each one is made of.",
+    matIntroBath:
+      "Every surface in a RE-LUX project is specified with the client. Tap the render to see what each one is made of.",
     matWood: "Wood",
+    matWalnut: "Walnut",
+    matMarble: "Marble",
     matOnyx: "Onyx",
     matCashmere: "Cashmere",
     matGlass: "Glass",
@@ -61,7 +65,7 @@ export const COPY = {
     cardOpen: "View project",
 
     p1Tag: "Kitchens",
-    p1Title: "Walnut kitchen with backlit onyx",
+    p1Title: "Liz Kitchen",
     p2Tag: "Closets",
     p2Title: "Walk-in closet in glass and wood",
     p3Tag: "Bathrooms",
@@ -156,6 +160,14 @@ export const COPY = {
     revAgo1: "a month ago",
     revLink: "All Google reviews",
 
+    baTitle: "Before & After",
+    baHint: "Drag to compare",
+    baBefore: "Before",
+    baAfter: "After",
+    dragHint: "Drag to light up",
+    menuOpen: "Menu",
+    menuClose: "Close",
+
     ctaKicker: "Ready to start?",
     ctaTitle: "Let's build the space",
     ctaTitleEm: "you've been picturing",
@@ -228,7 +240,11 @@ export const COPY = {
     matTitleEm: "MATERIALES",
     matIntro:
       "Cada superficie de una cocina RE-LUX se especifica junto al cliente. Recorre el render para ver de qu\u00e9 est\u00e1 hecha cada una.",
+    matIntroBath:
+      "Cada superficie de un proyecto RE-LUX se especifica junto al cliente. Toca el render para ver de qu\u00e9 est\u00e1 hecha cada una.",
     matWood: "Madera",
+    matWalnut: "Nogal",
+    matMarble: "M\u00e1rmol",
     matOnyx: "\u00d3nix",
     matCashmere: "Cashmere",
     matGlass: "Cristal",
@@ -248,7 +264,7 @@ export const COPY = {
     cardOpen: "Ver proyecto",
 
     p1Tag: "Cocinas",
-    p1Title: "Cocina en nogal con ónix retroiluminado",
+    p1Title: "Liz Kitchen",
     p2Tag: "Closets",
     p2Title: "Walk-in closet en cristal y madera",
     p3Tag: "Baños",
@@ -344,6 +360,14 @@ export const COPY = {
     revAgo1: "hace un mes",
     revLink: "Ver todas en Google",
 
+    baTitle: "Antes y Después",
+    baHint: "Arrastra para comparar",
+    baBefore: "Antes",
+    baAfter: "Después",
+    dragHint: "Arrastra para iluminar",
+    menuOpen: "Menú",
+    menuClose: "Cerrar",
+
     ctaKicker: "¿Listo para empezar?",
     ctaTitle: "Construyamos el espacio",
     ctaTitleEm: "que tienes en mente",
@@ -405,6 +429,8 @@ export const INSTAGRAM = {
  */
 const IMG = {
   kitchenOnyx: "/assets/kitchen-onyx.webp",
+  /** "Liz Kitchen", the first project: hero plus five detail shots. */
+  liz: [1, 2, 3, 4, 5, 6].map((n) => `/assets/liz-${n}.webp`),
   closet: "/assets/closet.webp",
   bath: "/assets/bath.webp",
   kitchenDining: "/assets/kitchen-dining.webp",
@@ -412,6 +438,8 @@ const IMG = {
   kitchenDark: "/assets/kitchen-dark.webp",
   interiorEmpty: "/assets/interior-empty.webp",
   materialKitchen: "/assets/material-kitchen.webp",
+  /** Portrait render the Materials section swaps to on phones. */
+  materialBath: "/assets/material-bath.webp",
 
   proj4: "/assets/proj-4.webp",
   proj6: "/assets/proj-6.webp",
@@ -465,7 +493,7 @@ export const VALUES = [
 
 /** The nine projects. The first six also appear in the homepage grid. */
 export const PROJECTS = [
-  { i: 0, tagKey: "p1Tag", titleKey: "p1Title", img: IMG.kitchenOnyx },
+  { i: 0, tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[0] },
   { i: 1, tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet },
   { i: 2, tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath },
   { i: 3, tagKey: "p4Tag", titleKey: "p4Title", img: IMG.proj4 },
@@ -476,9 +504,13 @@ export const PROJECTS = [
   { i: 8, tagKey: "p9Tag", titleKey: "p9Title", img: IMG.closet },
 ] as const;
 
-/** Hero + the two secondary shots shown inside each project detail view. */
-export const SHOTS = [
-  { hero: IMG.kitchenOnyx, shots: [IMG.kitchenDining, IMG.kitchenWood] },
+/**
+ * Hero + the secondary shots shown inside each project detail view. `before`
+ * turns on the before/after slider; the design has the slot for Liz Kitchen
+ * but no photo in it yet, so no project sets it.
+ */
+export const SHOTS: { hero: string; shots: string[]; before?: string }[] = [
+  { hero: IMG.liz[0], shots: IMG.liz.slice(1) },
   { hero: IMG.closet, shots: [IMG.kitchenDark, IMG.bath] },
   { hero: IMG.bath, shots: [IMG.closet, IMG.kitchenDark] },
   { hero: IMG.proj4, shots: [IMG.kitchenOnyx, IMG.kitchenWood] },
@@ -487,7 +519,7 @@ export const SHOTS = [
   { hero: IMG.interiorEmpty, shots: [IMG.kitchenWood, IMG.closet] },
   { hero: IMG.kitchenDining, shots: [IMG.kitchenWood, IMG.kitchenDark] },
   { hero: IMG.closet, shots: [IMG.interiorEmpty, IMG.kitchenWood] },
-] as const;
+];
 
 type DetailEntry = {
   summary: string;
@@ -500,15 +532,18 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
   en: [
     {
       summary:
-        "A walnut kitchen built around a single backlit onyx panel, with the island and hood drawn as one continuous line.",
+        "A family kitchen in Miami built around a walnut wall, a quartzite waterfall island and a run of glass display cabinets over a strip window to the garden.",
       paras: [
-        "The client wanted the stone to be the only ornament in the room, so every cabinet front was kept flat and handleless and the lighting was buried in the millwork.",
-        "Countertops, backsplash and island end panel come from the same slab, cut and bookmatched in our shop before installation.",
+        "The full left wall is floor-to-ceiling walnut, with the double oven and the refrigerator set flush into the same panel rhythm so the appliances read as part of the joinery.",
+        "Taj Mahal quartzite runs up the backsplash and down both ends of the island. The island and base cabinets are finished in a soft cashmere tone, and a long horizontal window under the glass cabinets brings the garden into the room.",
       ],
-      meta: [["Scope", "Full kitchen"], ["Materials", "Walnut, backlit onyx"], ["Duration", "7 weeks"]],
+      meta: [["Scope", "Full kitchen"], ["Materials", "Walnut, Taj Mahal quartzite, cashmere lacquer"], ["Location", "Miami, FL"]],
       captions: [
-        "The island seats three without breaking the run of the counter.",
-        "Warm strip lighting runs behind every open shelf.",
+        "Walnut tall wall with the double oven and refrigerator set flush.",
+        "Cashmere base cabinets under the quartzite counter, with the strip window to the garden.",
+        "The island from the side, with the quartzite waterfall and the alabaster pendant.",
+        "Same view in evening light, with the ceiling cove and cabinet lighting on.",
+        "Detail of the island, the glass cabinets and the backlit shelving.",
       ],
     },
     {
@@ -619,15 +654,18 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
   es: [
     {
       summary:
-        "Una cocina en nogal construida alrededor de un solo panel de ónix retroiluminado, con la isla y la campana dibujadas como una línea continua.",
+        "Una cocina familiar en Miami construida alrededor de una pared de nogal, una isla en cascada de cuarcita y una fila de vitrinas de cristal sobre una ventana corrida al jardín.",
       paras: [
-        "El cliente quería que la piedra fuera el único ornamento del espacio, así que todos los frentes se dejaron planos y sin tiradores, y la iluminación se ocultó dentro de la carpintería.",
-        "Encimeras, salpicadero y el lateral de la isla salen de la misma plancha, cortada y espejada en nuestro taller antes de instalarla.",
+        "Toda la pared izquierda es nogal de piso a techo, con el horno doble y el refrigerador empotrados en el mismo ritmo de paneles para que los electrodomésticos se lean como parte de la carpintería.",
+        "La cuarcita Taj Mahal sube por el salpicadero y baja por ambos extremos de la isla. La isla y los muebles bajos van en un tono cashmere suave, y una ventana horizontal bajo las vitrinas trae el jardín a la cocina.",
       ],
-      meta: [["Alcance", "Cocina completa"], ["Materiales", "Nogal, ónix retroiluminado"], ["Duración", "7 semanas"]],
+      meta: [["Alcance", "Cocina completa"], ["Materiales", "Nogal, cuarcita Taj Mahal, laca cashmere"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "La isla sienta a tres personas sin romper la línea de la encimera.",
-        "Una tira de luz cálida recorre cada estante abierto.",
+        "Pared alta de nogal con el horno doble y el refrigerador empotrados.",
+        "Muebles bajos cashmere bajo la encimera de cuarcita, con la ventana corrida al jardín.",
+        "La isla de lado, con la cascada de cuarcita y la lámpara de alabastro.",
+        "La misma vista con luz de tarde, con la moldura del techo y las vitrinas encendidas.",
+        "Detalle de la isla, las vitrinas de cristal y los estantes retroiluminados.",
       ],
     },
     {

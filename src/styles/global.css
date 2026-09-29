@@ -3,9 +3,9 @@
 /* ──────────────────────────────────────────────────────────────
    RE-LUX brand tokens
    Palette and type scale transcribed from the Claude Design file
-   "Relux Web". Desktop sizes are the design's own px values,
-   anchored to a 1440px canvas and expressed as clamp() so the
-   page holds up from phone to 4K.
+   "Relux Web". Desktop sizes are the design's own px values on a
+   1512px canvas; the tablet (≤1080px) and phone (≤720px) overrides
+   at the bottom are the design's responsive spec.
    ────────────────────────────────────────────────────────────── */
 @theme {
   --color-ink: #060505;
@@ -371,23 +371,43 @@ img[data-failed] {
   color: rgb(239 226 196 / 0.6);
 }
 
-@media (max-width: 860px) {
+/* The design has no small-screen spec; shrink the fixed header below the
+   width where the nav collapses into the burger. */
+/* The design's logo slot drops to 180×74 on tablet and 140×58 on phones,
+   which puts the mark (0.6 of the slot width, see --logo-w) at 107 and 83px. */
+@media (max-width: 1080px) {
+  :root {
+    --header-h: 94px;
+    --logo-w: 107px;
+    --gutter: 32px;
+    --fs-hero: 52px;
+    --fs-h2-lg: 40px;
+    --fs-h2: 40px;
+  }
+  .sec-head {
+    gap: 32px;
+  }
+}
+@media (max-width: 720px) {
+  :root {
+    --header-h: 74px;
+    --logo-w: 83px;
+    --gutter: 20px;
+    --fs-hero: 40px;
+    --fs-h2-lg: 32px;
+    --fs-h2: 32px;
+    --fs-h2-sm: 28px;
+  }
   .sec-head {
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+    gap: 18px;
   }
   .sec-head__intro {
     justify-self: start;
     margin-bottom: 0;
   }
-}
-
-/* The design has no small-screen spec; shrink the fixed header below the
-   width where the nav collapses into the burger. */
-@media (max-width: 1080px) {
-  :root {
-    --header-h: 84px;
-    --logo-w: 124px;
+  .view__foot {
+    padding-bottom: 80px;
   }
 }
 

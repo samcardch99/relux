@@ -1,9 +1,12 @@
 /**
- * The Materials section — an interactive breakdown of the kitchen render.
+ * The Materials section — an interactive breakdown of a render.
  *
- * Transcribed from the Claude Design file. The mask polygons are authored
- * against a 2576×1449 canvas and converted to percentages here, so they track
- * the image at any rendered size. Coordinates and copy are the design's own.
+ * Transcribed from the Claude Design file. Two scenes: the landscape kitchen
+ * on desktop and tablet, and a portrait bathroom that replaces it on phones
+ * (≤720px), where a 16:9 image is too small to tap. Each scene's mask polygons
+ * are authored against its own canvas and converted to percentages here, so
+ * they track the image at any rendered size. Coordinates and copy are the
+ * design's own.
  */
 
 export type MaterialKey = "wood" | "onyx" | "cashmere" | "glass" | "floor";
@@ -18,8 +21,10 @@ export type MaterialCopy = {
 
 type Material = {
   index: string;
-  /** Point on the image (0–1) the swatch crop is taken from. */
-  sample: [number, number];
+  /** Tab group it lights: cashmere is a sub-option under "Wood". */
+  group?: MaterialKey;
+  /** Photographed sample shown in the spec panel. */
+  swatch: string;
   /** i18n key for the tab label. */
   labelKey: string;
   /** The floor is not lifted — scaling a full-width plane looks wrong. */
@@ -29,7 +34,7 @@ type Material = {
   mask: [number, number][][];
 };
 
-/** The canvas the mask coordinates were authored against. */
+/** The canvas the kitchen mask coordinates were authored against. */
 const MAT_REF = { w: 2576, h: 1449 };
 
 export const MAT_ORDER: MaterialKey[] = ["wood", "onyx", "cashmere", "glass", "floor"];
@@ -37,19 +42,20 @@ export const MAT_ORDER: MaterialKey[] = ["wood", "onyx", "cashmere", "glass", "f
 export const MATERIALS: Record<MaterialKey, Material> = {
   wood: {
     index: "01",
-    sample: [0.78, 0.35],
+    group: "wood",
+    swatch: "/assets/swatch-wood.webp",
     labelKey: "matWood",
     lift: true,
     en: {
       name: "Natural Walnut",
-      category: "Wood veneer",
+      category: "Wood · Walnut",
       finish: "Satin matte, open grain",
       application: "Tall cabinetry, wall panels, island front",
       description: "Book-matched walnut veneer run vertically across every panel, so the grain continues from the tall units into the wall.",
     },
     es: {
       name: "Nogal Natural",
-      category: "Chapa de madera",
+      category: "Madera · Nogal",
       finish: "Mate satinado, poro abierto",
       application: "Muebles altos, paneles de pared, frente de isla",
       description: "Chapa de nogal espejada colocada en vertical en todos los paneles, para que la veta continúe de los muebles altos a la pared.",
@@ -65,7 +71,7 @@ export const MATERIALS: Record<MaterialKey, Material> = {
   },
   onyx: {
     index: "02",
-    sample: [0.52, 0.45],
+    swatch: "/assets/swatch-onyx.webp",
     labelKey: "matOnyx",
     lift: true,
     en: {
@@ -94,31 +100,32 @@ export const MATERIALS: Record<MaterialKey, Material> = {
     ],
   },
   cashmere: {
-    index: "03",
-    sample: [0.2, 0.62],
+    index: "01",
+    group: "wood",
+    swatch: "/assets/swatch-cashmere.webp",
     labelKey: "matCashmere",
     lift: true,
     en: {
-      name: "Cashmere Lacquer",
-      category: "Lacquered cabinetry",
-      finish: "Soft-touch matte, handleless",
+      name: "Cashmere Wood",
+      category: "Wood · Cashmere",
+      finish: "Matte, cashmere tone, handleless",
       application: "Base cabinets, back wall",
-      description: "A warm greige lacquer that sits quietly under the walnut and onyx. Push-to-open fronts keep the run clean, with no hardware breaking the line.",
+      description: "Wood cabinetry finished in a warm cashmere tone that sits quietly under the walnut and onyx. Push-to-open fronts keep the run clean, with no hardware breaking the line.",
     },
     es: {
-      name: "Laca Cashmere",
-      category: "Carpintería lacada",
-      finish: "Mate soft-touch, sin tiradores",
+      name: "Madera Cashmere",
+      category: "Madera · Cashmere",
+      finish: "Mate, tono cashmere, sin tiradores",
       application: "Muebles bajos, pared del fondo",
-      description: "Una laca greige cálida que acompaña sin competir con el nogal y el ónix. Frentes con apertura push mantienen la línea limpia, sin herrajes a la vista.",
+      description: "Carpintería en madera con un tono cashmere cálido que acompaña sin competir con el nogal y el ónix. Frentes con apertura push mantienen la línea limpia, sin herrajes a la vista.",
     },
     mask: [
       [[110,820], [708,820], [708,924], [718,924], [718,1048], [548,1048], [544,940], [528,915], [522,884], [452,872], [300,874], [200,878], [110,884]],
     ],
   },
   glass: {
-    index: "04",
-    sample: [0.12, 0.25],
+    index: "03",
+    swatch: "/assets/swatch-glass.webp",
     labelKey: "matGlass",
     lift: true,
     en: {
@@ -142,8 +149,8 @@ export const MATERIALS: Record<MaterialKey, Material> = {
     ],
   },
   floor: {
-    index: "05",
-    sample: [0.8, 0.9],
+    index: "04",
+    swatch: "/assets/swatch-floor.webp",
     labelKey: "matFloor",
     lift: false,
     en: {
@@ -166,6 +173,122 @@ export const MATERIALS: Record<MaterialKey, Material> = {
   },
 };
 
+/** The canvas the bathroom mask coordinates were authored against. */
+const BATH_REF = { w: 1600, h: 1800 };
+
+export const BATH_ORDER: MaterialKey[] = ["wood", "onyx", "glass", "floor"];
+
+/** The phone scene. Its "onyx" is a marble, and the tab is relabelled to match. */
+export const BATH: Partial<Record<MaterialKey, Material>> = {
+  wood: {
+    index: "01",
+    group: "wood",
+    swatch: "/assets/swatch-bath-wood.webp",
+    labelKey: "matWood",
+    lift: true,
+    en: {
+      name: "Natural Walnut",
+      category: "Wood · Walnut",
+      finish: "Satin matte, open grain",
+      application: "Vanity, mirror wall, wall panels and canopy",
+      description: "Walnut veneer wraps the vanity, frames the mirror and climbs the wall into the ceiling canopy, with LED lines set into the joints.",
+    },
+    es: {
+      name: "Nogal Natural",
+      category: "Madera · Nogal",
+      finish: "Mate satinado, poro abierto",
+      application: "Mueble de lavabo, pared del espejo, paneles y techo",
+      description: "La chapa de nogal envuelve el mueble, enmarca el espejo y sube por la pared hasta el techo, con líneas LED integradas en las juntas.",
+    },
+    mask: [
+      [[378,380], [668,380], [668,440], [378,440]],
+      [[378,440], [410,440], [410,965], [378,965]],
+      [[640,440], [668,440], [668,965], [640,965]],
+      [[378,965], [668,965], [668,1062], [378,1062]],
+      [[114,1135], [795,1135], [795,1400], [120,1400], [120,1295], [114,1295]],
+      [[1005,212], [1505,212], [1345,328], [1345,1388], [1322,1388], [1322,1195], [1225,1195], [1225,390], [1280,390], [1280,322], [1082,322], [1082,1195], [1082,1388], [1005,1388]],
+    ],
+  },
+  onyx: {
+    index: "02",
+    swatch: "/assets/swatch-bath-onyx.webp",
+    labelKey: "matMarble",
+    lift: true,
+    en: {
+      name: "Black & Gold Marble",
+      category: "Natural stone",
+      finish: "Polished",
+      application: "Wall cladding, vanity top, lit niche",
+      description: "Dark marble with gold veining, set on both sides of the mirror and repeated inside the lit niche so the stone reads as one material across the room.",
+    },
+    es: {
+      name: "Mármol Negro y Oro",
+      category: "Piedra natural",
+      finish: "Pulido",
+      application: "Revestimiento de pared, encimera, nicho iluminado",
+      description: "Mármol oscuro con vetas doradas, colocado a ambos lados del espejo y repetido en el nicho iluminado para que la piedra se lea como un solo material.",
+    },
+    mask: [
+      [[250,380], [378,380], [378,1062], [250,1062]],
+      [[668,380], [795,380], [795,1062], [668,1062]],
+      [[110,1062], [795,1062], [795,1135], [110,1135]],
+      [[165,1400], [795,1400], [795,1445], [165,1445]],
+      [[1082,322], [1280,322], [1280,390], [1225,390], [1225,1195], [1082,1195]],
+    ],
+  },
+  glass: {
+    index: "03",
+    swatch: "/assets/swatch-bath-glass.webp",
+    labelKey: "matGlass",
+    lift: true,
+    en: {
+      name: "Smoked Glass Tower",
+      category: "Glass / metal",
+      finish: "Tinted glass, black frame",
+      application: "Floor-to-ceiling storage",
+      description: "A full-height glass cabinet with a walnut interior and strip lighting under every shelf.",
+    },
+    es: {
+      name: "Torre de Cristal Ahumado",
+      category: "Cristal / metal",
+      finish: "Cristal tintado, marco negro",
+      application: "Almacenaje de piso a techo",
+      description: "Una vitrina de altura completa con interior de nogal e iluminación bajo cada estante.",
+    },
+    mask: [[[795,205], [1005,205], [1005,1500], [795,1500]]],
+  },
+  floor: {
+    index: "04",
+    swatch: "/assets/swatch-bath-floor.webp",
+    labelKey: "matFloor",
+    lift: false,
+    en: {
+      name: "Large-format Porcelain",
+      category: "Porcelain tile",
+      finish: "Soft matte, large format",
+      application: "Bathroom floor",
+      description: "Light porcelain laid with minimal joints, so the dark wood and stone read clearly against it.",
+    },
+    es: {
+      name: "Porcelánico Gran Formato",
+      category: "Porcelánico",
+      finish: "Mate suave, gran formato",
+      application: "Piso del baño",
+      description: "Porcelánico claro con juntas mínimas, para que la madera y la piedra oscuras destaquen sobre él.",
+    },
+    mask: [
+      [[0,1590], [120,1500], [165,1450], [795,1450], [795,1500], [1005,1500], [1005,1392], [1085,1392], [1090,1480], [1320,1480], [1330,1392], [1400,1392], [1600,1560], [1600,1800], [0,1800]],
+    ],
+  },
+};
+
+export type Scene = "kitchen" | "bath";
+
+export const SCENES = {
+  kitchen: { ref: MAT_REF, mats: MATERIALS as Partial<Record<MaterialKey, Material>>, order: MAT_ORDER },
+  bath: { ref: BATH_REF, mats: BATH, order: BATH_ORDER },
+} as const;
+
 export type Region = {
   mat: MaterialKey;
   lift: boolean;
@@ -178,30 +301,19 @@ export type Region = {
 const pct = (v: number, total: number) => ((v / total) * 100).toFixed(2);
 
 /** One region per polygon, flattened in tab order. */
-export const REGIONS: Region[] = MAT_ORDER.flatMap((mat) =>
-  MATERIALS[mat].mask.map((poly) => {
-    const points = poly
-      .map(([x, y]) => `${pct(x, MAT_REF.w)}% ${pct(y, MAT_REF.h)}%`)
-      .join(", ");
-    const xs = poly.map((p) => p[0]);
-    const ys = poly.map((p) => p[1]);
-    const ox = pct((Math.min(...xs) + Math.max(...xs)) / 2, MAT_REF.w);
-    const oy = pct((Math.min(...ys) + Math.max(...ys)) / 2, MAT_REF.h);
-    return { mat, lift: MATERIALS[mat].lift, clipPath: points, origin: `${ox}% ${oy}%` };
-  })
-);
-
-/**
- * Background size/position that crops a detail of the render for the swatch,
- * zoomed 7× on the material's sample point.
- */
-export function swatchCrop(sample: [number, number]) {
-  const S = 7;
-  const Sy = (S * MAT_REF.h) / MAT_REF.w;
-  const x = ((sample[0] * S - 0.5) / (S - 1)) * 100;
-  const y = ((sample[1] * Sy - 0.5) / (Sy - 1)) * 100;
-  return {
-    size: `${S * 100}% auto`,
-    position: `${x.toFixed(2)}% ${y.toFixed(2)}%`,
-  };
+export function regionsFor(scene: Scene): Region[] {
+  const { ref, mats, order } = SCENES[scene];
+  return order.flatMap((mat) => {
+    const m = mats[mat]!;
+    return m.mask.map((poly) => {
+      const points = poly
+        .map(([x, y]) => `${pct(x, ref.w)}% ${pct(y, ref.h)}%`)
+        .join(", ");
+      const xs = poly.map((p) => p[0]);
+      const ys = poly.map((p) => p[1]);
+      const ox = pct((Math.min(...xs) + Math.max(...xs)) / 2, ref.w);
+      const oy = pct((Math.min(...ys) + Math.max(...ys)) / 2, ref.h);
+      return { mat, lift: m.lift, clipPath: points, origin: `${ox}% ${oy}%` };
+    });
+  });
 }

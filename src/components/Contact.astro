@@ -99,9 +99,18 @@ const en = COPY.en;
     color: var(--color-gold);
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1080px) {
+    .contact__inner {
+      gap: 56px;
+    }
+  }
+  @media (max-width: 720px) {
+    .contact {
+      padding-top: 80px;
+    }
     .contact__inner {
       grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
     }
   }
 </style>
@@ -173,7 +182,7 @@ const en = COPY.en;
     cursor: not-allowed;
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 720px) {
     .form__row {
       grid-template-columns: minmax(0, 1fr);
     }

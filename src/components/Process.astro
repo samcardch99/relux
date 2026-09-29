@@ -53,6 +53,19 @@ const en = COPY.en;
   .process__band {
     height: 420px;
   }
+  @media (max-width: 1080px) {
+    .process__band {
+      height: 320px;
+    }
+  }
+  @media (max-width: 720px) {
+    .process__head {
+      padding-top: 80px;
+    }
+    .process__band {
+      height: 240px;
+    }
+  }
   .process__band-scrim {
     position: absolute;
     inset: 0;
@@ -100,14 +113,12 @@ const en = COPY.en;
     color: var(--color-cream);
   }
 
-  @media (max-width: 900px) {
-    .cell-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 560px) {
+  @media (max-width: 720px) {
     .cell-grid {
       grid-template-columns: minmax(0, 1fr);
+    }
+    .cell {
+      padding: 32px 20px;
     }
   }
 </style>

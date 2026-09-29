@@ -74,6 +74,7 @@ function applyLang(next: Lang) {
 
   if (openDetail !== null) renderDetail(openDetail);
   refreshReview?.();
+  labelMenu();
 
   try {
     localStorage.setItem(STORAGE_KEY, next);
@@ -194,6 +195,16 @@ function renderDetail(index: number) {
     );
   }
 
+  const ba = document.getElementById("detail-ba");
+  if (ba) {
+    ba.hidden = !shots.before;
+    if (shots.before) {
+      setImage(document.getElementById("ba-after") as HTMLImageElement | null, shots.hero, t.baAfter);
+      setImage(document.getElementById("ba-before") as HTMLImageElement | null, shots.before, t.baBefore);
+      setBeforeAfter(50);
+    }
+  }
+
   const shotsEl = document.getElementById("detail-shots");
   if (shotsEl) {
     shotsEl.replaceChildren(
@@ -215,6 +226,46 @@ function renderDetail(index: number) {
       })
     );
   }
+}
+
+/* ── Before / after slider ── */
+
+const baStage = document.getElementById("ba-stage");
+const baClip = document.getElementById("ba-clip");
+const baHandle = document.getElementById("ba-handle");
+let baPct = 50;
+
+function setBeforeAfter(pct: number) {
+  baPct = Math.max(0, Math.min(100, pct));
+  if (baClip) baClip.style.clipPath = `inset(0 ${(100 - baPct).toFixed(2)}% 0 0)`;
+  if (baHandle) {
+    baHandle.style.left = `${baPct.toFixed(2)}%`;
+    baHandle.setAttribute("aria-valuenow", String(Math.round(baPct)));
+  }
+}
+
+if (baStage && baHandle) {
+  // getBoundingClientRect and clientX are both in viewport px, so the page
+  // zoom cancels out of the ratio.
+  const follow = (e: PointerEvent) => {
+    const r = baStage.getBoundingClientRect();
+    setBeforeAfter(((e.clientX - r.left) / r.width) * 100);
+  };
+  baHandle.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    baHandle.setPointerCapture(e.pointerId);
+    follow(e);
+    baHandle.addEventListener("pointermove", follow);
+  });
+  const release = () => baHandle.removeEventListener("pointermove", follow);
+  baHandle.addEventListener("pointerup", release);
+  baHandle.addEventListener("pointercancel", release);
+  baHandle.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") setBeforeAfter(baPct - 5);
+    else if (e.key === "ArrowRight") setBeforeAfter(baPct + 5);
+    else return;
+    e.preventDefault();
+  });
 }
 
 function openProject(index: number) {
@@ -274,20 +325,41 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-/* ── Mobile navigation ── */
+/* ── Tablet / phone menu ── */
 
 const burger = document.getElementById("nav-burger");
-const menu = document.getElementById("nav-menu");
+const burgerLabel = document.getElementById("nav-burger-label");
+const sheet = document.getElementById("nav-sheet");
 
-function closeMenu() {
-  burger?.setAttribute("aria-expanded", "false");
-  menu?.classList.remove("is-open");
+const menuIsOpen = () => burger?.getAttribute("aria-expanded") === "true";
+
+function labelMenu() {
+  if (!burgerLabel) return;
+  const t = COPY[lang] as unknown as Record<string, string>;
+  burgerLabel.textContent = menuIsOpen() ? t.menuClose : t.menuOpen;
 }
 
-burger?.addEventListener("click", () => {
-  const open = burger.getAttribute("aria-expanded") === "true";
-  burger.setAttribute("aria-expanded", String(!open));
-  menu?.classList.toggle("is-open", !open);
+function setMenu(open: boolean) {
+  burger?.setAttribute("aria-expanded", String(open));
+  if (sheet) sheet.hidden = !open;
+  // Only lock here if no full-screen view already holds the lock
+  if (!stack.length) document.body.classList.toggle("is-locked", open);
+  labelMenu();
+}
+
+function closeMenu() {
+  if (menuIsOpen()) setMenu(false);
+}
+
+burger?.addEventListener("click", () => setMenu(!menuIsOpen()));
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && menuIsOpen()) setMenu(false);
+});
+
+// Back to desktop width: the sheet is gone, so release the scroll lock too
+window.matchMedia("(min-width: 1081px)").addEventListener("change", (e) => {
+  if (e.matches) closeMenu();
 });
 
 /* ── Client reviews slider ── */
@@ -322,10 +394,23 @@ if (revRoot && revList.length > 1) {
   const revText = document.getElementById("review-text");
   const revName = document.getElementById("review-name");
   const revWhen = document.getElementById("review-when");
-  const revNum = document.getElementById("review-num");
   const revAvatar = document.getElementById("review-avatar");
+  const bars = [...revRoot.querySelectorAll<HTMLElement>("[data-rev-bar]")];
+
+  /** Each review stays up this long, while its bar fills. */
+  const DUR = 7000;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   let revIndex = 0;
+  let started = performance.now();
+  let pausedAt: number | null = null;
+
+  const renderWhen = (r: Review) => {
+    if (!revWhen) return;
+    const c = COPY[lang] as unknown as Record<string, string>;
+    revWhen.textContent =
+      r.monthsAgo === 1 ? c.revAgo1 : c.revAgo.replace("{n}", String(r.monthsAgo));
+  };
 
   const renderReview = () => {
     const r = revList[revIndex];
@@ -337,34 +422,58 @@ if (revRoot && revList.length > 1) {
       else if (r.text.length > 260) revText.classList.add("is-l");
       if (r.lang) revText.setAttribute("lang", r.lang);
       else revText.removeAttribute("lang");
+      // Fade up from 10px below: one frame hidden, then release the transition
+      revText.classList.add("is-enter");
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => revText.classList.remove("is-enter"))
+      );
     }
     if (revName) revName.textContent = r.name;
-    if (revWhen) {
-      const c = COPY[lang] as unknown as Record<string, string>;
-      revWhen.textContent =
-        r.monthsAgo === 1
-          ? c.revAgo1
-          : c.revAgo.replace("{n}", String(r.monthsAgo));
-    }
-    if (revNum) revNum.textContent = String(revIndex + 1).padStart(2, "0");
+    renderWhen(r);
     if (revAvatar instanceof HTMLImageElement && r.avatar) {
       revAvatar.src = r.avatar;
     }
   };
 
-  const stepReview = (delta: number) => {
-    revIndex = (revIndex + delta + revList.length) % revList.length;
+  const goReview = (n: number) => {
+    revIndex = (n + revList.length) % revList.length;
+    started = performance.now();
+    if (pausedAt !== null) pausedAt = started;
     renderReview();
   };
 
-  refreshReview = renderReview;
+  // A language switch only relabels the date; it must not restart the slide
+  refreshReview = () => renderWhen(revList[revIndex]);
 
   document
     .getElementById("review-prev")
-    ?.addEventListener("click", () => stepReview(-1));
+    ?.addEventListener("click", () => goReview(revIndex - 1));
   document
     .getElementById("review-next")
-    ?.addEventListener("click", () => stepReview(1));
+    ?.addEventListener("click", () => goReview(revIndex + 1));
+  revRoot.querySelectorAll<HTMLElement>("[data-rev-go]").forEach((btn) =>
+    btn.addEventListener("click", () => goReview(Number(btn.dataset.revGo)))
+  );
+
+  // Hovering the section holds the current review; leaving resumes the bar
+  revRoot.addEventListener("mouseenter", () => {
+    pausedAt = performance.now();
+  });
+  revRoot.addEventListener("mouseleave", () => {
+    if (pausedAt !== null) started += performance.now() - pausedAt;
+    pausedAt = null;
+  });
+
+  const tick = () => {
+    const now = pausedAt ?? performance.now();
+    const k = still ? 1 : Math.min(1, (now - started) / DUR);
+    bars.forEach((bar, n) => {
+      bar.style.width = `${n < revIndex ? 100 : n === revIndex ? k * 100 : 0}%`;
+    });
+    if (!still && k >= 1 && pausedAt === null) goReview(revIndex + 1);
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
 
 /* ── Go ── */

@@ -37,6 +37,41 @@ const en = COPY.en;
     <dl class="detail__meta" id="detail-meta"></dl>
   </div>
 
+  <!-- Before/after comparison. Only shown for projects that have a "before"
+       photo (see SHOTS in src/data/copy.ts). -->
+  <div class="ba" id="detail-ba" hidden>
+    <div class="ba__head">
+      <h3 class="ba__title" data-i18n="baTitle">{en.baTitle}</h3>
+      <span class="ba__hint" data-i18n="baHint">{en.baHint}</span>
+    </div>
+    <div class="ba__stage media" id="ba-stage">
+      <img id="ba-after" alt="" draggable="false" />
+      <div class="ba__clip" id="ba-clip">
+        <img id="ba-before" alt="" draggable="false" />
+      </div>
+      <span class="ba__tag" data-i18n="baBefore">{en.baBefore}</span>
+      <span class="ba__tag ba__tag--after" data-i18n="baAfter">{en.baAfter}</span>
+      <div
+        class="ba__handle"
+        id="ba-handle"
+        role="slider"
+        tabindex="0"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="50"
+        aria-label="Before / after"
+      >
+        <span class="ba__line"></span>
+        <span class="ba__knob">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 6-6 6 6 6" />
+            <path d="m15 6 6 6-6 6" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
   <div class="detail__shots" id="detail-shots"></div>
 
   <div class="view__foot detail__foot">
@@ -121,6 +156,108 @@ const en = COPY.en;
     padding: 0 var(--gutter) 88px;
   }
 
+  .ba {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 var(--gutter) 88px;
+  }
+  .ba[hidden] {
+    display: none;
+  }
+  .ba__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .ba__title {
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--color-cream);
+  }
+  .ba__hint {
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+  }
+  .ba__stage {
+    aspect-ratio: 16 / 9;
+    user-select: none;
+    touch-action: pan-y;
+  }
+  .ba__stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ba__clip {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 50% 0 0);
+  }
+  .ba__tag {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 3;
+    pointer-events: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgb(6 5 4 / 0.72);
+    font-size: var(--fs-label-sm);
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-cream);
+  }
+  .ba__tag--after {
+    left: auto;
+    right: 20px;
+    background: rgb(232 213 172 / 0.92);
+    color: var(--color-ink-2);
+  }
+  .ba__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    z-index: 4;
+    width: 48px;
+    margin-left: -24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ew-resize;
+    touch-action: none;
+  }
+  .ba__line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 23px;
+    width: 2px;
+    background: var(--color-cream);
+  }
+  .ba__knob {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: var(--color-cream);
+    color: var(--color-ink-2);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.4);
+  }
+
   .detail__foot {
     padding-top: 80px;
     border-top: 1px solid rgb(239 226 196 / 0.1);
@@ -133,12 +270,27 @@ const en = COPY.en;
     gap: 14px;
   }
 
-  @media (max-width: 860px) {
+  /* 62vh tall with a 420px floor on desktop; fixed heights below */
+  @media (max-width: 1080px) {
+    .detail__hero {
+      height: 320px;
+      min-height: 0;
+    }
+  }
+  @media (max-width: 720px) {
+    .detail__hero {
+      height: 240px;
+    }
     .detail__intro {
       grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+      padding-top: 56px;
     }
     .detail__shots {
       grid-template-columns: minmax(0, 1fr);
+    }
+    .detail__title {
+      font-size: 28px;
     }
   }
 </style>
@@ -185,6 +337,13 @@ const en = COPY.en;
   }
   .detail__shots .media {
     aspect-ratio: 3 / 2;
+  }
+  /* An odd shot out closes the grid as one wide frame */
+  .detail__shots > figure:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .detail__shots > figure:last-child:nth-child(odd) .media {
+    aspect-ratio: 16 / 7;
   }
   .detail__shots img {
     filter: brightness(0.9);
