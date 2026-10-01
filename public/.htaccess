@@ -1,0 +1,4 @@
+# Sitio de pruebas: ningún buscador debe indexarlo. Quitar al pasar a producción.
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
