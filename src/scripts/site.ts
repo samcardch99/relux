@@ -97,11 +97,12 @@ document.querySelectorAll<HTMLElement>("[data-lang]").forEach((btn) => {
    Full-screen views
    ────────────────────────────────────────────── */
 
-type ViewName = "work" | "about" | "detail";
+type ViewName = "work" | "about" | "process" | "detail";
 
 const views: Record<ViewName, HTMLElement | null> = {
   work: document.getElementById("view-work"),
   about: document.getElementById("view-about"),
+  process: document.getElementById("view-process"),
   detail: document.getElementById("view-detail"),
 };
 
@@ -140,7 +141,7 @@ function closeView(name: ViewName) {
 }
 
 function closeAllViews() {
-  (["detail", "about", "work"] as ViewName[]).forEach(closeView);
+  (["detail", "process", "about", "work"] as ViewName[]).forEach(closeView);
 }
 
 /* ──────────────────────────────────────────────

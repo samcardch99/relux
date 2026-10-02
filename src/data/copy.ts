@@ -136,6 +136,33 @@ export const COPY = {
     procTitleEm: "WORK",
     procIntro:
       "We design the whole job before we start. You approve drawings, materials and finishes, and only then do we build.",
+    procBtn: "Process",
+
+    pxTitle: "OUR",
+    pxTitleEm: "PROCESS",
+    pxIntro:
+      "Kitchens, closets and wall panels are cut and assembled in our own shop in Miami, on the same equipment, by the same team that installs them.",
+    mKicker: "Equipment",
+    mP1: "Every cabinet and panel starts on our Biesse Rover Multi Up NG S 1531, a CNC machining centre that cuts, drills and edges each part from the digital drawing you approved.",
+    mP2: "Working straight from the file removes hand measurements from the process. Parts come off the machine ready to assemble, and the fit on site matches the drawing.",
+    mSpecK1: "Machine",
+    mSpecV1: "Biesse Rover Multi Up NG S 1531",
+    mSpecK2: "Type",
+    mSpecV2: "CNC machining centre",
+    mSpecK3: "Work",
+    mSpecV3: "Cutting, drilling, routing",
+    mSpecK4: "Used for",
+    mSpecV4: "Kitchens, closets, wall panels",
+    shopKicker: "Workshop",
+    shopTitle: "Where it gets built",
+    shopIntro:
+      "Materials arrive, get cut, assembled and checked here before they reach your home. Nothing leaves the shop until it matches the drawing.",
+    shopCap1: "Panels ready for machining.",
+    shopCap2: "Assembly bench.",
+    shopCap3: "Edge and finish check.",
+    shopCap4: "Cabinet boxes before installation.",
+    shopCap5: "Hardware and fittings.",
+    shopCap6: "Parts labelled by project.",
     w1Title: "Consultation & Site Visit",
     w1Desc:
       "We visit the space, measure it, and listen to how you actually want to use it.",
@@ -335,6 +362,33 @@ export const COPY = {
     procTitleEm: "TRABAJAMOS",
     procIntro:
       "Diseñamos todo el trabajo antes de comenzar. Apruebas planos, materiales y acabados, y solo entonces construimos.",
+    procBtn: "Proceso",
+
+    pxTitle: "NUESTRO",
+    pxTitleEm: "PROCESO",
+    pxIntro:
+      "Cocinas, closets y paneles se cortan y montan en nuestro propio taller en Miami, con el mismo equipo y las mismas personas que después los instalan.",
+    mKicker: "Equipo",
+    mP1: "Cada mueble y cada panel empieza en nuestra Biesse Rover Multi Up NG S 1531, un centro de mecanizado CNC que corta, taladra y cantea cada pieza a partir del plano digital que aprobaste.",
+    mP2: "Trabajar directamente desde el archivo elimina las medidas a mano. Las piezas salen de la máquina listas para montar, y en obra encajan tal como en el plano.",
+    mSpecK1: "Máquina",
+    mSpecV1: "Biesse Rover Multi Up NG S 1531",
+    mSpecK2: "Tipo",
+    mSpecV2: "Centro de mecanizado CNC",
+    mSpecK3: "Trabajo",
+    mSpecV3: "Corte, taladrado, fresado",
+    mSpecK4: "Uso",
+    mSpecV4: "Cocinas, closets, wall panels",
+    shopKicker: "Taller",
+    shopTitle: "Donde se construye",
+    shopIntro:
+      "Aquí llegan los materiales, se cortan, se montan y se revisan antes de llegar a tu casa. Nada sale del taller hasta que coincide con el plano.",
+    shopCap1: "Paneles listos para mecanizar.",
+    shopCap2: "Banco de montaje.",
+    shopCap3: "Revisión de cantos y acabados.",
+    shopCap4: "Cascos de mueble antes de instalar.",
+    shopCap5: "Herrajes y accesorios.",
+    shopCap6: "Piezas etiquetadas por proyecto.",
     w1Title: "Consulta y Visita",
     w1Desc:
       "Visitamos el espacio, lo medimos y escuchamos cómo quieres usarlo de verdad.",
@@ -450,6 +504,9 @@ const IMG = {
   founder1: "/assets/relux-founder-1.webp",
   /** Cropped from the shot of the two of them — the design had no second portrait. */
   founder2: "/assets/relux-founder-2.webp",
+  /** Process view: a render of the CNC (stands in for the machine video) and two details. */
+  machineHero: "/assets/machine-hero.webp",
+  machine: ["/assets/machine-1.webp", "/assets/machine-2.webp"],
 } as const;
 
 /** Crops the design's author set by panning the image inside its slot. */
@@ -484,6 +541,27 @@ export const PROCESS = [
  * NO sirve — abre una busqueda, no el negocio.
  */
 export const REVIEWS_URL = "https://maps.google.com/?cid=12488415478177387112";
+
+/** Process view: the machine spec rows and the six workshop shots. */
+export const MACHINE_SPECS = [
+  { k: "mSpecK1", v: "mSpecV1" },
+  { k: "mSpecK2", v: "mSpecV2" },
+  { k: "mSpecK3", v: "mSpecV3" },
+  { k: "mSpecK4", v: "mSpecV4" },
+] as const;
+
+/**
+ * The design leaves every workshop slot empty, so `img` is unset and the
+ * frame shows its tonal placeholder. `tall` cells are 4:5, the rest 4:3.
+ */
+export const SHOP: { capKey: CopyKey; tall: boolean; img?: string }[] = [
+  { capKey: "shopCap1", tall: true },
+  { capKey: "shopCap2", tall: false },
+  { capKey: "shopCap3", tall: false },
+  { capKey: "shopCap4", tall: true },
+  { capKey: "shopCap5", tall: false },
+  { capKey: "shopCap6", tall: false },
+];
 
 export const VALUES = [
   { n: "01", titleKey: "v1Title", descKey: "v1Desc" },

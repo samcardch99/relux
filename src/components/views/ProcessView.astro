@@ -1,0 +1,274 @@
+---
+import { COPY, IMG, MACHINE_SPECS, SHOP } from "../../data/copy";
+import ArrowBack from "../icons/ArrowBack.astro";
+import ArrowUpRight from "../icons/ArrowUpRight.astro";
+
+const en = COPY.en;
+---
+
+<div class="view" id="view-process" role="dialog" aria-modal="true" aria-label="Our process" hidden>
+  <div class="view__bar">
+    <button type="button" class="btn btn--ghost btn--back" data-close="process">
+      <ArrowBack />
+      <span data-i18n="workBack">Back</span>
+    </button>
+    <span class="view__bar-meta" data-i18n="sinceLine">{en.sinceLine}</span>
+  </div>
+
+  <div class="sec-head processview__head">
+    <h2 class="sec-head__title">
+      <span data-i18n="pxTitle">{en.pxTitle}</span><br />
+      <em data-i18n="pxTitleEm">{en.pxTitleEm}</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="pxIntro">{en.pxIntro}</p>
+  </div>
+
+  <!-- Wide workshop shot: still an empty slot in the design -->
+  <div class="media processview__band"></div>
+
+  <div class="processview__machine">
+    <div class="processview__titles">
+      <span class="processview__kicker" data-i18n="mKicker">{en.mKicker}</span>
+      <h3 class="processview__h3">Biesse Rover Multi Up NG S 1531</h3>
+    </div>
+
+    <div class="processview__split">
+      <div class="processview__media">
+        <div class="media processview__main">
+          <img src={IMG.machineHero} alt="Biesse Rover Multi Up NG S 1531" loading="lazy" />
+        </div>
+        <div class="processview__pair">
+          {
+            IMG.machine.map((src) => (
+              <div class="media processview__shot">
+                <img src={src} alt="" loading="lazy" />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="processview__copy">
+        <p data-i18n="mP1">{en.mP1}</p>
+        <p data-i18n="mP2">{en.mP2}</p>
+        <dl class="processview__specs">
+          {
+            MACHINE_SPECS.map((s) => (
+              <div class="processview__spec">
+                <dt class="field-label" data-i18n={s.k}>{en[s.k]}</dt>
+                <dd data-i18n={s.v}>{en[s.v]}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="processview__shop">
+    <div class="sec-head processview__shop-head">
+      <div class="processview__titles">
+        <span class="processview__kicker" data-i18n="shopKicker">{en.shopKicker}</span>
+        <h3 class="processview__h3" data-i18n="shopTitle">{en.shopTitle}</h3>
+      </div>
+      <p class="sec-head__intro" data-i18n="shopIntro">{en.shopIntro}</p>
+    </div>
+
+    <ul class="processview__grid">
+      {
+        SHOP.map((s) => (
+          <li class="processview__item">
+            <div class:list={["media processview__photo", { "is-tall": s.tall }]}>
+              {s.img && <img src={s.img} alt="" loading="lazy" />}
+            </div>
+            <p data-i18n={s.capKey}>{en[s.capKey]}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="view__foot processview__foot">
+    <p data-i18n="aboutFoot">{en.aboutFoot}</p>
+    <button type="button" class="btn btn--solid" data-close="process" data-goto="contact">
+      <span data-i18n="workCta">Request a Quote</span>
+      <ArrowUpRight />
+    </button>
+  </div>
+</div>
+
+<style>
+  .processview__head {
+    padding: 88px var(--gutter) 56px;
+  }
+
+  .processview__band {
+    height: 520px;
+    margin-bottom: 96px;
+  }
+
+  .processview__titles {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .processview__kicker {
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+  }
+  .processview__h3 {
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--color-cream);
+  }
+
+  /* ── Machine ── */
+  .processview__machine {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 0 var(--gutter) 104px;
+  }
+  .processview__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+  .processview__media {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .processview__main {
+    aspect-ratio: 16 / 9;
+  }
+  .processview__pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .processview__shot {
+    aspect-ratio: 4 / 3;
+  }
+  .processview__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .processview__copy > p {
+    font-size: var(--fs-body);
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgb(239 226 196 / 0.68);
+  }
+  .processview__specs {
+    margin: 0;
+    border-top: 1px solid rgb(239 226 196 / 0.14);
+  }
+  .processview__spec {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgb(239 226 196 / 0.14);
+  }
+  .processview__spec dt {
+    letter-spacing: 0.3em;
+  }
+  .processview__spec dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--color-cream);
+    text-align: right;
+  }
+
+  /* ── Workshop ── */
+  .processview__shop {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 96px var(--gutter);
+    border-top: 1px solid rgb(239 226 196 / 0.1);
+  }
+  .processview__shop-head .sec-head__intro {
+    margin-bottom: 0;
+  }
+  .processview__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 20px;
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .processview__item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .processview__photo {
+    aspect-ratio: 4 / 3;
+  }
+  .processview__photo.is-tall {
+    aspect-ratio: 4 / 5;
+  }
+  .processview__item p {
+    font-size: var(--fs-xs);
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgb(239 226 196 / 0.5);
+  }
+
+  .processview__foot {
+    padding-top: 80px;
+    border-top: 1px solid rgb(239 226 196 / 0.1);
+  }
+
+  @media (max-width: 1080px) {
+    .processview__split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+    .processview__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .processview__band {
+      height: 440px;
+    }
+    .processview__h3 {
+      font-size: 28px;
+    }
+    /* Photos run edge to edge on phones, captions keep the gutter */
+    .processview__media {
+      margin: 0 calc(var(--gutter) * -1);
+      gap: 6px;
+    }
+    .processview__pair {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px;
+    }
+    .processview__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+      margin: 0 calc(var(--gutter) * -1);
+    }
+    .processview__item p {
+      padding: 0 var(--gutter);
+    }
+    .processview__photo,
+    .processview__photo.is-tall {
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>

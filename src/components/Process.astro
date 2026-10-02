@@ -1,5 +1,6 @@
 ---
 import { PROCESS, COPY, IMG, FOCUS } from "../data/copy";
+import ArrowUpRight from "./icons/ArrowUpRight.astro";
 
 const en = COPY.en;
 ---
@@ -10,7 +11,13 @@ const en = COPY.en;
       <span data-i18n="procTitle">HOW WE</span><br />
       <em data-i18n="procTitleEm">WORK</em>
     </h2>
-    <p class="sec-head__intro" data-i18n="procIntro">{en.procIntro}</p>
+    <div class="process__aside">
+      <p class="sec-head__intro" data-i18n="procIntro">{en.procIntro}</p>
+      <button type="button" class="btn btn--ghost" data-open="process">
+        <span data-i18n="procBtn">{en.procBtn}</span>
+        <ArrowUpRight />
+      </button>
+    </div>
   </div>
 
   <div class="media process__band">
@@ -50,6 +57,21 @@ const en = COPY.en;
     padding: 120px var(--gutter) 52px;
   }
 
+  /* Intro and the button into the Process view, stacked against the right edge */
+  .process__aside {
+    justify-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 10px;
+  }
+  .process__aside .sec-head__intro {
+    max-width: 420px;
+    margin-bottom: 0;
+    text-align: right;
+  }
+
   .process__band {
     height: 420px;
   }
@@ -61,6 +83,14 @@ const en = COPY.en;
   @media (max-width: 720px) {
     .process__head {
       padding-top: 80px;
+    }
+    .process__aside {
+      justify-self: start;
+      align-items: flex-start;
+      margin-bottom: 0;
+    }
+    .process__aside .sec-head__intro {
+      text-align: left;
     }
     .process__band {
       height: 240px;
