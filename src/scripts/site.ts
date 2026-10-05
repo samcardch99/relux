@@ -206,11 +206,37 @@ function renderDetail(index: number) {
     }
   }
 
+  // Video row. Without `side`, the first two shots move up beside the video
+  // and the grid starts at the third, keeping the captions aligned.
+  const side = shots.side ?? [shots.shots[0] ?? shots.hero, shots.shots[1] ?? shots.hero];
+  const offset = shots.side ? 0 : 2;
+  const grid = shots.shots.slice(offset);
+
+  const vidTag = document.getElementById("detail-vid-tag");
+  if (vidTag) vidTag.textContent = t[project.tagKey];
+  const video = document.getElementById("detail-video") as HTMLVideoElement | null;
+  const videoPending = document.getElementById("detail-video-ph");
+  if (video) {
+    if (shots.video) {
+      if (video.getAttribute("src") !== shots.video) video.src = shots.video;
+    } else if (video.hasAttribute("src")) {
+      video.removeAttribute("src");
+      video.load();
+    }
+    video.hidden = !shots.video;
+  }
+  if (videoPending) videoPending.hidden = !!shots.video;
+  side.forEach((src, n) =>
+    setImage(document.getElementById(`detail-side-${n + 1}`) as HTMLImageElement | null, src, t[project.titleKey])
+  );
+
   const shotsEl = document.getElementById("detail-shots");
   if (shotsEl) {
     shotsEl.replaceChildren(
-      ...shots.shots.map((src, n) => {
+      ...grid.map((src, i) => {
+        const n = i + offset;
         const figure = document.createElement("figure");
+        if (shots.tall?.includes(i)) figure.classList.add("is-tall");
 
         const frame = document.createElement("div");
         frame.className = "media";

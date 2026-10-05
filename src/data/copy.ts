@@ -67,13 +67,13 @@ export const COPY = {
     p1Tag: "Kitchens",
     p1Title: "Liz Kitchen",
     p2Tag: "Closets",
-    p2Title: "Walk-in closet in glass and wood",
+    p2Title: "Walk-in closet in graphite and walnut",
     p3Tag: "Bathrooms",
-    p3Title: "Primary bath in dark marble",
-    p4Tag: "Interiors",
-    p4Title: "Open kitchen and dining room",
-    p5Tag: "Woodwork",
-    p5Title: "Floor-to-ceiling wall panelling",
+    p3Title: "Primary bath in walnut and onyx",
+    p4Tag: "Kitchens",
+    p4Title: "Walnut kitchen with quartzite island",
+    p5Tag: "Commercial",
+    p5Title: "Crystal Luxe Wellness Center",
     p6Tag: "Kitchens",
     p6Title: "Matte black kitchen with island",
     p7Tag: "Interiors",
@@ -191,6 +191,8 @@ export const COPY = {
     baHint: "Drag to compare",
     baBefore: "Before",
     baAfter: "After",
+    vidTitle: "Project video",
+    vidPending: "Video coming soon",
     dragHint: "Drag to light up",
     menuOpen: "Menu",
     menuClose: "Close",
@@ -293,13 +295,13 @@ export const COPY = {
     p1Tag: "Cocinas",
     p1Title: "Liz Kitchen",
     p2Tag: "Closets",
-    p2Title: "Walk-in closet en cristal y madera",
+    p2Title: "Walk-in closet en grafito y nogal",
     p3Tag: "Baños",
-    p3Title: "Baño principal en mármol oscuro",
-    p4Tag: "Interiores",
-    p4Title: "Cocina y comedor en espacio abierto",
-    p5Tag: "Carpintería",
-    p5Title: "Panelado de pared de piso a techo",
+    p3Title: "Baño principal en nogal y ónix",
+    p4Tag: "Cocinas",
+    p4Title: "Cocina en nogal con isla de cuarcita",
+    p5Tag: "Comercial",
+    p5Title: "Crystal Luxe Wellness Center",
     p6Tag: "Cocinas",
     p6Title: "Cocina en negro mate con isla",
     p7Tag: "Interiores",
@@ -418,6 +420,8 @@ export const COPY = {
     baHint: "Arrastra para comparar",
     baBefore: "Antes",
     baAfter: "Después",
+    vidTitle: "Vídeo del proyecto",
+    vidPending: "Vídeo próximamente",
     dragHint: "Arrastra para iluminar",
     menuOpen: "Menú",
     menuClose: "Cerrar",
@@ -477,7 +481,7 @@ export const INSTAGRAM = {
  *
  * Two origins, mirroring the design: `assets/*` are the photos the design
  * references by `src`, while the rest were dropped into `<image-slot>`s and
- * therefore override that `src` wherever both exist (proj-4, proj-6,
+ * therefore override that `src` wherever both exist (proj-6,
  * process-band, cta-band). Slots the author panned carry an `objectPosition`,
  * translated from the slot's stored offset.
  */
@@ -485,6 +489,11 @@ const IMG = {
   kitchenOnyx: "/assets/kitchen-onyx.webp",
   /** "Liz Kitchen", the first project: hero plus five detail shots. */
   liz: [1, 2, 3, 4, 5, 6].map((n) => `/assets/liz-${n}.webp`),
+  /** Projects 2–5, numbered as the design's photo files. */
+  closet2: [1, 2, 3, 4, 5].map((n) => `/assets/wc-${n}.webp`),
+  bath2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/bath2-${n}.webp`),
+  kitchen3: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/k3-${n}.webp`),
+  crystalLuxe: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/cl-${n}.webp`),
   closet: "/assets/closet.webp",
   bath: "/assets/bath.webp",
   kitchenDining: "/assets/kitchen-dining.webp",
@@ -495,7 +504,6 @@ const IMG = {
   /** Portrait render the Materials section swaps to on phones. */
   materialBath: "/assets/material-bath.webp",
 
-  proj4: "/assets/proj-4.webp",
   proj6: "/assets/proj-6.webp",
   processBand: "/assets/process-band.webp",
   ctaBand: "/assets/cta-band.webp",
@@ -572,10 +580,10 @@ export const VALUES = [
 /** The nine projects. The first six also appear in the homepage grid. */
 export const PROJECTS = [
   { i: 0, tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[0] },
-  { i: 1, tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet },
-  { i: 2, tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath },
-  { i: 3, tagKey: "p4Tag", titleKey: "p4Title", img: IMG.proj4 },
-  { i: 4, tagKey: "p5Tag", titleKey: "p5Title", img: IMG.kitchenWood },
+  { i: 1, tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet2[0] },
+  { i: 2, tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath2[2] },
+  { i: 3, tagKey: "p4Tag", titleKey: "p4Title", img: IMG.kitchen3[4] },
+  { i: 4, tagKey: "p5Tag", titleKey: "p5Title", img: IMG.crystalLuxe[0] },
   { i: 5, tagKey: "p6Tag", titleKey: "p6Title", img: IMG.proj6, focus: FOCUS.proj6 },
   { i: 6, tagKey: "p7Tag", titleKey: "p7Title", img: IMG.interiorEmpty },
   { i: 7, tagKey: "p8Tag", titleKey: "p8Title", img: IMG.kitchenDining },
@@ -583,16 +591,43 @@ export const PROJECTS = [
 ] as const;
 
 /**
- * Hero + the secondary shots shown inside each project detail view. `before`
- * turns on the before/after slider; the design has the slot for Liz Kitchen
- * but no photo in it yet, so no project sets it.
+ * Hero + the secondary shots shown inside each project detail view.
+ *
+ * Every detail has a video row: the vertical video (or its "coming soon"
+ * frame while `video` is unset) beside two photos. Those two are `side` when
+ * given; otherwise the first two `shots` move there and the grid below starts
+ * at the third, together with its caption. `tall` lists grid positions shown
+ * as 2:3 portraits instead of 3:2. `before` turns on the before/after slider;
+ * the design has the slot for Liz Kitchen but no photo in it yet, so no
+ * project sets it.
  */
-export const SHOTS: { hero: string; shots: string[]; before?: string }[] = [
+export type ProjectShots = {
+  hero: string;
+  shots: string[];
+  side?: [string, string];
+  tall?: number[];
+  video?: string;
+  before?: string;
+};
+
+const pick = (set: string[], ...n: number[]) => n.map((k) => set[k - 1]);
+
+export const SHOTS: ProjectShots[] = [
   { hero: IMG.liz[0], shots: IMG.liz.slice(1) },
-  { hero: IMG.closet, shots: [IMG.kitchenDark, IMG.bath] },
-  { hero: IMG.bath, shots: [IMG.closet, IMG.kitchenDark] },
-  { hero: IMG.proj4, shots: [IMG.kitchenOnyx, IMG.kitchenWood] },
-  { hero: IMG.kitchenWood, shots: [IMG.kitchenDining, IMG.closet] },
+  {
+    hero: IMG.closet2[0],
+    side: [IMG.closet2[1], IMG.closet2[3]],
+    shots: pick(IMG.closet2, 3, 5),
+    tall: [0, 1],
+  },
+  { hero: IMG.bath2[2], shots: pick(IMG.bath2, 2, 6, 7, 8, 9, 10, 4, 1, 5, 11) },
+  { hero: IMG.kitchen3[4], shots: pick(IMG.kitchen3, 3, 1, 6, 4, 2, 7) },
+  {
+    hero: IMG.crystalLuxe[0],
+    side: [IMG.crystalLuxe[1], IMG.crystalLuxe[3]],
+    shots: pick(IMG.crystalLuxe, 3, 5, 6, 7),
+    tall: [0, 1, 2, 3],
+  },
   { hero: IMG.proj6, shots: [IMG.bath, IMG.kitchenOnyx] },
   { hero: IMG.interiorEmpty, shots: [IMG.kitchenWood, IMG.closet] },
   { hero: IMG.kitchenDining, shots: [IMG.kitchenWood, IMG.kitchenDark] },
@@ -626,54 +661,68 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "A walk-in closet in glass and warm wood, lit shelf by shelf so the room reads like a display case.",
+        "A walk-in closet in graphite wood with vertical LED lines, a walnut island with a mirrored glass top and a sculptural pendant light overhead.",
       paras: [
-        "Every module was built to the exact ceiling height, so there is no filler panel anywhere in the room.",
-        "Smoked glass doors keep the dust out while leaving the contents visible, which was the whole point for this client.",
+        "Every hanging bay is framed by a recessed vertical LED strip, so the light runs the full height of the room and turns the graphite panels into a quiet backdrop for the clothes.",
+        "The island is built in walnut with deep drawers on every side and two mirrored glass inserts in the top, cut to the same line as the drawer fronts. A walnut section of wardrobe with drawers closes the room on one side.",
       ],
-      meta: [["Scope", "Walk-in closet"], ["Materials", "Walnut, smoked glass"], ["Duration", "5 weeks"]],
+      meta: [["Scope", "Walk-in closet"], ["Materials", "Graphite wood, walnut, mirrored glass"], ["Location", "Miami, FL"]],
       captions: [
-        "Each vertical bay has its own dimmable strip.",
-        "The island doubles as drawer storage and a packing surface.",
+        "The mirrored glass top set into the walnut island.",
+        "The island, the pendant and the lit graphite bays.",
       ],
     },
     {
       summary:
-        "A primary bathroom in dark veined marble, with a backlit mirror and a vanity that runs into the dressing area.",
+        "A primary bathroom built as one piece of walnut joinery: a lit ceiling frame, three backlit mirrors, onyx vessel sinks and glass-front cabinets at both ends.",
       paras: [
-        "The shower, vanity wall and dressing area were treated as one continuous surface so the room feels larger than its footprint.",
-        "All plumbing was rerouted to keep the stone joints symmetrical around the mirror.",
+        "The vanity wall is framed in walnut with LED channels cut into the ceiling panel, so the light follows the line of the joinery instead of coming from fixtures. The counter steps down in two levels and floats over a lit toe-kick.",
+        "The walk-in shower is clad floor to ceiling in large-format onyx-look porcelain, with a lit niche running the full length of the wall, a brushed-brass ceiling rain head and a thermostatic column.",
       ],
-      meta: [["Scope", "Primary bath"], ["Materials", "Marble, walnut, brass"], ["Duration", "6 weeks"]],
+      meta: [["Scope", "Primary bathroom"], ["Materials", "Walnut, onyx, brushed brass"], ["Location", "Miami, FL"]],
       captions: [
-        "The dressing area continues the same cabinetry line.",
-        "Matte black fixtures against the veined stone.",
+        "The vanity with the armchair and the shower behind the glass.",
+        "Onyx vessel sink and brushed-brass faucet.",
+        "Three backlit mirrors along the stone wall.",
+        "Walk-in shower with a lit niche along the full wall.",
+        "Ceiling rain head and brass shower column.",
+        "From the shower towards the vanity.",
+        "Shower, toilet and the single vanity by the entrance.",
+        "Glass-front cabinet with lit shelves beside the vanity.",
+        "The full run of cabinetry from the corner.",
+        "The dressing area and vanity from the armchair.",
       ],
     },
     {
       summary:
-        "An open kitchen and dining room for a family that cooks and entertains in the same space.",
+        "An open kitchen built around a quartzite island with a folded waterfall edge, a matching stone hood and a full wall of walnut tall units.",
       paras: [
-        "We removed the wall between kitchen and dining and rebuilt the ceiling line so the lighting could run the full length of the room.",
-        "The bar counter was set at a height that works for both stools and prep, which took two rounds of drawings to get right.",
+        "The island, hood and backsplash are cut from the same light quartzite, so the stone reads as one piece from the hood down to the angled leg of the island. Warm LED strips run under the island overhang and every wall cabinet.",
+        "The walnut wall hides the refrigerator behind flush panels and frames the double oven and a lit glass display column. A second walnut column with open corner shelves divides the kitchen from the wine wall and the living room.",
       ],
-      meta: [["Scope", "Kitchen + dining"], ["Materials", "Oak, quartzite"], ["Duration", "9 weeks"]],
+      meta: [["Scope", "Kitchen + wine wall"], ["Materials", "Walnut, quartzite, glass"], ["Location", "Miami, FL"]],
       captions: [
-        "The dining table sits directly off the counter run.",
-        "Storage was pushed to full height to free the floor.",
+        "The wine wall and walnut columns leading into the kitchen.",
+        "The island and stone hood against the walnut wall.",
+        "The island from the end, with the tall walnut units and lit glass column.",
+        "Stools under the lit overhang of the island.",
+        "The walnut column with open corner shelves and the waterfall counter.",
+        "Lit walnut shelving between the living room and the kitchen.",
       ],
     },
     {
       summary:
-        "Floor-to-ceiling wall panelling in walnut, wrapping the kitchen, the pantry doors and the appliance wall.",
+        "Reception and waiting area for a wellness center in Miami, designed around a feature wall in oak with deep teal niches and the backlit brand logo at its centre.",
       paras: [
-        "Appliances, pantry and doorways all disappear into the same panel rhythm, so the room reads as one built object.",
-        "Panels were fabricated in our shop and installed in two days to keep the household running.",
+        "The feature wall is built as staggered oak modules with recessed LED strips, open display niches and teal back panels that frame the logo. The reception desk repeats the same oak with a curved end panel and a teal counter.",
+        "Across the room, a second run of oak joinery holds lit open shelving, a low cabinet with bronze-framed glass doors and a wall panel for the screen, with lounge seating for clients in between.",
       ],
-      meta: [["Scope", "Millwork"], ["Materials", "Walnut veneer"], ["Duration", "4 weeks"]],
+      meta: [["Scope", "Reception + waiting area"], ["Materials", "Oak laminate, teal lacquer, bronze glass"], ["Location", "Miami, FL"]],
       captions: [
-        "The rounded island softens the panelled walls.",
-        "Glass-front bays break up the run without adding hardware.",
+        "Backlit logo set into the oak panel.",
+        "The owner at the feature wall.",
+        "Oak niches and teal panels around the logo.",
+        "The owners in front of the lit shelving and glass cabinet.",
       ],
     },
     {
@@ -748,54 +797,68 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "Un walk-in closet en cristal y madera cálida, iluminado estante por estante para que el espacio se lea como una vitrina.",
+        "Un walk-in closet en madera grafito con líneas LED verticales, una isla de nogal con cubierta de cristal espejado y una lámpara escultórica colgante.",
       paras: [
-        "Cada módulo se fabricó a la altura exacta del techo, así que no hay ni un panel de relleno en toda la habitación.",
-        "Las puertas en cristal ahumado dejan fuera el polvo y mantienen el contenido a la vista, que era justo lo que pedía el cliente.",
+        "Cada cuerpo de colgar va enmarcado por una tira LED vertical empotrada, así la luz recorre toda la altura del cuarto y los paneles grafito quedan como un fondo tranquilo para la ropa.",
+        "La isla está construida en nogal con cajones profundos por todos los lados y dos insertos de cristal espejado en la cubierta, cortados en la misma línea que los frentes. Un tramo de armario en nogal con cajones cierra el cuarto por un lado.",
       ],
-      meta: [["Alcance", "Walk-in closet"], ["Materiales", "Nogal, cristal ahumado"], ["Duración", "5 semanas"]],
+      meta: [["Alcance", "Walk-in closet"], ["Materiales", "Madera grafito, nogal, cristal espejado"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "Cada cuerpo vertical tiene su propia tira regulable.",
-        "La isla suma cajones y una superficie para preparar la ropa.",
+        "La cubierta de cristal espejado integrada en la isla de nogal.",
+        "La isla, la lámpara y los cuerpos grafito iluminados.",
       ],
     },
     {
       summary:
-        "Un baño principal en mármol oscuro veteado, con espejo retroiluminado y un mueble que se prolonga hasta el vestidor.",
+        "Un baño principal construido como una sola pieza de carpintería en nogal: marco de techo iluminado, tres espejos retroiluminados, lavabos de ónix y vitrinas de cristal a ambos lados.",
       paras: [
-        "La ducha, la pared del lavabo y el vestidor se trataron como una sola superficie continua, y el espacio se percibe más grande de lo que es.",
-        "Se reubicó toda la fontanería para mantener las juntas de piedra simétricas respecto al espejo.",
+        "La pared del lavabo va enmarcada en nogal con canales LED cortados en el panel del techo, así la luz sigue la línea de la carpintería en lugar de salir de lámparas. La encimera baja en dos niveles y flota sobre un zócalo iluminado.",
+        "La ducha walk-in va revestida de piso a techo en porcelánico gran formato efecto ónix, con un nicho iluminado a lo largo de toda la pared, rociador de techo en latón cepillado y columna termostática.",
       ],
-      meta: [["Alcance", "Baño principal"], ["Materiales", "Mármol, nogal, latón"], ["Duración", "6 semanas"]],
+      meta: [["Alcance", "Baño principal"], ["Materiales", "Nogal, ónix, latón cepillado"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "El vestidor continúa la misma línea de carpintería.",
-        "Grifería en negro mate contra la piedra veteada.",
+        "El mueble del lavabo con el sillón y la ducha tras el cristal.",
+        "Lavabo de ónix y grifería en latón cepillado.",
+        "Tres espejos retroiluminados sobre la pared de piedra.",
+        "Ducha walk-in con nicho iluminado a lo largo de la pared.",
+        "Rociador de techo y columna de ducha en latón.",
+        "Desde la ducha hacia el lavabo.",
+        "Ducha, inodoro y el lavabo individual junto a la entrada.",
+        "Vitrina de cristal con estantes iluminados junto al lavabo.",
+        "Todo el frente de carpintería desde la esquina.",
+        "La zona de vestidor y lavabo desde el sillón.",
       ],
     },
     {
       summary:
-        "Cocina y comedor en un solo espacio abierto para una familia que cocina y recibe en el mismo sitio.",
+        "Una cocina abierta construida alrededor de una isla de cuarcita con canto en cascada plegado, una campana en la misma piedra y una pared completa de muebles altos en nogal.",
       paras: [
-        "Quitamos el muro entre cocina y comedor y rehicimos la línea de techo para que la luminaria pudiera recorrer todo el largo.",
-        "La barra se fijó a una altura que funciona para taburetes y para trabajar; hicieron falta dos rondas de planos para acertar.",
+        "La isla, la campana y el salpicadero salen de la misma cuarcita clara, así la piedra se lee como una sola pieza desde la campana hasta la pata inclinada de la isla. Tiras LED cálidas recorren el voladizo de la isla y todos los muebles de pared.",
+        "La pared de nogal oculta el refrigerador tras paneles enrasados y enmarca el horno doble y una vitrina de cristal iluminada. Una segunda columna de nogal con estantes de esquina abiertos separa la cocina de la pared de vinos y del salón.",
       ],
-      meta: [["Alcance", "Cocina y comedor"], ["Materiales", "Roble, cuarcita"], ["Duración", "9 semanas"]],
+      meta: [["Alcance", "Cocina y pared de vinos"], ["Materiales", "Nogal, cuarcita, cristal"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "La mesa arranca justo donde termina la encimera.",
-        "El almacenaje se llevó a altura completa para liberar el suelo.",
+        "La pared de vinos y las columnas de nogal que llevan a la cocina.",
+        "La isla y la campana de piedra frente a la pared de nogal.",
+        "La isla desde el extremo, con los muebles altos de nogal y la vitrina iluminada.",
+        "Taburetes bajo el voladizo iluminado de la isla.",
+        "La columna de nogal con estantes de esquina y la encimera en cascada.",
+        "Estantería de nogal iluminada entre el salón y la cocina.",
       ],
     },
     {
       summary:
-        "Panelado de pared de piso a techo en nogal, envolviendo la cocina, las puertas de la despensa y el frente de electrodomésticos.",
+        "Recepción y sala de espera para un wellness center en Miami, diseñadas alrededor de una pared protagonista en roble con nichos en verde petróleo y el logo retroiluminado en el centro.",
       paras: [
-        "Electrodomésticos, despensa y puertas desaparecen dentro del mismo ritmo de paneles, y el espacio se lee como una sola pieza construida.",
-        "Los paneles se fabricaron en nuestro taller y se instalaron en dos días para no parar la vida de la casa.",
+        "La pared se construyó con módulos de roble escalonados, tiras LED empotradas, nichos abiertos de exhibición y fondos en verde petróleo que enmarcan el logo. El mostrador de recepción repite el mismo roble con un lateral curvo y una encimera en verde petróleo.",
+        "Al otro lado, una segunda pared de carpintería en roble reúne estantes abiertos iluminados, un mueble bajo con puertas de cristal enmarcadas en bronce y un panel para la pantalla, con zona de espera para los clientes.",
       ],
-      meta: [["Alcance", "Carpintería"], ["Materiales", "Chapa de nogal"], ["Duración", "4 semanas"]],
+      meta: [["Alcance", "Recepción y sala de espera"], ["Materiales", "Laminado roble, laca verde petróleo, cristal bronce"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "La isla redondeada suaviza las paredes paneladas.",
-        "Los cuerpos con frente de cristal rompen la línea sin añadir herrajes.",
+        "Logo retroiluminado integrado en el panel de roble.",
+        "La dueña frente a la pared protagonista.",
+        "Nichos de roble y paneles en verde petróleo alrededor del logo.",
+        "Los dueños frente a los estantes iluminados y la vitrina de cristal.",
       ],
     },
     {

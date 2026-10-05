@@ -72,6 +72,40 @@ const en = COPY.en;
     </div>
   </div>
 
+  <!-- Video row: the vertical project video beside two photos. While a
+       project has no video (see SHOTS) its frame says it is coming soon. -->
+  <div class="vid">
+    <div class="ba__head">
+      <h3 class="ba__title" data-i18n="vidTitle">{en.vidTitle}</h3>
+      <span class="ba__hint" id="detail-vid-tag"></span>
+    </div>
+    <div class="vid__row">
+      <div class="media vid__frame">
+        <video
+          id="detail-video"
+          muted
+          loop
+          playsinline
+          controls
+          preload="metadata"
+          hidden
+        ></video>
+        <div class="vid__pending" id="detail-video-ph">
+          <span class="vid__play">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M7 5v14l12-7z" />
+            </svg>
+          </span>
+          <span class="vid__label" data-i18n="vidPending">{en.vidPending}</span>
+        </div>
+      </div>
+      <div class="vid__side">
+        <div class="media"><img id="detail-side-1" alt="" loading="lazy" /></div>
+        <div class="media"><img id="detail-side-2" alt="" loading="lazy" /></div>
+      </div>
+    </div>
+  </div>
+
   <div class="detail__shots" id="detail-shots"></div>
 
   <div class="view__foot detail__foot">
@@ -258,6 +292,76 @@ const en = COPY.en;
     box-shadow: 0 6px 20px rgb(0 0 0 / 0.4);
   }
 
+  .vid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 var(--gutter) 88px;
+  }
+  .vid__row {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+  .vid__frame {
+    aspect-ratio: 9 / 16;
+    border: 1px solid rgb(239 226 196 / 0.08);
+  }
+  .vid__frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000;
+  }
+  .vid__frame video[hidden],
+  .vid__pending[hidden] {
+    display: none;
+  }
+  .vid__pending {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    text-align: center;
+  }
+  .vid__play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    border: 1px solid rgb(239 226 196 / 0.3);
+    color: var(--color-cream);
+  }
+  .vid__play svg {
+    margin-left: 3px;
+  }
+  .vid__label {
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: rgb(239 226 196 / 0.45);
+  }
+  .vid__side {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+  }
+  .vid__side .media {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
   .detail__foot {
     padding-top: 80px;
     border-top: 1px solid rgb(239 226 196 / 0.1);
@@ -288,6 +392,17 @@ const en = COPY.en;
     }
     .detail__shots {
       grid-template-columns: minmax(0, 1fr);
+    }
+    /* The video stacks over the two photos, now 3:2 each */
+    .vid__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .vid__side {
+      gap: 6px;
+    }
+    .vid__side .media {
+      flex: none;
+      aspect-ratio: 3 / 2;
     }
     .detail__title {
       font-size: 28px;
@@ -338,11 +453,15 @@ const en = COPY.en;
   .detail__shots .media {
     aspect-ratio: 3 / 2;
   }
-  /* An odd shot out closes the grid as one wide frame */
-  .detail__shots > figure:last-child:nth-child(odd) {
+  /* Portrait shots (`tall` in SHOTS) */
+  .detail__shots .is-tall .media {
+    aspect-ratio: 2 / 3;
+  }
+  /* An odd landscape shot out closes the grid as one wide frame */
+  .detail__shots > figure:last-child:nth-child(odd):not(.is-tall) {
     grid-column: 1 / -1;
   }
-  .detail__shots > figure:last-child:nth-child(odd) .media {
+  .detail__shots > figure:last-child:nth-child(odd):not(.is-tall) .media {
     aspect-ratio: 16 / 7;
   }
   .detail__shots img {
