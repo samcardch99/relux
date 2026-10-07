@@ -193,7 +193,6 @@ export const COPY = {
     baAfter: "After",
     vidTitle: "Project video",
     vidPending: "Video coming soon",
-    dragHint: "Drag to light up",
     menuOpen: "Menu",
     menuClose: "Close",
 
@@ -422,7 +421,6 @@ export const COPY = {
     baAfter: "Después",
     vidTitle: "Vídeo del proyecto",
     vidPending: "Vídeo próximamente",
-    dragHint: "Arrastra para iluminar",
     menuOpen: "Menú",
     menuClose: "Cerrar",
 

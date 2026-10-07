@@ -166,6 +166,9 @@ const en = COPY.en;
       height: 132px;
       transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
     }
+    .panel {
+      cursor: default;
+    }
     .panel.is-on {
       height: 460px;
     }
@@ -190,9 +193,45 @@ const en = COPY.en;
 
 <script>
   const panels = [...document.querySelectorAll<HTMLElement>("[data-svc]")];
+  const stacked = window.matchMedia("(max-width: 1080px)");
+
+  // Side by side: a tap opens a panel and closes the rest
   panels.forEach((panel) =>
-    panel.addEventListener("click", () =>
-      panels.forEach((p) => p.classList.toggle("is-on", p === panel))
-    )
+    panel.addEventListener("click", () => {
+      if (stacked.matches) return;
+      panels.forEach((p) => p.classList.toggle("is-on", p === panel));
+    })
   );
+
+  // Stacked: each panel opens by itself once its top climbs past 80% of the
+  // viewport and then stays open. Panels only ever grow below what is on
+  // screen, so the page never jumps.
+  let ticking = false;
+  const reveal = () => {
+    ticking = false;
+    if (!stacked.matches) return;
+    const line = window.innerHeight * 0.8;
+    panels.forEach((p) => {
+      if (p.getBoundingClientRect().top < line) p.classList.add("is-on");
+    });
+  };
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(reveal);
+    }
+  };
+  const setMode = () => {
+    if (stacked.matches) {
+      panels.forEach((p) => p.classList.remove("is-on"));
+      reveal();
+    } else {
+      panels.forEach((p, i) => p.classList.toggle("is-on", i === 0));
+    }
+  };
+
+  setMode();
+  stacked.addEventListener("change", setMode);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
 </script>

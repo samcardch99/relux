@@ -458,6 +458,17 @@ const tab = (key: "glass" | "floor") => ({
     color: var(--color-cream);
   }
 
+  /* Touch, and the tablet/phone layout: no "View material" label trailing
+     the finger — a tap on the render simply selects the material. */
+  @media (hover: none), (max-width: 1080px) {
+    .mat-cursor {
+      display: none;
+    }
+    .mat-region__clip {
+      cursor: pointer;
+    }
+  }
+
   @media (max-width: 1080px) {
     .materials__body {
       grid-template-columns: minmax(0, 1fr);
@@ -509,6 +520,8 @@ const tab = (key: "glass" | "floor") => ({
 
     /** Same breakpoint the CSS uses to swap the kitchen for the bathroom. */
     const phone = window.matchMedia("(max-width: 720px)");
+    /** Touch screens fire fake mouse events on a tap; hover logic ignores them. */
+    const touch = window.matchMedia("(hover: none)");
     const scene = (): Scene => (phone.matches ? "bath" : "kitchen");
     const mats = () => SCENES[scene()].mats;
     let regions = allRegions.filter((r) => r.dataset.scene === scene());
@@ -623,12 +636,14 @@ const tab = (key: "glass" | "floor") => ({
     });
 
     stage.addEventListener("mouseover", (e) => {
+      if (touch.matches) return;
       const k = keyAt(e.target);
       if (k) setMat(k);
       else if (!pinned) setMat(null);
     });
 
     stage.addEventListener("mousemove", (e: MouseEvent) => {
+      if (touch.matches) return;
       const r = stage.getBoundingClientRect();
       const z = zoom();
       cursor.style.left = `${(e.clientX - r.left) / z + 62}px`;
@@ -637,6 +652,7 @@ const tab = (key: "glass" | "floor") => ({
     });
 
     stage.addEventListener("mouseleave", () => {
+      if (touch.matches) return;
       pinned = false;
       setMat(null);
     });
@@ -649,9 +665,11 @@ const tab = (key: "glass" | "floor") => ({
 
     tabs.forEach((tab) => {
       const k = tab.getAttribute("data-mat-btn") as MaterialKey;
-      tab.addEventListener("mouseenter", () => setMat(k));
+      tab.addEventListener("mouseenter", () => {
+        if (!touch.matches) setMat(k);
+      });
       tab.addEventListener("mouseleave", () => {
-        if (!pinned) setMat(null);
+        if (!pinned && !touch.matches) setMat(null);
       });
       tab.addEventListener("click", () => {
         pinned = true;

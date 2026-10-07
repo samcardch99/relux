@@ -55,8 +55,8 @@ const MENU = [
       stroke-linecap="round"
       aria-hidden="true"
     >
-      <path class="nav__burger-open" d="M4 8h16M4 16h16"></path>
-      <path class="nav__burger-close" d="M6 6l12 12M18 6 6 18"></path>
+      <path class="nav__burger-l1" d="M4 8h16"></path>
+      <path class="nav__burger-l2" d="M4 16h16"></path>
     </svg>
   </button>
 </header>
@@ -64,11 +64,14 @@ const MENU = [
 <!-- Full-screen menu for tablet and phone. Sits under the header, so the
      burger stays in place as the close button. -->
 <div class="sheet" id="nav-sheet" hidden>
+  <span class="sheet__edge" aria-hidden="true"></span>
   <nav class="sheet__nav" aria-label="Main">
     {
       MENU.map((m, i) => (
-        <a href={m.href}>
-          <span data-i18n={m.key}>{m.label}</span>
+        <a href={m.href} style={`--i:${i}`}>
+          <span class="sheet__mask">
+            <span class="sheet__label" data-i18n={m.key}>{m.label}</span>
+          </span>
           <span class="sheet__n">{String(i + 1).padStart(2, "0")}</span>
         </a>
       ))
@@ -214,19 +217,36 @@ const MENU = [
     text-transform: uppercase;
     white-space: nowrap;
   }
+  .nav__burger > span {
+    display: inline-block;
+  }
   .nav__burger svg {
     display: block;
+    overflow: visible;
   }
-  .nav__burger-close,
-  .nav__burger[aria-expanded="true"] .nav__burger-open {
-    display: none;
+  /* The two bars fold into an X around their own centres */
+  .nav__burger svg path {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
   }
-  .nav__burger[aria-expanded="true"] .nav__burger-close {
-    display: inline;
+  .nav__burger[aria-expanded="true"] .nav__burger-l1 {
+    transform: translateY(4px) rotate(45deg) scaleX(0.85);
+  }
+  .nav__burger[aria-expanded="true"] .nav__burger-l2 {
+    transform: translateY(-4px) rotate(-45deg) scaleX(0.85);
   }
 
-  /* ── Full-screen sheet ── */
+  /* ── Full-screen sheet ──
+     Opening: the ink curtain drops behind a gold hairline, the dividers
+     draw in gold and cool to the usual hairline, each label rises out of
+     its own mask and the indexes settle their tracking, row by row; the
+     footer comes last. Closing gathers the content first, then lifts the
+     curtain. The script toggles .is-open and keeps the sheet unhidden
+     until the curtain is up. */
   .sheet {
+    --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
+    --ease-rise: cubic-bezier(0.22, 1, 0.36, 1);
     position: fixed;
     inset: 0;
     z-index: 99;
@@ -237,36 +257,175 @@ const MENU = [
     padding: 120px 28px 40px;
     overflow-y: auto;
     background: var(--color-ink);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.7s var(--ease-curtain) 0.22s;
+  }
+  .sheet.is-open {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.9s var(--ease-curtain);
   }
   .sheet[hidden] {
     display: none;
   }
+
+  .sheet__edge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgb(201 164 92 / 0) 0%,
+      rgb(201 164 92 / 0.9) 30%,
+      rgb(232 213 172 / 1) 50%,
+      rgb(201 164 92 / 0.9) 70%,
+      rgb(201 164 92 / 0) 100%
+    );
+    box-shadow: 0 0 14px 1px rgb(201 164 92 / 0.45);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sheet.is-open .sheet__edge {
+    animation: sheet-edge 0.9s var(--ease-curtain) both;
+  }
+  @keyframes sheet-edge {
+    0% {
+      opacity: 1;
+      top: 0;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      top: calc(100% - 1px);
+    }
+  }
+
   .sheet__nav {
+    position: relative;
     display: flex;
     flex-direction: column;
-    border-top: 1px solid rgb(239 226 196 / 0.1);
   }
+  /* Hairlines are drawn, not bordered, so they can sweep in */
+  .sheet__nav::before,
+  .sheet__nav > a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgb(239 226 196 / 0.1);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+      transform 0.35s ease,
+      background 0.35s ease;
+  }
+  .sheet__nav::before {
+    top: 0;
+  }
+  .sheet__nav > a::after {
+    bottom: 0;
+  }
+  .sheet.is-open .sheet__nav::before,
+  .sheet.is-open .sheet__nav > a::after {
+    transform: scaleX(1);
+    animation: sheet-rule 1.6s ease both;
+    transition: transform 1s var(--ease-rise);
+  }
+  .sheet.is-open .sheet__nav::before {
+    transition-delay: 0.3s;
+    animation-delay: 0.3s;
+  }
+  .sheet.is-open .sheet__nav > a::after {
+    transition-delay: calc(0.38s + var(--i) * 0.08s);
+    animation-delay: calc(0.38s + var(--i) * 0.08s);
+  }
+  @keyframes sheet-rule {
+    0%,
+    35% {
+      background: rgb(201 164 92 / 0.7);
+    }
+    100% {
+      background: rgb(239 226 196 / 0.1);
+    }
+  }
+
   .sheet__nav > a {
+    position: relative;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 16px;
     padding: 22px 0;
-    border-bottom: 1px solid rgb(239 226 196 / 0.1);
     font-size: 26px;
     font-weight: 300;
     color: var(--color-cream);
   }
+  .sheet__mask {
+    display: block;
+    overflow: hidden;
+    /* room for descenders inside the mask */
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+  .sheet__label {
+    display: block;
+    transform: translateY(110%);
+    transition: transform 0.3s ease;
+  }
+  .sheet.is-open .sheet__label {
+    transform: translateY(0);
+    transition: transform 1s var(--ease-rise) calc(0.42s + var(--i) * 0.08s);
+  }
+
   .sheet__n {
     font-size: 10px;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.7em;
     color: var(--color-stone);
+    opacity: 0;
+    transition:
+      opacity 0.25s ease,
+      letter-spacing 0.25s ease;
   }
+  .sheet.is-open .sheet__n {
+    opacity: 1;
+    letter-spacing: 0.3em;
+    transition:
+      opacity 0.9s ease calc(0.6s + var(--i) * 0.08s),
+      letter-spacing 1.2s var(--ease-rise) calc(0.6s + var(--i) * 0.08s);
+  }
+
   .sheet__foot {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 28px;
+  }
+  .sheet__foot > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease;
+  }
+  .sheet.is-open .sheet__foot > * {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.8s ease,
+      transform 0.9s var(--ease-rise);
+  }
+  .sheet.is-open .sheet__foot > :nth-child(1) {
+    transition-delay: 0.85s;
+  }
+  .sheet.is-open .sheet__foot > :nth-child(2) {
+    transition-delay: 0.93s;
+  }
+  .sheet.is-open .sheet__foot > :nth-child(3) {
+    transition-delay: 1.01s;
   }
   .sheet__lang {
     gap: 14px;
@@ -280,6 +439,17 @@ const MENU = [
     font-size: 15px;
     font-weight: 300;
     color: rgb(239 226 196 / 0.66);
+  }
+
+  /* The global rule shortens durations; drop the staggers too */
+  @media (prefers-reduced-motion: reduce) {
+    .sheet,
+    .sheet *,
+    .sheet *::after,
+    .sheet__nav::before {
+      transition-delay: 0s !important;
+      animation-delay: 0s !important;
+    }
   }
 
   @media (max-width: 1080px) {

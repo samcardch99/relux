@@ -363,12 +363,35 @@ const menuIsOpen = () => burger?.getAttribute("aria-expanded") === "true";
 function labelMenu() {
   if (!burgerLabel) return;
   const t = COPY[lang] as unknown as Record<string, string>;
-  burgerLabel.textContent = menuIsOpen() ? t.menuClose : t.menuOpen;
+  const next = menuIsOpen() ? t.menuClose : t.menuOpen;
+  if (burgerLabel.textContent === next) return;
+  burgerLabel.textContent = next;
+  burgerLabel.animate(
+    [
+      { opacity: 0, transform: "translateY(5px)", letterSpacing: "0.34em" },
+      { opacity: 1, transform: "none", letterSpacing: "0.24em" },
+    ],
+    { duration: 600, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+  );
 }
+
+let sheetTimer = 0;
 
 function setMenu(open: boolean) {
   burger?.setAttribute("aria-expanded", String(open));
-  if (sheet) sheet.hidden = !open;
+  if (sheet) {
+    clearTimeout(sheetTimer);
+    if (open) {
+      sheet.hidden = false;
+      void sheet.offsetHeight; // start from the closed state so it animates
+      sheet.classList.add("is-open");
+    } else {
+      sheet.classList.remove("is-open");
+      // Hide once the curtain is up (0.22s delay + 0.7s lift)
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      sheetTimer = window.setTimeout(() => (sheet.hidden = true), reduce ? 0 : 950);
+    }
+  }
   // Only lock here if no full-screen view already holds the lock
   if (!stack.length) document.body.classList.toggle("is-locked", open);
   labelMenu();
