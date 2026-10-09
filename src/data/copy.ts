@@ -76,8 +76,8 @@ export const COPY = {
     p5Title: "Crystal Luxe Wellness Center",
     p6Tag: "Kitchens",
     p6Title: "Matte black kitchen with island",
-    p7Tag: "Interiors",
-    p7Title: "Full apartment remodel",
+    p7Tag: "Closets",
+    p7Title: "Walk-in closet in white and gold",
     p8Tag: "Interiors",
     p8Title: "Living room and TV wall",
     p9Tag: "Woodwork",
@@ -303,8 +303,8 @@ export const COPY = {
     p5Title: "Crystal Luxe Wellness Center",
     p6Tag: "Cocinas",
     p6Title: "Cocina en negro mate con isla",
-    p7Tag: "Interiores",
-    p7Title: "Remodelación completa de apartamento",
+    p7Tag: "Closets",
+    p7Title: "Walk-in closet en blanco y dorado",
     p8Tag: "Interiores",
     p8Title: "Sala y TV wall",
     p9Tag: "Carpintería",
@@ -492,6 +492,8 @@ const IMG = {
   bath2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/bath2-${n}.webp`),
   kitchen3: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/k3-${n}.webp`),
   crystalLuxe: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/cl-${n}.webp`),
+  /** Project 7, the white and gold walk-in closet. */
+  goldCloset: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/gw-${n}.webp`),
   closet: "/assets/closet.webp",
   bath: "/assets/bath.webp",
   kitchenDining: "/assets/kitchen-dining.webp",
@@ -508,7 +510,6 @@ const IMG = {
   owners: "/assets/relux-owners.webp",
   ownersWide: "/assets/relux-owners-wide.webp",
   founder1: "/assets/relux-founder-1.webp",
-  /** Cropped from the shot of the two of them — the design had no second portrait. */
   founder2: "/assets/relux-founder-2.webp",
   /** Process view: a render of the CNC (stands in for the machine video) and two details. */
   machineHero: "/assets/machine-hero.webp",
@@ -520,7 +521,9 @@ export const FOCUS = {
   proj6: "62% center",
   processBand: "center bottom",
   ctaBand: "center 72%",
-  ownersWide: "center 55%",
+  ownersWide: "center center",
+  /** The design pans the first founder's portrait slightly up inside its frame. */
+  founder1: "center 45%",
 } as const;
 
 export { IMG };
@@ -575,7 +578,11 @@ export const VALUES = [
   { n: "03", titleKey: "v3Title", descKey: "v3Desc" },
 ] as const;
 
-/** The nine projects. The first six also appear in the homepage grid. */
+/**
+ * Every project with a detail view. Project 8 keeps its slot so the indices
+ * still line up with SHOTS and DETAIL, but the design no longer lists it
+ * anywhere — see WORK and FEATURED below.
+ */
 export const PROJECTS = [
   { i: 0, tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[0] },
   { i: 1, tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet2[0] },
@@ -583,10 +590,16 @@ export const PROJECTS = [
   { i: 3, tagKey: "p4Tag", titleKey: "p4Title", img: IMG.kitchen3[4] },
   { i: 4, tagKey: "p5Tag", titleKey: "p5Title", img: IMG.crystalLuxe[0] },
   { i: 5, tagKey: "p6Tag", titleKey: "p6Title", img: IMG.proj6, focus: FOCUS.proj6 },
-  { i: 6, tagKey: "p7Tag", titleKey: "p7Title", img: IMG.interiorEmpty },
+  { i: 6, tagKey: "p7Tag", titleKey: "p7Title", img: IMG.goldCloset[4] },
   { i: 7, tagKey: "p8Tag", titleKey: "p8Title", img: IMG.kitchenDining },
   { i: 8, tagKey: "p9Tag", titleKey: "p9Title", img: IMG.closet },
 ] as const;
+
+/** The "Our work" view lists every project except 8. */
+export const WORK = PROJECTS.filter((p) => p.i !== 7);
+
+/** The homepage shows six: projects 1–5 and 7, which uses a different photo there. */
+export const FEATURED = [...PROJECTS.slice(0, 5), { ...PROJECTS[6], img: IMG.goldCloset[6] }];
 
 /**
  * Hero + the secondary shots shown inside each project detail view.
@@ -627,7 +640,12 @@ export const SHOTS: ProjectShots[] = [
     tall: [0, 1, 2, 3],
   },
   { hero: IMG.proj6, shots: [IMG.bath, IMG.kitchenOnyx] },
-  { hero: IMG.interiorEmpty, shots: [IMG.kitchenWood, IMG.closet] },
+  {
+    hero: IMG.goldCloset[4],
+    side: [IMG.goldCloset[5], IMG.goldCloset[7]],
+    shots: pick(IMG.goldCloset, 2, 4, 10, 3, 1, 9, 11, 7),
+    tall: [0, 1, 2, 3, 4, 5, 6, 7],
+  },
   { hero: IMG.kitchenDining, shots: [IMG.kitchenWood, IMG.kitchenDark] },
   { hero: IMG.closet, shots: [IMG.interiorEmpty, IMG.kitchenWood] },
 ];
@@ -738,15 +756,21 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "A full apartment remodel taken back to the shell: floors, walls, doors and finishes replaced throughout.",
+        "A walk-in closet lined wall to wall with gold-framed glass cabinets, built around a white island with a stone top and gold pulls.",
       paras: [
-        "We replaced every floor, squared the openings and rebuilt the baseboards so the new millwork would sit flush.",
-        "The finish work — walls, doors and paint — is what makes an empty room feel finished before a single piece of furniture arrives.",
+        "Every hanging bay sits behind a clear glass door in a brushed gold frame, with a vertical LED strip on each side so the clothes are lit from the edges and nothing casts a shadow.",
+        "The white island carries deep drawers on both faces and a polished stone top. A second, lower run of glass display cabinets holds shoes along one side, and the walnut floor runs through the whole room.",
       ],
-      meta: [["Scope", "Full interior"], ["Materials", "Engineered oak, paint"], ["Duration", "10 weeks"]],
+      meta: [["Scope", "Walk-in closet"], ["Materials", "Glass, brushed gold, white lacquer, stone"], ["Location", "Miami, FL"]],
       captions: [
-        "New flooring runs unbroken through every room.",
-        "Openings were squared before the joinery went in.",
+        "The owners in front of the shelving and hanging bays.",
+        "The owners in the corner of the closet.",
+        "The owners between the glass cabinets.",
+        "Leaning on the white island, with the glass bays behind.",
+        "Choosing a jacket in front of the lit hanging bays.",
+        "The sculpture on the stone top of the island.",
+        "The island drawers with gold pulls and the walnut floor.",
+        "The island and the hanging bays in warm evening light.",
       ],
     },
     {
@@ -874,15 +898,21 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "Remodelación completa de apartamento llevada hasta la obra gris: pisos, paredes, puertas y acabados renovados por completo.",
+        "Un walk-in closet revestido de pared a pared con vitrinas de cristal y marco dorado, construido alrededor de una isla blanca con cubierta de piedra y tiradores dorados.",
       paras: [
-        "Cambiamos todos los pisos, escuadramos los vanos y rehicimos los rodapiés para que la nueva carpintería asentara a ras.",
-        "El acabado —paredes, puertas y pintura— es lo que hace que una habitación vacía se vea terminada antes de que entre un solo mueble.",
+        "Cada cuerpo de colgar queda detrás de una puerta de cristal transparente con marco dorado cepillado, con una tira LED vertical a cada lado para que la ropa se ilumine desde los bordes y nada proyecte sombra.",
+        "La isla blanca lleva cajones profundos en ambas caras y una cubierta de piedra pulida. Una segunda fila de vitrinas más bajas guarda los zapatos en un lateral, y el piso de nogal recorre todo el cuarto.",
       ],
-      meta: [["Alcance", "Interior completo"], ["Materiales", "Roble laminado, pintura"], ["Duración", "10 semanas"]],
+      meta: [["Alcance", "Walk-in closet"], ["Materiales", "Cristal, dorado cepillado, laca blanca, piedra"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "El piso corre sin interrupción por todas las habitaciones.",
-        "Los vanos se escuadraron antes de montar la carpintería.",
+        "Los dueños frente a las repisas y los cuerpos de colgar.",
+        "Los dueños en la esquina del closet.",
+        "Los dueños entre las vitrinas de cristal.",
+        "Apoyado en la isla blanca, con las vitrinas detrás.",
+        "Eligiendo una chaqueta frente a los cuerpos iluminados.",
+        "La escultura sobre la cubierta de piedra de la isla.",
+        "Los cajones de la isla con tiradores dorados y el piso de nogal.",
+        "La isla y los cuerpos de colgar con luz cálida de tarde.",
       ],
     },
     {

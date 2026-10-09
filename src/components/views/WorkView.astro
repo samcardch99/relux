@@ -1,5 +1,5 @@
 ---
-import { PROJECTS, COPY, INSTAGRAM } from "../../data/copy";
+import { WORK, COPY, INSTAGRAM } from "../../data/copy";
 import ProjectCard from "../ProjectCard.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
@@ -30,7 +30,7 @@ const en = COPY.en;
   </div>
 
   <div class="grid-3 workview__grid">
-    {PROJECTS.map((p) => <ProjectCard project={p} />)}
+    {WORK.map((p) => <ProjectCard project={p} />)}
   </div>
 
   <div class="view__foot">

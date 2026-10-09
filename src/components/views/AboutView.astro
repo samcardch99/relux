@@ -5,6 +5,7 @@ import ArrowUpRight from "../icons/ArrowUpRight.astro";
 
 const en = COPY.en;
 const founderPhotos = [IMG.founder1, IMG.founder2];
+const founderFocus = [FOCUS.founder1, undefined];
 ---
 
 <div class="view" id="view-about" role="dialog" aria-modal="true" aria-label="About RE-LUX" hidden>
@@ -27,7 +28,7 @@ const founderPhotos = [IMG.founder1, IMG.founder2];
   <div class="media aboutview__band">
     <img
       src={IMG.ownersWide}
-      alt="A RE-LUX kitchen build"
+      alt="The RE-LUX team"
       loading="lazy"
       style={`object-position:${FOCUS.ownersWide}`}
     />
@@ -68,7 +69,12 @@ const founderPhotos = [IMG.founder1, IMG.founder2];
       FOUNDERS.map((f, i) => (
         <div class="founder">
           <div class="media founder__photo">
-            <img src={founderPhotos[i]} alt={f.name} loading="lazy" />
+            <img
+              src={founderPhotos[i]}
+              alt={f.name}
+              loading="lazy"
+              style={founderFocus[i] && `object-position:${founderFocus[i]}`}
+            />
           </div>
           <div class="founder__meta">
             <span class="founder__name">{f.name}</span>
@@ -99,7 +105,9 @@ const founderPhotos = [IMG.founder1, IMG.founder2];
   }
 
   .aboutview__band {
-    height: 460px;
+    height: 82vh;
+    min-height: 560px;
+    max-height: 980px;
     margin-bottom: 88px;
   }
 
@@ -182,6 +190,7 @@ const founderPhotos = [IMG.founder1, IMG.founder2];
   @media (max-width: 720px) {
     .aboutview__band {
       height: 280px;
+      min-height: 0;
     }
     .aboutview__text {
       grid-template-columns: minmax(0, 1fr);

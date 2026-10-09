@@ -1,10 +1,9 @@
 ---
-import { PROJECTS, COPY } from "../data/copy";
+import { FEATURED, COPY } from "../data/copy";
 import ProjectCard from "./ProjectCard.astro";
 import ArrowUpRight from "./icons/ArrowUpRight.astro";
 
 const en = COPY.en;
-const featured = PROJECTS.slice(0, 6);
 ---
 
 <section class="projects" id="projects">
@@ -17,7 +16,7 @@ const featured = PROJECTS.slice(0, 6);
   </div>
 
   <div class="grid-3">
-    {featured.map((p) => <ProjectCard project={p} />)}
+    {FEATURED.map((p) => <ProjectCard project={p} />)}
   </div>
 
   <div class="projects__more">
