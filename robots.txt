@@ -1,0 +1,4 @@
+# Sitio de pruebas (test.relux-construction.com): que no se indexe.
+# Quitar este bloqueo y el .htaccess cuando el sitio vuelva al dominio principal.
+User-agent: *
+Disallow: /
