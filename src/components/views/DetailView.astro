@@ -1,9 +1,24 @@
 ---
-import { COPY } from "../../data/copy";
+import { COPY, DETAIL, PROJECTS, SHOTS } from "../../data/copy";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
 
+interface Props {
+  /**
+   * Project shown when the page loads at its own address. Only the top of the
+   * view is rendered here (so it reads right before scripts run, and to search
+   * engines); site.ts fills in the rest and redraws it all on language change.
+   */
+  index?: number;
+}
+
+const { index } = Astro.props;
 const en = COPY.en;
+const project = index === undefined ? undefined : PROJECTS[index];
+const entry = index === undefined ? undefined : DETAIL.en[index];
+const hero = index === undefined ? "" : SHOTS[index].hero;
+const tag = project ? en[project.tagKey] : "";
+const title = project ? en[project.titleKey] : "";
 ---
 
 <div
@@ -12,29 +27,38 @@ const en = COPY.en;
   role="dialog"
   aria-modal="true"
   aria-labelledby="detail-title"
-  hidden
+  hidden={!project}
 >
   <div class="view__bar">
     <button type="button" class="btn btn--ghost btn--back" data-close="detail">
       <ArrowBack />
       <span data-i18n="workBack">Back</span>
     </button>
-    <span class="view__bar-meta" id="detail-tag"></span>
+    <span class="view__bar-meta" id="detail-tag">{tag}</span>
   </div>
 
   <div class="media detail__hero">
-    <img id="detail-hero" src="" alt="" />
+    <img id="detail-hero" src={hero} alt={title} />
     <div class="detail__hero-scrim"></div>
   </div>
 
   <div class="detail__intro">
     <div class="detail__copy">
-      <h2 class="detail__title" id="detail-title"></h2>
-      <p class="detail__summary" id="detail-summary"></p>
-      <div class="detail__paras" id="detail-paras"></div>
+      <h2 class="detail__title" id="detail-title">{title}</h2>
+      <p class="detail__summary" id="detail-summary">{entry?.summary}</p>
+      <div class="detail__paras" id="detail-paras">{entry?.paras.map((text) => <p>{text}</p>)}</div>
     </div>
 
-    <dl class="detail__meta" id="detail-meta"></dl>
+    <dl class="detail__meta" id="detail-meta">
+      {
+        entry?.meta.map(([key, value]) => (
+          <div>
+            <dt>{key}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
   </div>
 
   <!-- Before/after comparison. Only shown for projects that have a "before"
@@ -77,7 +101,7 @@ const en = COPY.en;
   <div class="vid">
     <div class="ba__head">
       <h3 class="ba__title" data-i18n="vidTitle">{en.vidTitle}</h3>
-      <span class="ba__hint" id="detail-vid-tag"></span>
+      <span class="ba__hint" id="detail-vid-tag">{tag}</span>
     </div>
     <div class="vid__row">
       <div class="media vid__frame">

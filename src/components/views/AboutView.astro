@@ -3,12 +3,18 @@ import { COPY, VALUES, FOUNDERS, IMG, FOCUS } from "../../data/copy";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
 
+interface Props {
+  /** Rendered already open, for the page at this view's own address. */
+  open?: boolean;
+}
+
+const { open = false } = Astro.props;
 const en = COPY.en;
 const founderPhotos = [IMG.founder1, IMG.founder2];
 const founderFocus = [FOCUS.founder1, undefined];
 ---
 
-<div class="view" id="view-about" role="dialog" aria-modal="true" aria-label="About RE-LUX" hidden>
+<div class="view" id="view-about" role="dialog" aria-modal="true" aria-label="About RE-LUX" hidden={!open}>
   <div class="view__bar">
     <button type="button" class="btn btn--ghost btn--back" data-close="about">
       <ArrowBack />

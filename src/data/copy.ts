@@ -584,15 +584,15 @@ export const VALUES = [
  * anywhere — see WORK and FEATURED below.
  */
 export const PROJECTS = [
-  { i: 0, tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[0] },
-  { i: 1, tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet2[0] },
-  { i: 2, tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath2[2] },
-  { i: 3, tagKey: "p4Tag", titleKey: "p4Title", img: IMG.kitchen3[4] },
-  { i: 4, tagKey: "p5Tag", titleKey: "p5Title", img: IMG.crystalLuxe[0] },
-  { i: 5, tagKey: "p6Tag", titleKey: "p6Title", img: IMG.proj6, focus: FOCUS.proj6 },
-  { i: 6, tagKey: "p7Tag", titleKey: "p7Title", img: IMG.goldCloset[4] },
-  { i: 7, tagKey: "p8Tag", titleKey: "p8Title", img: IMG.kitchenDining },
-  { i: 8, tagKey: "p9Tag", titleKey: "p9Title", img: IMG.closet },
+  { i: 0, slug: "liz-kitchen", tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[0] },
+  { i: 1, slug: "walk-in-closet-grafito-y-nogal", tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet2[0] },
+  { i: 2, slug: "bano-principal-nogal-y-onix", tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath2[2] },
+  { i: 3, slug: "cocina-nogal-isla-de-cuarcita", tagKey: "p4Tag", titleKey: "p4Title", img: IMG.kitchen3[4] },
+  { i: 4, slug: "crystal-luxe-wellness-center", tagKey: "p5Tag", titleKey: "p5Title", img: IMG.crystalLuxe[0] },
+  { i: 5, slug: "cocina-negro-mate", tagKey: "p6Tag", titleKey: "p6Title", img: IMG.proj6, focus: FOCUS.proj6 },
+  { i: 6, slug: "walk-in-closet-blanco-y-dorado", tagKey: "p7Tag", titleKey: "p7Title", img: IMG.goldCloset[4] },
+  { i: 7, slug: "sala-y-tv-wall", tagKey: "p8Tag", titleKey: "p8Title", img: IMG.kitchenDining },
+  { i: 8, slug: "recibidor-panelado-de-madera", tagKey: "p9Tag", titleKey: "p9Title", img: IMG.closet },
 ] as const;
 
 /** The "Our work" view lists every project except 8. */
@@ -600,6 +600,19 @@ export const WORK = PROJECTS.filter((p) => p.i !== 7);
 
 /** The homepage shows six: projects 1–5 and 7, which uses a different photo there. */
 export const FEATURED = [...PROJECTS.slice(0, 5), { ...PROJECTS[6], img: IMG.goldCloset[6] }];
+
+/**
+ * Each full-screen view has its own address, so it can be shared and the
+ * browser's Back button closes it. Every path below is also built as a real
+ * page (src/pages), which opens with that view already on screen.
+ */
+export const VIEW_PATHS = {
+  work: "/trabajos/",
+  about: "/nosotros/",
+  process: "/proceso/",
+} as const;
+
+export const projectPath = (index: number) => `/proyectos/${PROJECTS[index].slug}/`;
 
 /**
  * Hero + the secondary shots shown inside each project detail view.

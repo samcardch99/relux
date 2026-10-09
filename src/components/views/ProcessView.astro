@@ -3,10 +3,16 @@ import { COPY, IMG, MACHINE_SPECS, SHOP } from "../../data/copy";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
 
+interface Props {
+  /** Rendered already open, for the page at this view's own address. */
+  open?: boolean;
+}
+
+const { open = false } = Astro.props;
 const en = COPY.en;
 ---
 
-<div class="view" id="view-process" role="dialog" aria-modal="true" aria-label="Our process" hidden>
+<div class="view" id="view-process" role="dialog" aria-modal="true" aria-label="Our process" hidden={!open}>
   <div class="view__bar">
     <button type="button" class="btn btn--ghost btn--back" data-close="process">
       <ArrowBack />

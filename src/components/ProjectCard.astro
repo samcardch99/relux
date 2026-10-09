@@ -1,5 +1,5 @@
 ---
-import { COPY, type PROJECTS } from "../data/copy";
+import { COPY, projectPath, type PROJECTS } from "../data/copy";
 import ArrowRight from "./icons/ArrowRight.astro";
 
 interface Props {
@@ -10,7 +10,7 @@ const { project } = Astro.props;
 const en = COPY.en;
 ---
 
-<button type="button" class="pcard" data-project={project.i}>
+<a href={projectPath(project.i)} class="pcard" data-project={project.i}>
   <div class="media pcard__media">
     <img
       src={project.img}
@@ -29,7 +29,7 @@ const en = COPY.en;
       <ArrowRight />
     </span>
   </div>
-</button>
+</a>
 
 <style>
   .pcard {

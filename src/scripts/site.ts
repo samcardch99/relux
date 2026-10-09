@@ -1,4 +1,4 @@
-import { COPY, DETAIL, PROJECTS, SHOTS, type Lang } from "../data/copy";
+import { COPY, DETAIL, PROJECTS, SHOTS, VIEW_PATHS, WORK, projectPath, type Lang } from "../data/copy";
 
 const STORAGE_KEY = "relux:lang";
 
@@ -301,6 +301,153 @@ function openProject(index: number) {
 }
 
 /* ──────────────────────────────────────────────
+   Addresses
+   Every open view has its own path (VIEW_PATHS,
+   projectPath). Opening one pushes a history entry
+   that records the whole stack of views, so Back
+   closes the view and Forward brings it back.
+   `depth` counts the entries pushed on top of the
+   one the visitor landed on: while it is above 0,
+   closing a view is simply going back in history.
+   ────────────────────────────────────────────── */
+
+type Route = { views: ViewName[]; project: number | null };
+type HistoryState = Route & { relux: true; depth: number };
+
+let depth = 0;
+/** Views only cover the page, so going back must not move the page underneath;
+ *  and a "close and go to…" scrolls itself once the history step has landed. */
+history.scrollRestoration = "manual";
+/** Where to scroll once a "close and go to…" has returned to the homepage. */
+let pendingGoto: string | null = null;
+
+function pathFor({ views, project }: Route) {
+  const top = views[views.length - 1];
+  if (!top) return "/";
+  if (top === "detail") return project === null ? "/" : projectPath(project);
+  return VIEW_PATHS[top];
+}
+
+function routeFromPath(path: string): Route {
+  const p = path.endsWith("/") ? path : `${path}/`;
+  for (const name of Object.keys(VIEW_PATHS) as (keyof typeof VIEW_PATHS)[]) {
+    if (VIEW_PATHS[name] === p) return { views: [name], project: null };
+  }
+  const slug = p.match(/^\/proyectos\/([^/]+)\/$/)?.[1];
+  const project = WORK.find((w) => w.slug === slug);
+  return project ? { views: ["detail"], project: project.i } : { views: [], project: null };
+}
+
+const current = (): Route => ({ views: [...stack], project: openDetail });
+
+/** Tab titles, matching the <title> each page is built with (src/pages). */
+const SITE_TITLE = "RE-LUX Construction";
+const VIEW_TITLES = {
+  work: "All projects",
+  about: "About RE-LUX",
+  process: "Our process",
+} as const;
+
+function titleFor({ views, project }: Route) {
+  const top = views[views.length - 1];
+  if (!top) return `${SITE_TITLE} — Designed & Built | Miami`;
+  if (top === "detail") {
+    const t = COPY[lang] as unknown as Record<string, string>;
+    return project === null ? SITE_TITLE : `${t[PROJECTS[project].titleKey]} — ${SITE_TITLE}`;
+  }
+  return `${VIEW_TITLES[top]} — ${SITE_TITLE}`;
+}
+
+function record(push: boolean, hash = "") {
+  const route = current();
+  if (push) depth += 1;
+  const state: HistoryState = { ...route, relux: true, depth };
+  const url = pathFor(route) + hash;
+  if (push) history.pushState(state, "", url);
+  else history.replaceState(state, "", url);
+  document.title = titleFor(route);
+}
+
+/** Make the views on screen match a route, closing from the top down. */
+function applyRoute({ views, project }: Route) {
+  [...stack].reverse().forEach((name) => {
+    if (!views.includes(name)) closeView(name);
+  });
+  if (views.includes("detail") && project !== null && openDetail !== project) {
+    renderDetail(project);
+  }
+  views.forEach((name) => {
+    if (stack.includes(name)) return;
+    if (name === "detail" && project !== null) renderDetail(project);
+    openView(name);
+  });
+}
+
+function scrollToSection(id: string) {
+  requestAnimationFrame(() => {
+    if (id) document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+/** Close the view on top, as the Back button would. */
+function closeTop() {
+  if (!stack.length) return;
+  if (depth > 0) {
+    history.back();
+    return;
+  }
+  closeView(stack[stack.length - 1]);
+  record(false);
+}
+
+/** Close every view and scroll the homepage to a section. */
+function closeAllAndGo(id: string) {
+  if (depth > 0) {
+    pendingGoto = id;
+    history.go(-depth);
+    return;
+  }
+  closeAllViews();
+  record(false, id ? `#${id}` : "");
+  scrollToSection(id);
+}
+
+window.addEventListener("popstate", (event) => {
+  const state = event.state as HistoryState | null;
+  depth = state?.relux ? state.depth : 0;
+  applyRoute(state?.relux ? state : routeFromPath(location.pathname));
+  document.title = titleFor(current());
+
+  if (pendingGoto !== null) {
+    const id = pendingGoto;
+    pendingGoto = null;
+    // Landed on the entry the visit started from, which may itself be a view
+    if (stack.length) {
+      closeAllViews();
+      record(false, id ? `#${id}` : "");
+    }
+    scrollToSection(id);
+  }
+});
+
+// A page loaded at a view's address arrives with that view already rendered
+// open; register it so it behaves as if it had been opened here.
+{
+  const landing = routeFromPath(location.pathname);
+  stack.length = 0;
+  landing.views.forEach((name) => {
+    if (name === "detail" && landing.project !== null) renderDetail(landing.project);
+    openView(name);
+  });
+  history.replaceState(
+    { ...landing, relux: true, depth: 0 } satisfies HistoryState,
+    "",
+    location.href
+  );
+}
+
+/* ──────────────────────────────────────────────
    Wiring
    ────────────────────────────────────────────── */
 
@@ -308,18 +455,27 @@ document.addEventListener("click", (event) => {
   const target = event.target as Element | null;
   if (!target) return;
 
-  // Open a project detail
+  // Open a project detail. Cards are links, so a modified click still opens
+  // the project's page in a new tab.
   const card = target.closest<HTMLElement>("[data-project]");
   if (card) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
     const index = Number(card.dataset.project);
-    if (!Number.isNaN(index)) openProject(index);
+    if (!Number.isNaN(index)) {
+      openProject(index);
+      record(true);
+    }
     return;
   }
 
   // Open a named view
   const opener = target.closest<HTMLElement>("[data-open]");
   if (opener) {
-    openView(opener.dataset.open as ViewName);
+    const name = opener.dataset.open as ViewName;
+    if (stack.includes(name)) return;
+    openView(name);
+    record(true);
     return;
   }
 
@@ -327,29 +483,24 @@ document.addEventListener("click", (event) => {
   const closer = target.closest<HTMLElement>("[data-close]");
   if (closer) {
     const goto = closer.dataset.goto;
-    if (goto) {
-      closeAllViews();
-      requestAnimationFrame(() => {
-        document.getElementById(goto)?.scrollIntoView({ behavior: "smooth" });
-      });
-    } else {
-      closeView(closer.dataset.close as ViewName);
-    }
+    if (goto) closeAllAndGo(goto);
+    else closeTop();
     return;
   }
 
   // Any in-page link returns to the homepage first
   const anchor = target.closest<HTMLAnchorElement>('a[href^="#"]');
   if (anchor) {
-    closeAllViews();
     closeMenu();
+    if (stack.length) {
+      event.preventDefault();
+      closeAllAndGo(anchor.getAttribute("href")!.slice(1));
+    }
   }
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && stack.length) {
-    closeView(stack[stack.length - 1]);
-  }
+  if (event.key === "Escape" && stack.length) closeTop();
 });
 
 /* ── Tablet / phone menu ── */

@@ -1,0 +1,58 @@
+---
+/**
+ * The whole one-page site. Every route renders it; `view` (and `project` for
+ * a detail) say which full-screen view is already open when the page loads.
+ */
+import Layout from "../layouts/Layout.astro";
+import Cursor from "./Cursor.astro";
+import Navbar from "./Navbar.astro";
+import Hero from "./Hero.astro";
+import Story from "./Story.astro";
+import Services from "./Services.astro";
+import Materials from "./Materials.astro";
+import Projects from "./Projects.astro";
+import Process from "./Process.astro";
+import Reviews from "./Reviews.astro";
+import CTA from "./CTA.astro";
+import Contact from "./Contact.astro";
+import Footer from "./Footer.astro";
+import WorkView from "./views/WorkView.astro";
+import AboutView from "./views/AboutView.astro";
+import ProcessView from "./views/ProcessView.astro";
+import DetailView from "./views/DetailView.astro";
+
+interface Props {
+  view?: "work" | "about" | "process" | "detail";
+  project?: number;
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const { view, project, title, description, image } = Astro.props;
+---
+
+<Layout title={title} description={description} image={image} locked={!!view}>
+  <Cursor />
+  <Navbar />
+
+  <main>
+    <Hero />
+    <Story />
+    <Services />
+    <Materials />
+    <Projects />
+    <Process />
+    <Reviews />
+    <CTA />
+    <Contact />
+  </main>
+
+  <Footer />
+
+  <!-- Full-screen views, opened from the grid and the About / Process buttons -->
+  <WorkView open={view === "work"} />
+  <AboutView open={view === "about"} />
+  <ProcessView open={view === "process"} />
+  <DetailView index={view === "detail" ? project : undefined} />
+</Layout>

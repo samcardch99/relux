@@ -1,0 +1,20 @@
+---
+import Site from "../../components/Site.astro";
+import { COPY, DETAIL, SHOTS, WORK } from "../../data/copy";
+
+/** One page per project listed on the site; project 8 is left out with it. */
+export function getStaticPaths() {
+  return WORK.map((p) => ({ params: { slug: p.slug }, props: { index: p.i } }));
+}
+
+const { index } = Astro.props;
+const project = WORK.find((p) => p.i === index)!;
+---
+
+<Site
+  view="detail"
+  project={index}
+  title={`${COPY.en[project.titleKey]} — RE-LUX Construction`}
+  description={DETAIL.en[index].summary}
+  image={SHOTS[index].hero}
+/>
