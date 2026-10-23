@@ -82,6 +82,26 @@ export const COPY = {
     p8Title: "Living room and TV wall",
     p9Tag: "Woodwork",
     p9Title: "Entry hall and wood panelling",
+    p10Tag: "Bathrooms",
+    p10Title: "Bathroom in black marble and walnut",
+    p11Tag: "Kitchens",
+    p11Title: "Walnut kitchen with black granite",
+    p12Tag: "Commercial",
+    p12Title: "Beauty academy",
+    p13Tag: "Commercial",
+    p13Title: "EnvySky office reception",
+    p14Tag: "Bathrooms",
+    p14Title: "Bathroom in grey stone and oak",
+    p15Tag: "Kitchens",
+    p15Title: "Grey and dark wood kitchen",
+    p16Tag: "Kitchens",
+    p16Title: "Kitchen with a black marble floor",
+    p17Tag: "Kitchens",
+    p17Title: "Oak kitchen with two islands",
+    p18Tag: "Kitchens",
+    p18Title: "White and light oak kitchen",
+    p19Tag: "Kitchens",
+    p19Title: "Kitchen with a fluted stone island",
 
     workTitle: "All",
     workTitleEm: "Projects",
@@ -309,6 +329,26 @@ export const COPY = {
     p8Title: "Sala y TV wall",
     p9Tag: "Carpintería",
     p9Title: "Recibidor y panelado de madera",
+    p10Tag: "Baños",
+    p10Title: "Baño en mármol negro y nogal",
+    p11Tag: "Cocinas",
+    p11Title: "Cocina en nogal con granito negro",
+    p12Tag: "Comercial",
+    p12Title: "Academia de belleza",
+    p13Tag: "Comercial",
+    p13Title: "Recepción de oficina EnvySky",
+    p14Tag: "Baños",
+    p14Title: "Baño en piedra gris y roble",
+    p15Tag: "Cocinas",
+    p15Title: "Cocina gris y madera oscura",
+    p16Tag: "Cocinas",
+    p16Title: "Cocina con piso de mármol negro",
+    p17Tag: "Cocinas",
+    p17Title: "Cocina en roble con dos islas",
+    p18Tag: "Cocinas",
+    p18Title: "Cocina blanca y roble claro",
+    p19Tag: "Cocinas",
+    p19Title: "Cocina con isla acanalada de piedra",
 
     workTitle: "Todos los",
     workTitleEm: "Proyectos",
@@ -483,10 +523,13 @@ export const INSTAGRAM = {
  * process-band, cta-band). Slots the author panned carry an `objectPosition`,
  * translated from the slot's stored offset.
  */
+/** 1…n, the way the photo files are numbered. */
+const range = (n: number) => Array.from({ length: n }, (_, k) => k + 1);
+
 const IMG = {
   kitchenOnyx: "/assets/kitchen-onyx.webp",
-  /** "Liz Kitchen", the first project: hero plus five detail shots. */
-  liz: [1, 2, 3, 4, 5, 6].map((n) => `/assets/liz-${n}.webp`),
+  /** "Liz Kitchen", the first project: hero plus six detail shots. */
+  liz: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/liz-${n}.webp`),
   /** Projects 2–5, numbered as the design's photo files. */
   closet2: [1, 2, 3, 4, 5].map((n) => `/assets/wc-${n}.webp`),
   bath2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/bath2-${n}.webp`),
@@ -494,6 +537,22 @@ const IMG = {
   crystalLuxe: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/cl-${n}.webp`),
   /** Project 7, the white and gold walk-in closet. */
   goldCloset: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/gw-${n}.webp`),
+  /** Project 6: 1–6 are the light walnut version of the same kitchen, 7–12 the black one. */
+  blackKitchen: range(12).map((n) => `/assets/bk-${n}.webp`),
+  /** Projects 10–19, numbered as the renders were delivered. */
+  blackBath: range(4).map((n) => `/assets/bm-${n}.webp`),
+  graniteKitchen: range(8).map((n) => `/assets/kg-${n}.webp`),
+  academy: range(11).map((n) => `/assets/acad-${n}.webp`),
+  envySky: range(8).map((n) => `/assets/envy-${n}.webp`),
+  greyBath: range(6).map((n) => `/assets/bg-${n}.webp`),
+  /** The delivery's two near-black lighting frames are left out. */
+  greyKitchen: range(4).map((n) => `/assets/kd-${n}.webp`),
+  marbleFloorKitchen: range(4).map((n) => `/assets/km-${n}.webp`),
+  oakKitchen: range(4).map((n) => `/assets/ko-${n}.webp`),
+  whiteKitchen: range(7).map((n) => `/assets/kw-${n}.webp`),
+  /** 2–6 are the lights coming on one by one; 2 and 3 are too dark to use. */
+  flutedKitchen: range(8).map((n) => `/assets/kf-${n}.webp`),
+  flutedKitchenVideo: "/assets/kf-video.mp4",
   closet: "/assets/closet.webp",
   bath: "/assets/bath.webp",
   kitchenDining: "/assets/kitchen-dining.webp",
@@ -579,9 +638,8 @@ export const VALUES = [
 ] as const;
 
 /**
- * Every project with a detail view. Project 8 keeps its slot so the indices
- * still line up with SHOTS and DETAIL, but the design no longer lists it
- * anywhere — see WORK and FEATURED below.
+ * Every project with a detail view. Hidden projects keep their slot so the
+ * indices still line up with SHOTS and DETAIL — see WORK and FEATURED below.
  */
 export const PROJECTS = [
   { i: 0, slug: "liz-kitchen", tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[0] },
@@ -589,17 +647,30 @@ export const PROJECTS = [
   { i: 2, slug: "bano-principal-nogal-y-onix", tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath2[2] },
   { i: 3, slug: "cocina-nogal-isla-de-cuarcita", tagKey: "p4Tag", titleKey: "p4Title", img: IMG.kitchen3[4] },
   { i: 4, slug: "crystal-luxe-wellness-center", tagKey: "p5Tag", titleKey: "p5Title", img: IMG.crystalLuxe[0] },
-  { i: 5, slug: "cocina-negro-mate", tagKey: "p6Tag", titleKey: "p6Title", img: IMG.proj6, focus: FOCUS.proj6 },
+  { i: 5, slug: "cocina-negro-mate", tagKey: "p6Tag", titleKey: "p6Title", img: IMG.blackKitchen[8], focus: FOCUS.proj6 },
   { i: 6, slug: "walk-in-closet-blanco-y-dorado", tagKey: "p7Tag", titleKey: "p7Title", img: IMG.goldCloset[4] },
   { i: 7, slug: "sala-y-tv-wall", tagKey: "p8Tag", titleKey: "p8Title", img: IMG.kitchenDining },
   { i: 8, slug: "recibidor-panelado-de-madera", tagKey: "p9Tag", titleKey: "p9Title", img: IMG.closet },
+  { i: 9, slug: "bano-marmol-negro-y-nogal", tagKey: "p10Tag", titleKey: "p10Title", img: IMG.blackBath[2] },
+  { i: 10, slug: "cocina-nogal-y-granito-negro", tagKey: "p11Tag", titleKey: "p11Title", img: IMG.graniteKitchen[0] },
+  { i: 11, slug: "academia-de-belleza", tagKey: "p12Tag", titleKey: "p12Title", img: IMG.academy[9] },
+  { i: 12, slug: "recepcion-envysky", tagKey: "p13Tag", titleKey: "p13Title", img: IMG.envySky[3] },
+  { i: 13, slug: "bano-piedra-gris-y-roble", tagKey: "p14Tag", titleKey: "p14Title", img: IMG.greyBath[1] },
+  { i: 14, slug: "cocina-gris-y-madera-oscura", tagKey: "p15Tag", titleKey: "p15Title", img: IMG.greyKitchen[2] },
+  { i: 15, slug: "cocina-piso-marmol-negro", tagKey: "p16Tag", titleKey: "p16Title", img: IMG.marbleFloorKitchen[2] },
+  { i: 16, slug: "cocina-roble-dos-islas", tagKey: "p17Tag", titleKey: "p17Title", img: IMG.oakKitchen[0] },
+  { i: 17, slug: "cocina-blanca-y-roble-claro", tagKey: "p18Tag", titleKey: "p18Title", img: IMG.whiteKitchen[0] },
+  { i: 18, slug: "cocina-isla-acanalada", tagKey: "p19Tag", titleKey: "p19Title", img: IMG.flutedKitchen[6] },
 ] as const;
 
-/** The "Our work" view lists every project except 8. */
-export const WORK = PROJECTS.filter((p) => p.i !== 7);
+/**
+ * The "Our work" view, in this order. Projects 2–5 and 7 (the photographed
+ * ones) are off the site for now, and 8–9 had no project of their own.
+ */
+export const WORK = [0, 5, 11, 10, 12, 18, 9, 13, 17, 16, 15, 14].map((i) => PROJECTS[i]);
 
-/** The homepage shows six: projects 1–5 and 7, which uses a different photo there. */
-export const FEATURED = [...PROJECTS.slice(0, 5), { ...PROJECTS[6], img: IMG.goldCloset[6] }];
+/** The homepage shows the first six of them. */
+export const FEATURED = WORK.slice(0, 6);
 
 /**
  * Each full-screen view has its own address, so it can be shared and the
@@ -652,7 +723,11 @@ export const SHOTS: ProjectShots[] = [
     shots: pick(IMG.crystalLuxe, 3, 5, 6, 7),
     tall: [0, 1, 2, 3],
   },
-  { hero: IMG.proj6, shots: [IMG.bath, IMG.kitchenOnyx] },
+  {
+    hero: IMG.blackKitchen[8],
+    side: [IMG.blackKitchen[11], IMG.blackKitchen[6]],
+    shots: pick(IMG.blackKitchen, 10, 11, 8, 3, 2, 5, 6, 4, 1),
+  },
   {
     hero: IMG.goldCloset[4],
     side: [IMG.goldCloset[5], IMG.goldCloset[7]],
@@ -661,6 +736,64 @@ export const SHOTS: ProjectShots[] = [
   },
   { hero: IMG.kitchenDining, shots: [IMG.kitchenWood, IMG.kitchenDark] },
   { hero: IMG.closet, shots: [IMG.interiorEmpty, IMG.kitchenWood] },
+  {
+    hero: IMG.blackBath[1],
+    side: [IMG.blackBath[0], IMG.blackBath[1]],
+    shots: pick(IMG.blackBath, 3, 4),
+    tall: [0, 1],
+  },
+  {
+    hero: IMG.graniteKitchen[0],
+    side: [IMG.graniteKitchen[2], IMG.graniteKitchen[3]],
+    shots: pick(IMG.graniteKitchen, 1, 2, 5, 6, 7, 8),
+    tall: [0, 1, 2, 3, 4, 5],
+  },
+  {
+    hero: IMG.academy[9],
+    side: [IMG.academy[0], IMG.academy[5]],
+    shots: pick(IMG.academy, 2, 3, 5, 9, 7, 4, 8, 11),
+  },
+  {
+    hero: IMG.envySky[3],
+    side: [IMG.envySky[4], IMG.envySky[5]],
+    shots: pick(IMG.envySky, 1, 2, 3, 7, 8, 4),
+    tall: [0, 1, 2, 3, 4, 5],
+  },
+  {
+    hero: IMG.greyBath[1],
+    side: [IMG.greyBath[4], IMG.greyBath[5]],
+    shots: pick(IMG.greyBath, 1, 3, 4),
+  },
+  {
+    hero: IMG.greyKitchen[2],
+    side: [IMG.greyKitchen[1], IMG.greyKitchen[3]],
+    shots: pick(IMG.greyKitchen, 1, 3),
+    tall: [0, 1],
+  },
+  {
+    hero: IMG.marbleFloorKitchen[2],
+    side: [IMG.marbleFloorKitchen[0], IMG.marbleFloorKitchen[1]],
+    shots: pick(IMG.marbleFloorKitchen, 4, 3),
+    tall: [0, 1],
+  },
+  {
+    hero: IMG.oakKitchen[1],
+    side: [IMG.oakKitchen[2], IMG.oakKitchen[0]],
+    shots: pick(IMG.oakKitchen, 1, 4),
+    tall: [0, 1],
+  },
+  {
+    hero: IMG.whiteKitchen[0],
+    side: [IMG.whiteKitchen[4], IMG.whiteKitchen[2]],
+    shots: pick(IMG.whiteKitchen, 4, 2, 6, 7),
+  },
+  {
+    hero: IMG.flutedKitchen[6],
+    video: IMG.flutedKitchenVideo,
+    side: [IMG.flutedKitchen[3], IMG.flutedKitchen[5]],
+    shots: pick(IMG.flutedKitchen, 1, 8, 5, 7),
+    tall: [0, 1, 2, 3],
+  },
 ];
 
 type DetailEntry = {
@@ -686,6 +819,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "The island from the side, with the quartzite waterfall and the alabaster pendant.",
         "Same view in evening light, with the ceiling cove and cabinet lighting on.",
         "Detail of the island, the glass cabinets and the backlit shelving.",
+        "The waterfall end of the island and the stools from the window side.",
       ],
     },
     {
@@ -756,15 +890,22 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "A matte black kitchen with a marble island, built for a client who wanted the room to disappear at night.",
+        "An open kitchen and dining room built around an angular island in black and gold marble, with dark wood tall units and a run of lit glass cabinets.",
       paras: [
-        "Cabinet fronts are matte lacquer with no visible hardware; the only reflective surfaces in the room are the stone and the glassware.",
-        "The island was sized to seat five and still leave a full working aisle behind it.",
+        "The island is cut on a slant at both ends, and the same black marble with gold veining climbs the wall behind the hob. Warm LED strips run under the island overhang and inside every glass cabinet.",
+        "The project was also drawn in a lighter version, in walnut with a white marble island and hood, which closes the gallery below.",
       ],
-      meta: [["Scope", "Full kitchen"], ["Materials", "Matte lacquer, marble"], ["Duration", "8 weeks"]],
+      meta: [["Scope", "Kitchen + dining room"], ["Materials", "Black marble, dark wood, glass"]],
       captions: [
-        "Backlit shelving is the only light source after dark.",
-        "The wine wall was integrated into the cabinetry run.",
+        "The black marble island beside the dining table.",
+        "The dark wood tall units and lit glass cabinets behind the table.",
+        "The dining table runner and the lit wine cabinets.",
+        "The light version: walnut tall units and a white marble island.",
+        "The dining table in front of the walnut wall and stone hood.",
+        "The island and the glass cabinets in daylight.",
+        "Afternoon light across the island in the walnut version.",
+        "The dining table and its walnut runner in the light version.",
+        "The whole kitchen and dining room in the light walnut finish.",
       ],
     },
     {
@@ -812,6 +953,155 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "Floor stone continues into the living area.",
       ],
     },
+    {
+      summary:
+        "A bathroom in black marble with gold veining and walnut joinery, with a floating vanity, a backlit mirror and a lit glass cabinet beside it.",
+      paras: [
+        "The vanity wall is clad in black marble from floor to ceiling. The walnut vanity floats over a lit shelf for towels, under a tall mirror with rounded corners and a warm LED edge.",
+        "A narrow walnut column with glass doors and lit shelves stands between the vanity and the toilet, and a walnut door and a brass towel rail close the room on the other side.",
+      ],
+      meta: [["Scope", "Bathroom"], ["Materials", "Black marble, walnut, brass"]],
+      captions: [
+        "The vanity, the lit glass column and the toilet in black.",
+        "The dressing chair under the mirror, behind the glass shower screen.",
+      ],
+    },
+    {
+      summary:
+        "A walnut kitchen with a rounded, fluted island topped in black granite, a window seat and a wall of lit glass cabinets.",
+      paras: [
+        "The island is an oval in fluted walnut with a black and white granite top, and seats four along one side. The same granite runs up the backsplash and around the window.",
+        "Tall walnut units hide the refrigerator and frame lit glass display cabinets. Under the window, a built-in bench with grey cushions sits between the cabinetry and a glass-door bar unit.",
+      ],
+      meta: [["Scope", "Kitchen + window seat"], ["Materials", "Walnut, black granite, glass"]],
+      captions: [
+        "The fluted island and the walnut wall.",
+        "The granite top of the island from above.",
+        "The tall walnut units and glass cabinets.",
+        "The window seat between the cabinetry and the coffee station.",
+        "The bench under the window, framed in walnut.",
+        "The bench beside the lit glass bar unit.",
+      ],
+    },
+    {
+      summary:
+        "A beauty academy with a reception, a waiting lounge, rows of styling stations and a washing area, all in light oak with black and white details.",
+      paras: [
+        "The reception desk and the wall behind it are oak with curved ends and a lit plinth, beside the academy's logo and a tall oval mirror. The waiting lounge is a curved oak bench under a backlit sign.",
+        "Each styling station is a long oak counter with tall oval mirrors and black chairs, divided by lit oak columns for products. A slatted black ceiling with linear LED lines runs the full length of the floor.",
+      ],
+      meta: [["Scope", "Commercial interior"], ["Materials", "Oak, stone, black slatted ceiling"]],
+      captions: [
+        "The styling stations along the window.",
+        "The washing area along the curved wall.",
+        "The rows of stations and the lit oak columns.",
+        "Stations and mirrors from the corner.",
+        "The logo, the oval mirror and the reception.",
+        "Oak plaques along the curved wall.",
+        "Stations between the oak display columns.",
+        "Detail of a styling counter.",
+      ],
+    },
+    {
+      summary:
+        "Reception and waiting area for EnvySky, wrapped in oak panelling with deep teal niches, a stone-clad desk and a lounge in soft grey.",
+      paras: [
+        "Oak panels run floor to ceiling, broken by vertical slats and lit niches with teal back panels. The EnvySky logo sits on the oak wall behind the reception desk, which is clad in white stone with an oak front.",
+        "The waiting area has a low curved sofa and a pair of stone side tables, with an aeroplane model on the teal wall as a nod to the client's business.",
+      ],
+      meta: [["Scope", "Reception + waiting area"], ["Materials", "Oak, teal lacquer, stone"]],
+      captions: [
+        "A client waiting beside the lit oak niches.",
+        "The lounge and the reception behind it.",
+        "The sofa and the teal wall with the aeroplane.",
+        "Detail of a lit niche.",
+        "The oak grain beside the shelving.",
+        "The reception desk and the EnvySky logo.",
+      ],
+    },
+    {
+      summary:
+        "A bathroom in grey stone and light oak, with a long double vanity, arched backlit mirrors and a lit ceiling frame.",
+      paras: [
+        "The grey stone covers the walls, and an oak frame with an LED line wraps the vanity from the ceiling down. The counter is white marble with two wooden vessel sinks, and steps into a dressing table at one end.",
+        "Opposite the vanity, open oak shelves hold towels and baskets, leading to the walk-in shower at the end of the room.",
+      ],
+      meta: [["Scope", "Bathroom"], ["Materials", "Grey stone, oak, marble"]],
+      captions: [
+        "The vanity and the dressing table under the lit frame.",
+        "The open shelves and the shower at the end of the room.",
+        "The arched mirrors along the stone wall.",
+      ],
+    },
+    {
+      summary:
+        "A grey kitchen framed by dark wood tall units, with lit glass cabinets on both walls and a white stone island with a wooden front.",
+      paras: [
+        "Two dark wood columns stand at the ends of the kitchen, each with full-height glass cabinets and a vertical LED line. The grey base units run round the room under a stone backsplash.",
+        "The island is white stone with a waterfall end and a wooden front lit from below, with two stools under a pair of glass pendants.",
+      ],
+      meta: [["Scope", "Full kitchen"], ["Materials", "Dark wood, grey lacquer, stone, glass"]],
+      captions: [
+        "The grey run between the two lit glass columns.",
+        "The island from the end, with the stools and the pendants.",
+      ],
+    },
+    {
+      summary:
+        "A kitchen with a polished black marble floor, an island in green-veined stone and walnut, and a ring of lit glass cabinets.",
+      paras: [
+        "The island is clad in green-veined stone at both ends with a walnut front lit from below, and seats four under three white pendant lights. The same stone runs up the backsplash and the hood.",
+        "Dark wood wall cabinets with glass fronts and LED lighting circle the room above white base units, with tall units for the ovens at one end.",
+      ],
+      meta: [["Scope", "Full kitchen"], ["Materials", "Black marble, green stone, walnut, glass"]],
+      captions: [
+        "The island and the pendants from the side.",
+        "The island head-on, with the stools and the hood.",
+      ],
+    },
+    {
+      summary:
+        "A large open kitchen in light oak with two stone islands, each with four stools and a lit ceiling panel overhead.",
+      paras: [
+        "Two islands in light marble run side by side, each lit from below and seated on the long side. Over each one, a lowered ceiling panel in the same stone carries an LED edge and a linear pendant.",
+        "A full wall of oak tall units holds the ovens, a lit pantry and open display shelving, with a marble hood at the corner.",
+      ],
+      meta: [["Scope", "Full kitchen"], ["Materials", "Light oak, marble"]],
+      captions: [
+        "The first island and the marble hood.",
+        "Both islands from the end of the room.",
+      ],
+    },
+    {
+      summary:
+        "A bright kitchen in white and light oak, with a marble island, black appliances and a dining table by the garden window.",
+      paras: [
+        "The wall cabinets are light oak with a run of black glass display units lit from inside, over white base units and a white marble backsplash.",
+        "The island has a marble top with a waterfall end and an oak front, with four black stools under a pair of dark glass pendants.",
+      ],
+      meta: [["Scope", "Full kitchen"], ["Materials", "Light oak, white lacquer, marble"]],
+      captions: [
+        "The island, the stools and the garden windows.",
+        "The hob, the sink and the corner of the island.",
+        "The ovens and the refrigerator beside the island.",
+        "The sink under the window, framed by the oak cabinets.",
+      ],
+    },
+    {
+      summary:
+        "A kitchen in oak panelling with a rounded island clad in fluted stone, orange leather stools and a curved, lit ceiling panel.",
+      paras: [
+        "The island is an oval in fluted marble with a pale stone top, lit from below on the seating side. Above it, a lowered ceiling panel with rounded corners carries an LED line and three pendant lights.",
+        "Vertical oak panelling covers the walls and hides the tall units, with lit glass cabinets and a marble backsplash on the cooking wall.",
+      ],
+      meta: [["Scope", "Full kitchen"], ["Materials", "Oak, fluted marble, leather"]],
+      captions: [
+        "The fluted island and the orange stools.",
+        "The island and the second counter from the entrance.",
+        "The kitchen at night, with the island and the cabinets lit.",
+        "The kitchen with every light on.",
+      ],
+    },
   ],
   es: [
     {
@@ -828,6 +1118,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "La isla de lado, con la cascada de cuarcita y la lámpara de alabastro.",
         "La misma vista con luz de tarde, con la moldura del techo y las vitrinas encendidas.",
         "Detalle de la isla, las vitrinas de cristal y los estantes retroiluminados.",
+        "El extremo en cascada de la isla y los taburetes desde el lado de la ventana.",
       ],
     },
     {
@@ -898,15 +1189,22 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "Una cocina en negro mate con isla de mármol, para un cliente que quería que el espacio desapareciera de noche.",
+        "Una cocina abierta con comedor, construida alrededor de una isla angular en mármol negro y dorado, con muebles altos en madera oscura y una fila de vitrinas iluminadas.",
       paras: [
-        "Los frentes son laca mate sin herraje visible; las únicas superficies reflectantes del espacio son la piedra y la cristalería.",
-        "La isla se dimensionó para sentar a cinco y dejar aun así un pasillo de trabajo completo por detrás.",
+        "La isla va cortada en diagonal en los dos extremos, y el mismo mármol negro con vetas doradas sube por la pared detrás de la placa. Tiras LED cálidas recorren el voladizo de la isla y el interior de cada vitrina.",
+        "El proyecto también se dibujó en una versión clara, en nogal con isla y campana de mármol blanco, que cierra la galería de abajo.",
       ],
-      meta: [["Alcance", "Cocina completa"], ["Materiales", "Laca mate, mármol"], ["Duración", "8 semanas"]],
+      meta: [["Alcance", "Cocina y comedor"], ["Materiales", "Mármol negro, madera oscura, cristal"]],
       captions: [
-        "La estantería retroiluminada es la única luz al caer la noche.",
-        "La vinoteca se integró dentro de la línea de armarios.",
+        "La isla de mármol negro junto a la mesa del comedor.",
+        "Los muebles altos de madera oscura y las vitrinas iluminadas detrás de la mesa.",
+        "El camino de mesa y las vitrinas de vinos iluminadas.",
+        "La versión clara: muebles altos de nogal e isla de mármol blanco.",
+        "La mesa del comedor frente a la pared de nogal y la campana de piedra.",
+        "La isla y las vitrinas con luz de día.",
+        "Luz de tarde sobre la isla en la versión de nogal.",
+        "La mesa del comedor y su camino de nogal en la versión clara.",
+        "Toda la cocina y el comedor en el acabado claro de nogal.",
       ],
     },
     {
@@ -952,6 +1250,155 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       captions: [
         "El banco está en voladizo desde el panelado.",
         "La piedra del piso continúa hacia la sala.",
+      ],
+    },
+    {
+      summary:
+        "Un baño en mármol negro con vetas doradas y carpintería en nogal, con mueble de lavabo flotante, espejo retroiluminado y una vitrina iluminada al lado.",
+      paras: [
+        "La pared del lavabo va revestida en mármol negro de piso a techo. El mueble de nogal flota sobre un estante iluminado para toallas, bajo un espejo alto de esquinas redondeadas con borde LED cálido.",
+        "Una columna estrecha de nogal con puertas de cristal y estantes iluminados separa el lavabo del inodoro, y una puerta de nogal y un toallero de latón cierran el baño por el otro lado.",
+      ],
+      meta: [["Alcance", "Baño"], ["Materiales", "Mármol negro, nogal, latón"]],
+      captions: [
+        "El lavabo, la columna de cristal iluminada y el inodoro en negro.",
+        "La silla de tocador bajo el espejo, tras la mampara de la ducha.",
+      ],
+    },
+    {
+      summary:
+        "Una cocina en nogal con isla redondeada y acanalada, cubierta de granito negro, un banco bajo la ventana y una pared de vitrinas iluminadas.",
+      paras: [
+        "La isla es un óvalo en nogal acanalado con cubierta de granito blanco y negro, y tiene cuatro asientos por un lado. El mismo granito sube por el salpicadero y rodea la ventana.",
+        "Los muebles altos de nogal ocultan el refrigerador y enmarcan vitrinas de cristal iluminadas. Bajo la ventana, un banco empotrado con cojines grises queda entre la carpintería y un mueble bar con puertas de cristal.",
+      ],
+      meta: [["Alcance", "Cocina y banco de ventana"], ["Materiales", "Nogal, granito negro, cristal"]],
+      captions: [
+        "La isla acanalada y la pared de nogal.",
+        "La cubierta de granito de la isla desde arriba.",
+        "Los muebles altos de nogal y las vitrinas.",
+        "El banco de la ventana entre la carpintería y la estación de café.",
+        "El banco bajo la ventana, enmarcado en nogal.",
+        "El banco junto al mueble bar de cristal iluminado.",
+      ],
+    },
+    {
+      summary:
+        "Una academia de belleza con recepción, sala de espera, filas de puestos de peinado y zona de lavado, todo en roble claro con detalles en blanco y negro.",
+      paras: [
+        "El mostrador de recepción y la pared de detrás son de roble con extremos curvos y zócalo iluminado, junto al logo de la academia y un espejo ovalado alto. La sala de espera es un banco curvo de roble bajo un rótulo retroiluminado.",
+        "Cada puesto de peinado es una encimera larga de roble con espejos ovalados altos y sillones negros, separada por columnas de roble iluminadas para productos. Un techo de lamas negras con líneas LED recorre todo el local.",
+      ],
+      meta: [["Alcance", "Interior comercial"], ["Materiales", "Roble, piedra, techo de lamas negras"]],
+      captions: [
+        "Los puestos de peinado junto a la cristalera.",
+        "La zona de lavado a lo largo de la pared curva.",
+        "Las filas de puestos y las columnas de roble iluminadas.",
+        "Puestos y espejos desde la esquina.",
+        "El logo, el espejo ovalado y la recepción.",
+        "Placas de roble a lo largo de la pared curva.",
+        "Puestos entre las columnas de exhibición de roble.",
+        "Detalle de una encimera de peinado.",
+      ],
+    },
+    {
+      summary:
+        "Recepción y sala de espera para EnvySky, revestidas en panelado de roble con nichos en verde petróleo, un mostrador forrado en piedra y una zona de estar en gris suave.",
+      paras: [
+        "Los paneles de roble van de piso a techo, interrumpidos por lamas verticales y nichos iluminados con fondo en verde petróleo. El logo de EnvySky está sobre la pared de roble detrás del mostrador, que va revestido en piedra blanca con frente de roble.",
+        "La sala de espera tiene un sofá curvo bajo y un par de mesas auxiliares de piedra, con una maqueta de avión en la pared verde petróleo como guiño al negocio del cliente.",
+      ],
+      meta: [["Alcance", "Recepción y sala de espera"], ["Materiales", "Roble, laca verde petróleo, piedra"]],
+      captions: [
+        "Un cliente esperando junto a los nichos de roble iluminados.",
+        "La zona de estar y la recepción al fondo.",
+        "El sofá y la pared verde petróleo con el avión.",
+        "Detalle de un nicho iluminado.",
+        "La veta del roble junto a los estantes.",
+        "El mostrador de recepción y el logo de EnvySky.",
+      ],
+    },
+    {
+      summary:
+        "Un baño en piedra gris y roble claro, con un lavabo doble largo, espejos en arco retroiluminados y un marco de techo iluminado.",
+      paras: [
+        "La piedra gris reviste las paredes, y un marco de roble con una línea LED envuelve el lavabo desde el techo. La encimera es de mármol blanco con dos lavabos de madera sobre encimera, y se prolonga en un tocador en un extremo.",
+        "Frente al lavabo, unos estantes abiertos de roble guardan toallas y cestas, y llevan hasta la ducha walk-in al fondo del baño.",
+      ],
+      meta: [["Alcance", "Baño"], ["Materiales", "Piedra gris, roble, mármol"]],
+      captions: [
+        "El lavabo y el tocador bajo el marco iluminado.",
+        "Los estantes abiertos y la ducha al fondo.",
+        "Los espejos en arco sobre la pared de piedra.",
+      ],
+    },
+    {
+      summary:
+        "Una cocina gris enmarcada por muebles altos en madera oscura, con vitrinas iluminadas en ambas paredes y una isla de piedra blanca con frente de madera.",
+      paras: [
+        "Dos columnas de madera oscura cierran los extremos de la cocina, cada una con vitrinas de cristal de altura completa y una línea LED vertical. Los muebles bajos grises rodean el espacio bajo un salpicadero de piedra.",
+        "La isla es de piedra blanca con extremo en cascada y un frente de madera iluminado desde abajo, con dos taburetes bajo un par de lámparas de cristal.",
+      ],
+      meta: [["Alcance", "Cocina completa"], ["Materiales", "Madera oscura, laca gris, piedra, cristal"]],
+      captions: [
+        "El frente gris entre las dos columnas de cristal iluminadas.",
+        "La isla desde el extremo, con los taburetes y las lámparas.",
+      ],
+    },
+    {
+      summary:
+        "Una cocina con piso de mármol negro pulido, una isla en piedra de vetas verdes y nogal, y un anillo de vitrinas iluminadas.",
+      paras: [
+        "La isla va revestida en piedra de vetas verdes en los dos extremos, con un frente de nogal iluminado desde abajo, y tiene cuatro asientos bajo tres lámparas blancas. La misma piedra sube por el salpicadero y la campana.",
+        "Los muebles altos de madera oscura con frentes de cristal e iluminación LED rodean la cocina sobre muebles bajos blancos, con columnas para los hornos en un extremo.",
+      ],
+      meta: [["Alcance", "Cocina completa"], ["Materiales", "Mármol negro, piedra verde, nogal, cristal"]],
+      captions: [
+        "La isla y las lámparas de lado.",
+        "La isla de frente, con los taburetes y la campana.",
+      ],
+    },
+    {
+      summary:
+        "Una cocina abierta y amplia en roble claro con dos islas de piedra, cada una con cuatro taburetes y un panel de techo iluminado encima.",
+      paras: [
+        "Dos islas en mármol claro corren en paralelo, iluminadas desde abajo y con asientos en el lado largo. Sobre cada una, un panel de techo bajado en la misma piedra lleva un borde LED y una lámpara lineal.",
+        "Una pared completa de muebles altos de roble guarda los hornos, una despensa iluminada y estantes abiertos de exhibición, con una campana de mármol en la esquina.",
+      ],
+      meta: [["Alcance", "Cocina completa"], ["Materiales", "Roble claro, mármol"]],
+      captions: [
+        "La primera isla y la campana de mármol.",
+        "Las dos islas desde el fondo del espacio.",
+      ],
+    },
+    {
+      summary:
+        "Una cocina luminosa en blanco y roble claro, con isla de mármol, electrodomésticos negros y una mesa de comedor junto a la ventana al jardín.",
+      paras: [
+        "Los muebles altos son de roble claro con una fila de vitrinas de cristal negro iluminadas por dentro, sobre muebles bajos blancos y un salpicadero de mármol blanco.",
+        "La isla tiene cubierta de mármol con extremo en cascada y frente de roble, con cuatro taburetes negros bajo un par de lámparas de cristal oscuro.",
+      ],
+      meta: [["Alcance", "Cocina completa"], ["Materiales", "Roble claro, laca blanca, mármol"]],
+      captions: [
+        "La isla, los taburetes y las ventanas al jardín.",
+        "La placa, el fregadero y la esquina de la isla.",
+        "Los hornos y el refrigerador junto a la isla.",
+        "El fregadero bajo la ventana, entre los muebles de roble.",
+      ],
+    },
+    {
+      summary:
+        "Una cocina en panelado de roble con una isla redondeada revestida en piedra acanalada, taburetes de piel naranja y un panel de techo curvo iluminado.",
+      paras: [
+        "La isla es un óvalo en mármol acanalado con cubierta de piedra clara, iluminado desde abajo en el lado de los asientos. Encima, un panel de techo bajado con esquinas redondeadas lleva una línea LED y tres lámparas colgantes.",
+        "El panelado vertical de roble cubre las paredes y oculta los muebles altos, con vitrinas iluminadas y un salpicadero de mármol en la pared de cocción.",
+      ],
+      meta: [["Alcance", "Cocina completa"], ["Materiales", "Roble, mármol acanalado, piel"]],
+      captions: [
+        "La isla acanalada y los taburetes naranjas.",
+        "La isla y la segunda encimera desde la entrada.",
+        "La cocina de noche, con la isla y las vitrinas encendidas.",
+        "La cocina con todas las luces encendidas.",
       ],
     },
   ],
