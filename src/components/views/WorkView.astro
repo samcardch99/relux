@@ -1,5 +1,7 @@
 ---
 import { WORK, COPY, INSTAGRAM } from "../../data/copy";
+import Contact from "../Contact.astro";
+import Footer from "../Footer.astro";
 import ProjectCard from "../ProjectCard.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
@@ -46,6 +48,9 @@ const en = COPY.en;
       <ArrowUpRight />
     </button>
   </div>
+
+  <Contact inView />
+  <Footer />
 </div>
 
 <style>

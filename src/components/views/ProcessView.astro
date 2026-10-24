@@ -1,5 +1,7 @@
 ---
-import { COPY, IMG, MACHINE_SPECS, SHOP } from "../../data/copy";
+import { COPY, FOCUS, IMG, MACHINE_SPECS, SHOP } from "../../data/copy";
+import Contact from "../Contact.astro";
+import Footer from "../Footer.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
 
@@ -10,6 +12,8 @@ interface Props {
 
 const { open = false } = Astro.props;
 const en = COPY.en;
+/** Empty frames are left out; see SHOP. */
+const shots = SHOP.filter((s) => s.img);
 ---
 
 <div class="view" id="view-process" role="dialog" aria-modal="true" aria-label="Our process" hidden={!open}>
@@ -29,8 +33,15 @@ const en = COPY.en;
     <p class="sec-head__intro" data-i18n="pxIntro">{en.pxIntro}</p>
   </div>
 
-  <!-- Wide workshop shot: still an empty slot in the design -->
-  <div class="media processview__band"></div>
+  <!-- Wide shot of the CNC line -->
+  <div class="media processview__band">
+    <img
+      src={IMG.workshopBand}
+      alt="Biesse Rover Multi Up NG S 1531"
+      loading="lazy"
+      style={`object-position:${FOCUS.workshopBand}`}
+    />
+  </div>
 
   <div class="processview__machine">
     <div class="processview__titles">
@@ -41,7 +52,12 @@ const en = COPY.en;
     <div class="processview__split">
       <div class="processview__media">
         <div class="media processview__main">
-          <img src={IMG.machineHero} alt="Biesse Rover Multi Up NG S 1531" loading="lazy" />
+          <img
+            src={IMG.machineHero}
+            alt="Biesse Rover Multi Up NG S 1531"
+            loading="lazy"
+            style={`object-position:${FOCUS.machineHero}`}
+          />
         </div>
         <div class="processview__pair">
           {
@@ -80,18 +96,20 @@ const en = COPY.en;
       <p class="sec-head__intro" data-i18n="shopIntro">{en.shopIntro}</p>
     </div>
 
-    <ul class="processview__grid">
-      {
-        SHOP.map((s) => (
-          <li class="processview__item">
-            <div class:list={["media processview__photo", { "is-tall": s.tall }]}>
-              {s.img && <img src={s.img} alt="" loading="lazy" />}
-            </div>
-            <p data-i18n={s.capKey}>{en[s.capKey]}</p>
-          </li>
-        ))
-      }
-    </ul>
+    {
+      shots.length > 0 && (
+        <ul class="processview__grid">
+          {shots.map((s) => (
+            <li class="processview__item">
+              <div class:list={["media processview__photo", { "is-tall": s.tall }]}>
+                <img src={s.img} alt="" loading="lazy" />
+              </div>
+              <p data-i18n={s.capKey}>{en[s.capKey]}</p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </div>
 
   <div class="view__foot processview__foot">
@@ -101,6 +119,9 @@ const en = COPY.en;
       <ArrowUpRight />
     </button>
   </div>
+
+  <Contact inView />
+  <Footer />
 </div>
 
 <style>

@@ -212,7 +212,12 @@ export const COPY = {
     baBefore: "Before",
     baAfter: "After",
     vidTitle: "Project video",
-    vidPending: "Video coming soon",
+    lbGallery: "Project photos",
+    lbClose: "Close",
+    lbPrev: "Previous photo",
+    lbNext: "Next photo",
+    lbHintFine: "Scroll to zoom · ← → to browse · Esc to close",
+    lbHintCoarse: "Pinch to zoom · Swipe to browse",
     menuOpen: "Menu",
     menuClose: "Close",
 
@@ -460,7 +465,12 @@ export const COPY = {
     baBefore: "Antes",
     baAfter: "Después",
     vidTitle: "Vídeo del proyecto",
-    vidPending: "Vídeo próximamente",
+    lbGallery: "Fotos del proyecto",
+    lbClose: "Cerrar",
+    lbPrev: "Foto anterior",
+    lbNext: "Foto siguiente",
+    lbHintFine: "Rueda para ampliar · ← → para pasar · Esc para cerrar",
+    lbHintCoarse: "Pellizca para ampliar · Desliza para pasar",
     menuOpen: "Menú",
     menuClose: "Cerrar",
 
@@ -519,8 +529,8 @@ export const INSTAGRAM = {
  *
  * Two origins, mirroring the design: `assets/*` are the photos the design
  * references by `src`, while the rest were dropped into `<image-slot>`s and
- * therefore override that `src` wherever both exist (proj-6,
- * process-band, cta-band). Slots the author panned carry an `objectPosition`,
+ * therefore override that `src` wherever both exist
+ * (process-band, cta-band). Slots the author panned carry an `objectPosition`,
  * translated from the slot's stored offset.
  */
 /** 1…n, the way the photo files are numbered. */
@@ -528,8 +538,8 @@ const range = (n: number) => Array.from({ length: n }, (_, k) => k + 1);
 
 const IMG = {
   kitchenOnyx: "/assets/kitchen-onyx.webp",
-  /** "Liz Kitchen", the first project: hero plus six detail shots. */
-  liz: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/liz-${n}.webp`),
+  /** "Liz Kitchen", the first project: the four final renders (A, B, D, C). */
+  liz: [1, 4, 6, 7].map((n) => `/assets/liz-${n}.webp`),
   /** Projects 2–5, numbered as the design's photo files. */
   closet2: [1, 2, 3, 4, 5].map((n) => `/assets/wc-${n}.webp`),
   bath2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/bath2-${n}.webp`),
@@ -563,7 +573,6 @@ const IMG = {
   /** Portrait render the Materials section swaps to on phones. */
   materialBath: "/assets/material-bath.webp",
 
-  proj6: "/assets/proj-6.webp",
   processBand: "/assets/process-band.webp",
   ctaBand: "/assets/cta-band.webp",
   owners: "/assets/relux-owners.webp",
@@ -573,16 +582,25 @@ const IMG = {
   /** Process view: a render of the CNC (stands in for the machine video) and two details. */
   machineHero: "/assets/machine-hero.webp",
   machine: ["/assets/machine-1.webp", "/assets/machine-2.webp"],
+  /** Process view: the wide shot of the whole CNC line under the heading. */
+  workshopBand: "/assets/workshop-band.webp",
 } as const;
 
 /** Crops the design's author set by panning the image inside its slot. */
 export const FOCUS = {
-  proj6: "62% center",
+  /** 4:5 project cards cut from landscape renders, aimed at the main piece. */
+  blackKitchenCard: "35% center",
+  greyBathCard: "35% center",
+  whiteKitchenCard: "65% center",
   processBand: "center bottom",
   ctaBand: "center 72%",
   ownersWide: "center center",
   /** The design pans the first founder's portrait slightly up inside its frame. */
   founder1: "center 45%",
+  /** Both panned in the design: the CNC head kept to its bottom edge, the
+     line held a little above centre in the wide band. */
+  machineHero: "center bottom",
+  workshopBand: "center 35%",
 } as const;
 
 export { IMG };
@@ -619,8 +637,9 @@ export const MACHINE_SPECS = [
 ] as const;
 
 /**
- * The design leaves every workshop slot empty, so `img` is unset and the
- * frame shows its tonal placeholder. `tall` cells are 4:5, the rest 4:3.
+ * The workshop grid. Only shots with an `img` are shown — the design still
+ * leaves all six slots empty, so for now the grid doesn't render at all.
+ * `tall` cells are 4:5, the rest 4:3.
  */
 export const SHOP: { capKey: CopyKey; tall: boolean; img?: string }[] = [
   { capKey: "shopCap1", tall: true },
@@ -642,12 +661,12 @@ export const VALUES = [
  * indices still line up with SHOTS and DETAIL — see WORK and FEATURED below.
  */
 export const PROJECTS = [
-  { i: 0, slug: "liz-kitchen", tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[0] },
+  { i: 0, slug: "liz-kitchen", tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[3] },
   { i: 1, slug: "walk-in-closet-grafito-y-nogal", tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet2[0] },
   { i: 2, slug: "bano-principal-nogal-y-onix", tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath2[2] },
   { i: 3, slug: "cocina-nogal-isla-de-cuarcita", tagKey: "p4Tag", titleKey: "p4Title", img: IMG.kitchen3[4] },
   { i: 4, slug: "crystal-luxe-wellness-center", tagKey: "p5Tag", titleKey: "p5Title", img: IMG.crystalLuxe[0] },
-  { i: 5, slug: "cocina-negro-mate", tagKey: "p6Tag", titleKey: "p6Title", img: IMG.blackKitchen[8], focus: FOCUS.proj6 },
+  { i: 5, slug: "cocina-negro-mate", tagKey: "p6Tag", titleKey: "p6Title", img: IMG.blackKitchen[8], focus: FOCUS.blackKitchenCard },
   { i: 6, slug: "walk-in-closet-blanco-y-dorado", tagKey: "p7Tag", titleKey: "p7Title", img: IMG.goldCloset[4] },
   { i: 7, slug: "sala-y-tv-wall", tagKey: "p8Tag", titleKey: "p8Title", img: IMG.kitchenDining },
   { i: 8, slug: "recibidor-panelado-de-madera", tagKey: "p9Tag", titleKey: "p9Title", img: IMG.closet },
@@ -655,11 +674,11 @@ export const PROJECTS = [
   { i: 10, slug: "cocina-nogal-y-granito-negro", tagKey: "p11Tag", titleKey: "p11Title", img: IMG.graniteKitchen[0] },
   { i: 11, slug: "academia-de-belleza", tagKey: "p12Tag", titleKey: "p12Title", img: IMG.academy[9] },
   { i: 12, slug: "recepcion-envysky", tagKey: "p13Tag", titleKey: "p13Title", img: IMG.envySky[3] },
-  { i: 13, slug: "bano-piedra-gris-y-roble", tagKey: "p14Tag", titleKey: "p14Title", img: IMG.greyBath[1] },
+  { i: 13, slug: "bano-piedra-gris-y-roble", tagKey: "p14Tag", titleKey: "p14Title", img: IMG.greyBath[1], focus: FOCUS.greyBathCard },
   { i: 14, slug: "cocina-gris-y-madera-oscura", tagKey: "p15Tag", titleKey: "p15Title", img: IMG.greyKitchen[2] },
   { i: 15, slug: "cocina-piso-marmol-negro", tagKey: "p16Tag", titleKey: "p16Title", img: IMG.marbleFloorKitchen[2] },
   { i: 16, slug: "cocina-roble-dos-islas", tagKey: "p17Tag", titleKey: "p17Title", img: IMG.oakKitchen[0] },
-  { i: 17, slug: "cocina-blanca-y-roble-claro", tagKey: "p18Tag", titleKey: "p18Title", img: IMG.whiteKitchen[0] },
+  { i: 17, slug: "cocina-blanca-y-roble-claro", tagKey: "p18Tag", titleKey: "p18Title", img: IMG.whiteKitchen[0], focus: FOCUS.whiteKitchenCard },
   { i: 18, slug: "cocina-isla-acanalada", tagKey: "p19Tag", titleKey: "p19Title", img: IMG.flutedKitchen[6] },
 ] as const;
 
@@ -686,113 +705,90 @@ export const VIEW_PATHS = {
 export const projectPath = (index: number) => `/proyectos/${PROJECTS[index].slug}/`;
 
 /**
- * Hero + the secondary shots shown inside each project detail view.
+ * Hero + the gallery shown inside each project detail view.
  *
- * Every detail has a video row: the vertical video (or its "coming soon"
- * frame while `video` is unset) beside two photos. Those two are `side` when
- * given; otherwise the first two `shots` move there and the grid below starts
- * at the third, together with its caption. `tall` lists grid positions shown
- * as 2:3 portraits instead of 3:2. `before` turns on the before/after slider;
- * the design has the slot for Liz Kitchen but no photo in it yet, so no
- * project sets it.
+ * Nothing is cropped beyond the hero banner: every gallery frame takes the
+ * shape of its photo, and each row of the gallery is sized so its photos
+ * share one height (see renderShots in src/scripts/site.ts). `tall` lists the
+ * gallery positions that are portraits, so the page lays them out before the
+ * files arrive; the real proportions are read once each photo loads.
+ *
+ * Projects drawn only in portrait open with `heroSet`, three portraits side by
+ * side at the banner's height, instead of cropping one portrait into a strip.
+ * `hero` stays as the page's share image. `heroFocus` aims a single-photo crop.
+ *
+ * The video row only appears when the project has a `video`, beside the one
+ * `videoSide` portrait; `videoRatio` is the clip's width over height. `before`
+ * turns on the before/after slider; no project sets it yet.
  */
 export type ProjectShots = {
   hero: string;
+  heroSet?: [string, string, string];
+  heroFocus?: string;
   shots: string[];
-  side?: [string, string];
   tall?: number[];
   video?: string;
+  videoRatio?: number;
+  videoSide?: string;
   before?: string;
 };
 
 const pick = (set: string[], ...n: number[]) => n.map((k) => set[k - 1]);
 
+/** Every position from 0 to n − 1, for galleries that are all portraits. */
+const all = (n: number) => Array.from({ length: n }, (_, k) => k);
+
 export const SHOTS: ProjectShots[] = [
-  { hero: IMG.liz[0], shots: IMG.liz.slice(1) },
-  {
-    hero: IMG.closet2[0],
-    side: [IMG.closet2[1], IMG.closet2[3]],
-    shots: pick(IMG.closet2, 3, 5),
-    tall: [0, 1],
-  },
+  { hero: IMG.liz[0], shots: IMG.liz.slice(1), tall: [2] },
+  { hero: IMG.closet2[0], shots: pick(IMG.closet2, 2, 4, 3, 5), tall: all(4) },
   { hero: IMG.bath2[2], shots: pick(IMG.bath2, 2, 6, 7, 8, 9, 10, 4, 1, 5, 11) },
   { hero: IMG.kitchen3[4], shots: pick(IMG.kitchen3, 3, 1, 6, 4, 2, 7) },
-  {
-    hero: IMG.crystalLuxe[0],
-    side: [IMG.crystalLuxe[1], IMG.crystalLuxe[3]],
-    shots: pick(IMG.crystalLuxe, 3, 5, 6, 7),
-    tall: [0, 1, 2, 3],
-  },
-  {
-    hero: IMG.blackKitchen[8],
-    side: [IMG.blackKitchen[11], IMG.blackKitchen[6]],
-    shots: pick(IMG.blackKitchen, 10, 11, 8, 3, 2, 5, 6, 4, 1),
-  },
-  {
-    hero: IMG.goldCloset[4],
-    side: [IMG.goldCloset[5], IMG.goldCloset[7]],
-    shots: pick(IMG.goldCloset, 2, 4, 10, 3, 1, 9, 11, 7),
-    tall: [0, 1, 2, 3, 4, 5, 6, 7],
-  },
+  { hero: IMG.crystalLuxe[0], shots: pick(IMG.crystalLuxe, 2, 4, 3, 5, 6, 7), tall: all(6) },
+  { hero: IMG.blackKitchen[8], shots: pick(IMG.blackKitchen, 12, 7, 10, 11, 8, 3, 2, 5, 6, 4, 1) },
+  { hero: IMG.goldCloset[4], shots: pick(IMG.goldCloset, 6, 8, 2, 4, 10, 3, 1, 9, 11, 7), tall: all(10) },
   { hero: IMG.kitchenDining, shots: [IMG.kitchenWood, IMG.kitchenDark] },
   { hero: IMG.closet, shots: [IMG.interiorEmpty, IMG.kitchenWood] },
   {
-    hero: IMG.blackBath[1],
-    side: [IMG.blackBath[0], IMG.blackBath[1]],
-    shots: pick(IMG.blackBath, 3, 4),
-    tall: [0, 1],
+    hero: IMG.blackBath[2],
+    heroSet: [IMG.blackBath[0], IMG.blackBath[2], IMG.blackBath[3]],
+    shots: [IMG.blackBath[1]],
   },
   {
     hero: IMG.graniteKitchen[0],
-    side: [IMG.graniteKitchen[2], IMG.graniteKitchen[3]],
-    shots: pick(IMG.graniteKitchen, 1, 2, 5, 6, 7, 8),
-    tall: [0, 1, 2, 3, 4, 5],
+    heroSet: [IMG.graniteKitchen[5], IMG.graniteKitchen[0], IMG.graniteKitchen[4]],
+    shots: pick(IMG.graniteKitchen, 2, 3, 4, 7, 8),
+    tall: all(5),
   },
-  {
-    hero: IMG.academy[9],
-    side: [IMG.academy[0], IMG.academy[5]],
-    shots: pick(IMG.academy, 2, 3, 5, 9, 7, 4, 8, 11),
-  },
+  { hero: IMG.academy[9], shots: pick(IMG.academy, 1, 6, 2, 3, 5, 9, 7, 4, 8, 11) },
   {
     hero: IMG.envySky[3],
-    side: [IMG.envySky[4], IMG.envySky[5]],
-    shots: pick(IMG.envySky, 1, 2, 3, 7, 8, 4),
-    tall: [0, 1, 2, 3, 4, 5],
+    heroSet: [IMG.envySky[0], IMG.envySky[3], IMG.envySky[2]],
+    shots: pick(IMG.envySky, 2, 5, 6, 7, 8),
+    tall: all(5),
   },
-  {
-    hero: IMG.greyBath[1],
-    side: [IMG.greyBath[4], IMG.greyBath[5]],
-    shots: pick(IMG.greyBath, 1, 3, 4),
-  },
+  { hero: IMG.greyBath[1], shots: pick(IMG.greyBath, 1, 3, 4, 5, 6), tall: [4] },
   {
     hero: IMG.greyKitchen[2],
-    side: [IMG.greyKitchen[1], IMG.greyKitchen[3]],
-    shots: pick(IMG.greyKitchen, 1, 3),
-    tall: [0, 1],
+    heroSet: [IMG.greyKitchen[0], IMG.greyKitchen[2], IMG.greyKitchen[3]],
+    shots: [IMG.greyKitchen[1]],
+    tall: [0],
   },
   {
     hero: IMG.marbleFloorKitchen[2],
-    side: [IMG.marbleFloorKitchen[0], IMG.marbleFloorKitchen[1]],
-    shots: pick(IMG.marbleFloorKitchen, 4, 3),
-    tall: [0, 1],
+    heroSet: [IMG.marbleFloorKitchen[0], IMG.marbleFloorKitchen[2], IMG.marbleFloorKitchen[3]],
+    shots: [IMG.marbleFloorKitchen[1]],
+    tall: [0],
   },
-  {
-    hero: IMG.oakKitchen[1],
-    side: [IMG.oakKitchen[2], IMG.oakKitchen[0]],
-    shots: pick(IMG.oakKitchen, 1, 4),
-    tall: [0, 1],
-  },
-  {
-    hero: IMG.whiteKitchen[0],
-    side: [IMG.whiteKitchen[4], IMG.whiteKitchen[2]],
-    shots: pick(IMG.whiteKitchen, 4, 2, 6, 7),
-  },
+  { hero: IMG.oakKitchen[1], shots: pick(IMG.oakKitchen, 1, 4, 3), tall: [0, 1] },
+  { hero: IMG.whiteKitchen[0], shots: pick(IMG.whiteKitchen, 4, 2, 6, 7, 5, 3) },
   {
     hero: IMG.flutedKitchen[6],
+    heroSet: [IMG.flutedKitchen[0], IMG.flutedKitchen[6], IMG.flutedKitchen[7]],
     video: IMG.flutedKitchenVideo,
-    side: [IMG.flutedKitchen[3], IMG.flutedKitchen[5]],
-    shots: pick(IMG.flutedKitchen, 1, 8, 5, 7),
-    tall: [0, 1, 2, 3],
+    videoRatio: 4 / 5,
+    videoSide: IMG.flutedKitchen[5],
+    shots: pick(IMG.flutedKitchen, 4, 5),
+    tall: all(2),
   },
 ];
 
@@ -814,10 +810,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Full kitchen"], ["Materials", "Walnut, Taj Mahal quartzite, cashmere lacquer"], ["Location", "Miami, FL"]],
       captions: [
-        "Walnut tall wall with the double oven and refrigerator set flush.",
-        "Cashmere base cabinets under the quartzite counter, with the strip window to the garden.",
         "The island from the side, with the quartzite waterfall and the alabaster pendant.",
-        "Same view in evening light, with the ceiling cove and cabinet lighting on.",
         "Detail of the island, the glass cabinets and the backlit shelving.",
         "The waterfall end of the island and the stools from the window side.",
       ],
@@ -831,6 +824,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Walk-in closet"], ["Materials", "Graphite wood, walnut, mirrored glass"], ["Location", "Miami, FL"]],
       captions: [
+        "The owners at the island, under the sculptural pendant.",
+        "Leaning on the walnut island under the pendant.",
         "The mirrored glass top set into the walnut island.",
         "The island, the pendant and the lit graphite bays.",
       ],
@@ -882,6 +877,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Reception + waiting area"], ["Materials", "Oak laminate, teal lacquer, bronze glass"], ["Location", "Miami, FL"]],
       captions: [
+        "The reception desk and the lounge seating.",
+        "The oak feature wall with teal niches behind the desk.",
         "Backlit logo set into the oak panel.",
         "The owner at the feature wall.",
         "Oak niches and teal panels around the logo.",
@@ -897,6 +894,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Kitchen + dining room"], ["Materials", "Black marble, dark wood, glass"]],
       captions: [
+        "The island head-on, under the lit ceiling cove.",
+        "The island and the dining table from the garden side.",
         "The black marble island beside the dining table.",
         "The dark wood tall units and lit glass cabinets behind the table.",
         "The dining table runner and the lit wine cabinets.",
@@ -917,6 +916,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Walk-in closet"], ["Materials", "Glass, brushed gold, white lacquer, stone"], ["Location", "Miami, FL"]],
       captions: [
+        "The island in the middle of the glass bays.",
+        "The island and the lit hanging bays from the corner.",
         "The owners in front of the shelving and hanging bays.",
         "The owners in the corner of the closet.",
         "The owners between the glass cabinets.",
@@ -962,8 +963,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Bathroom"], ["Materials", "Black marble, walnut, brass"]],
       captions: [
-        "The vanity, the lit glass column and the toilet in black.",
-        "The dressing chair under the mirror, behind the glass shower screen.",
+        "The whole room from the door: vanity, lit glass column and brass towel rail.",
       ],
     },
     {
@@ -975,10 +975,9 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Kitchen + window seat"], ["Materials", "Walnut, black granite, glass"]],
       captions: [
-        "The fluted island and the walnut wall.",
         "The granite top of the island from above.",
-        "The tall walnut units and glass cabinets.",
-        "The window seat between the cabinetry and the coffee station.",
+        "The granite counter by the window.",
+        "The coffee station against the granite backsplash.",
         "The bench under the window, framed in walnut.",
         "The bench beside the lit glass bar unit.",
       ],
@@ -992,6 +991,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Commercial interior"], ["Materials", "Oak, stone, black slatted ceiling"]],
       captions: [
+        "The reception desk beside the logo and the oval mirror.",
+        "The waiting lounge under the backlit sign.",
         "The styling stations along the window.",
         "The washing area along the curved wall.",
         "The rows of stations and the lit oak columns.",
@@ -1011,12 +1012,11 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Reception + waiting area"], ["Materials", "Oak, teal lacquer, stone"]],
       captions: [
-        "A client waiting beside the lit oak niches.",
         "The lounge and the reception behind it.",
-        "The sofa and the teal wall with the aeroplane.",
+        "A plant in a lit teal niche.",
+        "The candle on the stone side table.",
         "Detail of a lit niche.",
         "The oak grain beside the shelving.",
-        "The reception desk and the EnvySky logo.",
       ],
     },
     {
@@ -1031,6 +1031,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "The vanity and the dressing table under the lit frame.",
         "The open shelves and the shower at the end of the room.",
         "The arched mirrors along the stone wall.",
+        "The double vanity from above, with the wooden sinks.",
+        "A lit niche in the stone wall.",
       ],
     },
     {
@@ -1043,7 +1045,6 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       meta: [["Scope", "Full kitchen"], ["Materials", "Dark wood, grey lacquer, stone, glass"]],
       captions: [
         "The grey run between the two lit glass columns.",
-        "The island from the end, with the stools and the pendants.",
       ],
     },
     {
@@ -1055,8 +1056,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Full kitchen"], ["Materials", "Black marble, green stone, walnut, glass"]],
       captions: [
-        "The island and the pendants from the side.",
-        "The island head-on, with the stools and the hood.",
+        "The island beside the tall oven units.",
       ],
     },
     {
@@ -1070,6 +1070,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       captions: [
         "The first island and the marble hood.",
         "Both islands from the end of the room.",
+        "The two islands under their lit ceiling panels.",
       ],
     },
     {
@@ -1085,6 +1086,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "The hob, the sink and the corner of the island.",
         "The ovens and the refrigerator beside the island.",
         "The sink under the window, framed by the oak cabinets.",
+        "The fruit bowl on the marble island.",
+        "The marble island top from above.",
       ],
     },
     {
@@ -1096,10 +1099,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Full kitchen"], ["Materials", "Oak, fluted marble, leather"]],
       captions: [
-        "The fluted island and the orange stools.",
-        "The island and the second counter from the entrance.",
-        "The kitchen at night, with the island and the cabinets lit.",
-        "The kitchen with every light on.",
+        "The island and the cabinets lit at night.",
+        "The ceiling pendants coming on over the island.",
       ],
     },
   ],
@@ -1113,10 +1114,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Cocina completa"], ["Materiales", "Nogal, cuarcita Taj Mahal, laca cashmere"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "Pared alta de nogal con el horno doble y el refrigerador empotrados.",
-        "Muebles bajos cashmere bajo la encimera de cuarcita, con la ventana corrida al jardín.",
         "La isla de lado, con la cascada de cuarcita y la lámpara de alabastro.",
-        "La misma vista con luz de tarde, con la moldura del techo y las vitrinas encendidas.",
         "Detalle de la isla, las vitrinas de cristal y los estantes retroiluminados.",
         "El extremo en cascada de la isla y los taburetes desde el lado de la ventana.",
       ],
@@ -1130,6 +1128,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Walk-in closet"], ["Materiales", "Madera grafito, nogal, cristal espejado"], ["Ubicación", "Miami, FL"]],
       captions: [
+        "Los dueños en la isla, bajo la lámpara escultórica.",
+        "Apoyado en la isla de nogal bajo la lámpara.",
         "La cubierta de cristal espejado integrada en la isla de nogal.",
         "La isla, la lámpara y los cuerpos grafito iluminados.",
       ],
@@ -1181,6 +1181,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Recepción y sala de espera"], ["Materiales", "Laminado roble, laca verde petróleo, cristal bronce"], ["Ubicación", "Miami, FL"]],
       captions: [
+        "El mostrador de recepción y la zona de espera.",
+        "La pared de roble con nichos en verde petróleo detrás del mostrador.",
         "Logo retroiluminado integrado en el panel de roble.",
         "La dueña frente a la pared protagonista.",
         "Nichos de roble y paneles en verde petróleo alrededor del logo.",
@@ -1196,6 +1198,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Cocina y comedor"], ["Materiales", "Mármol negro, madera oscura, cristal"]],
       captions: [
+        "La isla de frente, bajo la moldura iluminada del techo.",
+        "La isla y la mesa del comedor desde el lado del jardín.",
         "La isla de mármol negro junto a la mesa del comedor.",
         "Los muebles altos de madera oscura y las vitrinas iluminadas detrás de la mesa.",
         "El camino de mesa y las vitrinas de vinos iluminadas.",
@@ -1216,6 +1220,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Walk-in closet"], ["Materiales", "Cristal, dorado cepillado, laca blanca, piedra"], ["Ubicación", "Miami, FL"]],
       captions: [
+        "La isla en medio de las vitrinas.",
+        "La isla y los cuerpos de colgar iluminados desde la esquina.",
         "Los dueños frente a las repisas y los cuerpos de colgar.",
         "Los dueños en la esquina del closet.",
         "Los dueños entre las vitrinas de cristal.",
@@ -1261,8 +1267,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Baño"], ["Materiales", "Mármol negro, nogal, latón"]],
       captions: [
-        "El lavabo, la columna de cristal iluminada y el inodoro en negro.",
-        "La silla de tocador bajo el espejo, tras la mampara de la ducha.",
+        "Todo el baño desde la puerta: lavabo, columna de cristal iluminada y toallero de latón.",
       ],
     },
     {
@@ -1274,10 +1279,9 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Cocina y banco de ventana"], ["Materiales", "Nogal, granito negro, cristal"]],
       captions: [
-        "La isla acanalada y la pared de nogal.",
         "La cubierta de granito de la isla desde arriba.",
-        "Los muebles altos de nogal y las vitrinas.",
-        "El banco de la ventana entre la carpintería y la estación de café.",
+        "La encimera de granito junto a la ventana.",
+        "La estación de café contra el salpicadero de granito.",
         "El banco bajo la ventana, enmarcado en nogal.",
         "El banco junto al mueble bar de cristal iluminado.",
       ],
@@ -1291,6 +1295,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Interior comercial"], ["Materiales", "Roble, piedra, techo de lamas negras"]],
       captions: [
+        "El mostrador de recepción junto al logo y el espejo ovalado.",
+        "La sala de espera bajo el rótulo retroiluminado.",
         "Los puestos de peinado junto a la cristalera.",
         "La zona de lavado a lo largo de la pared curva.",
         "Las filas de puestos y las columnas de roble iluminadas.",
@@ -1310,12 +1316,11 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Recepción y sala de espera"], ["Materiales", "Roble, laca verde petróleo, piedra"]],
       captions: [
-        "Un cliente esperando junto a los nichos de roble iluminados.",
         "La zona de estar y la recepción al fondo.",
-        "El sofá y la pared verde petróleo con el avión.",
+        "Una planta en un nicho verde petróleo iluminado.",
+        "La vela sobre la mesa auxiliar de piedra.",
         "Detalle de un nicho iluminado.",
         "La veta del roble junto a los estantes.",
-        "El mostrador de recepción y el logo de EnvySky.",
       ],
     },
     {
@@ -1330,6 +1335,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "El lavabo y el tocador bajo el marco iluminado.",
         "Los estantes abiertos y la ducha al fondo.",
         "Los espejos en arco sobre la pared de piedra.",
+        "El lavabo doble desde arriba, con los lavabos de madera.",
+        "Un nicho iluminado en la pared de piedra.",
       ],
     },
     {
@@ -1342,7 +1349,6 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       meta: [["Alcance", "Cocina completa"], ["Materiales", "Madera oscura, laca gris, piedra, cristal"]],
       captions: [
         "El frente gris entre las dos columnas de cristal iluminadas.",
-        "La isla desde el extremo, con los taburetes y las lámparas.",
       ],
     },
     {
@@ -1354,8 +1360,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Cocina completa"], ["Materiales", "Mármol negro, piedra verde, nogal, cristal"]],
       captions: [
-        "La isla y las lámparas de lado.",
-        "La isla de frente, con los taburetes y la campana.",
+        "La isla junto a las columnas de los hornos.",
       ],
     },
     {
@@ -1369,6 +1374,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       captions: [
         "La primera isla y la campana de mármol.",
         "Las dos islas desde el fondo del espacio.",
+        "Las dos islas bajo sus paneles de techo iluminados.",
       ],
     },
     {
@@ -1384,6 +1390,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "La placa, el fregadero y la esquina de la isla.",
         "Los hornos y el refrigerador junto a la isla.",
         "El fregadero bajo la ventana, entre los muebles de roble.",
+        "El frutero sobre la isla de mármol.",
+        "La cubierta de mármol de la isla desde arriba.",
       ],
     },
     {
@@ -1395,10 +1403,8 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Cocina completa"], ["Materiales", "Roble, mármol acanalado, piel"]],
       captions: [
-        "La isla acanalada y los taburetes naranjas.",
-        "La isla y la segunda encimera desde la entrada.",
-        "La cocina de noche, con la isla y las vitrinas encendidas.",
-        "La cocina con todas las luces encendidas.",
+        "La isla y las vitrinas encendidas de noche.",
+        "Las lámparas del techo encendiéndose sobre la isla.",
       ],
     },
   ],

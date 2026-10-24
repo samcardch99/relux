@@ -20,6 +20,7 @@ import WorkView from "./views/WorkView.astro";
 import AboutView from "./views/AboutView.astro";
 import ProcessView from "./views/ProcessView.astro";
 import DetailView from "./views/DetailView.astro";
+import ProjectLightbox from "./ProjectLightbox.astro";
 
 interface Props {
   view?: "work" | "about" | "process" | "detail";
@@ -55,4 +56,5 @@ const { view, project, title, description, image } = Astro.props;
   <AboutView open={view === "about"} />
   <ProcessView open={view === "process"} />
   <DetailView index={view === "detail" ? project : undefined} />
+  <ProjectLightbox />
 </Layout>

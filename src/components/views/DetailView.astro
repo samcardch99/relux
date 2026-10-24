@@ -1,5 +1,7 @@
 ---
 import { COPY, DETAIL, PROJECTS, SHOTS } from "../../data/copy";
+import Contact from "../Contact.astro";
+import Footer from "../Footer.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
 
@@ -16,7 +18,8 @@ const { index } = Astro.props;
 const en = COPY.en;
 const project = index === undefined ? undefined : PROJECTS[index];
 const entry = index === undefined ? undefined : DETAIL.en[index];
-const hero = index === undefined ? "" : SHOTS[index].hero;
+const shots = index === undefined ? undefined : SHOTS[index];
+const hero = shots?.hero ?? "";
 const tag = project ? en[project.tagKey] : "";
 const title = project ? en[project.titleKey] : "";
 ---
@@ -37,8 +40,21 @@ const title = project ? en[project.titleKey] : "";
     <span class="view__bar-meta" id="detail-tag">{tag}</span>
   </div>
 
-  <div class="media detail__hero">
-    <img id="detail-hero" src={hero} alt={title} />
+  <!-- One photo cropped to the banner, or, for projects drawn in portrait
+       (`heroSet` in SHOTS), three portraits side by side at full size. -->
+  <div class:list={["media detail__hero", { "is-set": shots?.heroSet }]} id="detail-hero-box">
+    <img
+      id="detail-hero"
+      src={hero}
+      alt={title}
+      hidden={!!shots?.heroSet}
+      style={shots?.heroFocus ? `object-position:${shots.heroFocus}` : undefined}
+    />
+    <div class="detail__set" id="detail-hero-set" hidden={!shots?.heroSet}>
+      {[0, 1, 2].map((n) => (
+        <div class="media"><img id={`detail-hero-${n + 1}`} src={shots?.heroSet?.[n]} alt="" /></div>
+      ))}
+    </div>
     <div class="detail__hero-scrim"></div>
   </div>
 
@@ -96,36 +112,19 @@ const title = project ? en[project.titleKey] : "";
     </div>
   </div>
 
-  <!-- Video row: the vertical project video beside two photos. While a
-       project has no video (see SHOTS) its frame says it is coming soon. -->
-  <div class="vid">
+  <!-- Video row: only for projects with a video (see SHOTS), beside one
+       portrait. site.ts sizes both columns so they share one height. -->
+  <div class="vid" id="detail-vid" hidden>
     <div class="ba__head">
       <h3 class="ba__title" data-i18n="vidTitle">{en.vidTitle}</h3>
       <span class="ba__hint" id="detail-vid-tag">{tag}</span>
     </div>
-    <div class="vid__row">
-      <div class="media vid__frame">
-        <video
-          id="detail-video"
-          muted
-          loop
-          playsinline
-          controls
-          preload="metadata"
-          hidden
-        ></video>
-        <div class="vid__pending" id="detail-video-ph">
-          <span class="vid__play">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M7 5v14l12-7z" />
-            </svg>
-          </span>
-          <span class="vid__label" data-i18n="vidPending">{en.vidPending}</span>
-        </div>
+    <div class="vid__row" id="detail-vid-row">
+      <div class="media vid__frame" id="detail-vid-frame">
+        <video id="detail-video" muted loop playsinline controls preload="metadata"></video>
       </div>
-      <div class="vid__side">
-        <div class="media"><img id="detail-side-1" alt="" loading="lazy" /></div>
-        <div class="media"><img id="detail-side-2" alt="" loading="lazy" /></div>
+      <div class="media vid__side">
+        <img id="detail-side" alt="" loading="lazy" />
       </div>
     </div>
   </div>
@@ -149,6 +148,9 @@ const title = project ? en[project.titleKey] : "";
       </button>
     </div>
   </div>
+
+  <Contact inView />
+  <Footer />
 </div>
 
 <style>
@@ -157,9 +159,34 @@ const title = project ? en[project.titleKey] : "";
     height: calc(62svh / var(--zoom, 1));
     min-height: 300px;
   }
+  .detail__hero > img[hidden],
+  .detail__set[hidden] {
+    display: none;
+  }
+
+  /* Three 4:5 portraits at the banner's height. Where the screen is too
+     narrow for that, the banner gets shorter instead of cropping them. */
+  .detail__hero.is-set {
+    container-type: inline-size;
+    height: auto;
+    min-height: 0;
+    background: none;
+  }
+  .detail__set {
+    --set-gap: 8px;
+    display: flex;
+    justify-content: center;
+    gap: var(--set-gap);
+    height: min(calc(62svh / var(--zoom, 1)), calc((100cqw - 2 * var(--set-gap)) / 3 * 1.25));
+  }
+  .detail__set > .media {
+    height: 100%;
+    aspect-ratio: 4 / 5;
+  }
   .detail__hero-scrim {
     position: absolute;
     inset: 0;
+    pointer-events: none;
     background: linear-gradient(
       to bottom,
       rgb(6 5 4 / 0.2) 0%,
@@ -208,8 +235,8 @@ const title = project ? en[project.titleKey] : "";
   }
 
   .detail__shots {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 20px;
     padding: 0 var(--gutter) 88px;
   }
@@ -322,14 +349,21 @@ const title = project ? en[project.titleKey] : "";
     gap: 24px;
     padding: 0 var(--gutter) 88px;
   }
+  .vid[hidden] {
+    display: none;
+  }
+  /* Each column is as wide as its frame's proportion (set by site.ts), so the
+     video and the photo come out the same height with nothing cropped. */
   .vid__row {
     display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+    grid-template-columns: var(--cols, minmax(0, 9fr) minmax(0, 20fr));
     gap: 16px;
-    align-items: stretch;
+    align-items: start;
+    width: var(--row-width, 100%);
+    margin-inline: auto;
   }
   .vid__frame {
-    aspect-ratio: 9 / 16;
+    aspect-ratio: var(--ratio, 9 / 16);
     border: 1px solid rgb(239 226 196 / 0.08);
   }
   .vid__frame video {
@@ -340,50 +374,8 @@ const title = project ? en[project.titleKey] : "";
     object-fit: cover;
     background: #000;
   }
-  .vid__frame video[hidden],
-  .vid__pending[hidden] {
-    display: none;
-  }
-  .vid__pending {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 24px;
-    text-align: center;
-  }
-  .vid__play {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 64px;
-    height: 64px;
-    border-radius: 999px;
-    border: 1px solid rgb(239 226 196 / 0.3);
-    color: var(--color-cream);
-  }
-  .vid__play svg {
-    margin-left: 3px;
-  }
-  .vid__label {
-    font-size: var(--fs-label);
-    font-weight: 400;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: rgb(239 226 196 / 0.45);
-  }
   .vid__side {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    min-height: 0;
-  }
-  .vid__side .media {
-    flex: 1 1 0;
-    min-height: 0;
+    aspect-ratio: 4 / 5;
   }
 
   .detail__foot {
@@ -409,24 +401,28 @@ const title = project ? en[project.titleKey] : "";
     .detail__hero {
       height: 240px;
     }
+    /* Too narrow for three whole portraits: they keep the banner's height
+       and the strip scrolls sideways instead. */
+    .detail__set {
+      height: 240px;
+      justify-content: flex-start;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .detail__set > .media {
+      flex: none;
+      scroll-snap-align: start;
+    }
     .detail__intro {
       grid-template-columns: minmax(0, 1fr);
       gap: 40px;
       padding-top: 56px;
     }
-    .detail__shots {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    /* The video stacks over the two photos, now 3:2 each */
+    /* The video stacks over its photo */
     .vid__row {
       grid-template-columns: minmax(0, 1fr);
-    }
-    .vid__side {
-      gap: 6px;
-    }
-    .vid__side .media {
-      flex: none;
-      aspect-ratio: 3 / 2;
+      width: 100%;
     }
     .detail__title {
       font-size: 28px;
@@ -468,6 +464,17 @@ const title = project ? en[project.titleKey] : "";
     color: var(--color-cream);
   }
 
+  /* Each column is as wide as its photo's proportion, so the row shares one
+     height; a short last row is narrowed and centred. See renderShots. The
+     gap is GALLERY_GAP in site.ts. */
+  .detail__row {
+    display: grid;
+    grid-template-columns: var(--cols);
+    gap: 20px;
+    align-items: start;
+    width: var(--row-width, 100%);
+    margin-inline: auto;
+  }
   .detail__shots figure {
     display: flex;
     flex-direction: column;
@@ -475,21 +482,23 @@ const title = project ? en[project.titleKey] : "";
     margin: 0;
   }
   .detail__shots .media {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: var(--ratio, 16 / 9);
   }
-  /* Portrait shots (`tall` in SHOTS) */
-  .detail__shots .is-tall .media {
-    aspect-ratio: 2 / 3;
-  }
-  /* An odd landscape shot out closes the grid as one wide frame */
-  .detail__shots > figure:last-child:nth-child(odd):not(.is-tall) {
-    grid-column: 1 / -1;
-  }
-  .detail__shots > figure:last-child:nth-child(odd):not(.is-tall) .media {
-    aspect-ratio: 16 / 7;
+  /* One photo per row on phones, each still at its own proportion */
+  @media (max-width: 720px) {
+    .detail__row {
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+    }
   }
   .detail__shots img {
     filter: brightness(0.9);
+  }
+  /* Every photo in the detail opens the full-screen viewer (ProjectLightbox);
+     site.ts marks them with data-lb-index. */
+  #view-detail img[data-lb-index]:focus-visible {
+    outline: 1px solid rgb(239 226 196 / 0.7);
+    outline-offset: -4px;
   }
   .detail__shots figcaption {
     font-size: var(--fs-xs);

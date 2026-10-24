@@ -1,16 +1,17 @@
 ---
 import Logo from "./icons/Logo.astro";
-import { COPY, FOUNDERS, INSTAGRAM } from "../data/copy";
+import { COPY, FOUNDERS, INSTAGRAM, VIEW_PATHS } from "../data/copy";
 
 const en = COPY.en;
 const primary = FOUNDERS[0];
 
-/* The full-screen menu lists About first, like the design's phone menu. */
+/* Work, About and Process open their own full-screen views (at their own
+   addresses); Services scrolls to its section of the homepage. */
 const MENU = [
-  { href: "#about", key: "navAbout", label: en.navAbout },
+  { href: VIEW_PATHS.about, open: "about", key: "navAbout", label: en.navAbout },
   { href: "#services", key: "navServices", label: en.navServices },
-  { href: "#projects", key: "navProjects", label: en.navProjects },
-  { href: "#process", key: "navProcess", label: en.navProcess },
+  { href: VIEW_PATHS.work, open: "work", key: "navProjects", label: en.navProjects },
+  { href: VIEW_PATHS.process, open: "process", key: "navProcess", label: en.navProcess },
 ] as const;
 ---
 
@@ -21,9 +22,9 @@ const MENU = [
 
   <nav class="nav__menu" aria-label="Main">
     <a href="#services" data-i18n="navServices">Services</a>
-    <a href="#projects" data-i18n="navProjects">Work</a>
-    <a href="#about" data-i18n="navAbout">About</a>
-    <a href="#process" data-i18n="navProcess">Process</a>
+    <a href={VIEW_PATHS.work} data-open="work" data-i18n="navProjects">Work</a>
+    <a href={VIEW_PATHS.about} data-open="about" data-i18n="navAbout">About</a>
+    <a href={VIEW_PATHS.process} data-open="process" data-i18n="navProcess">Process</a>
   </nav>
 
   <div class="nav__right">
@@ -68,7 +69,7 @@ const MENU = [
   <nav class="sheet__nav" aria-label="Main">
     {
       MENU.map((m, i) => (
-        <a href={m.href} style={`--i:${i}`}>
+        <a href={m.href} data-open={"open" in m ? m.open : undefined} style={`--i:${i}`}>
           <span class="sheet__mask">
             <span class="sheet__label" data-i18n={m.key}>{m.label}</span>
           </span>
@@ -105,11 +106,11 @@ const MENU = [
     column-gap: 24px;
     /* The design's logo slot is what sets this height, not the mark itself */
     min-height: var(--header-h);
-    padding: 14px 36px;
+    padding: 10px 36px;
     background: linear-gradient(
       to bottom,
-      rgb(6 5 4 / 0.94) 0%,
-      rgb(6 5 4 / 0.78) 55%,
+      rgb(6 5 4 / 0.9) 0%,
+      rgb(6 5 4 / 0.6) 45%,
       rgb(6 5 4 / 0) 100%
     );
     backdrop-filter: blur(3px);
@@ -455,7 +456,7 @@ const MENU = [
   @media (max-width: 1080px) {
     .nav {
       grid-template-columns: 1fr auto;
-      padding: 10px 24px;
+      padding: 8px 24px;
     }
     .nav__menu,
     .nav__right {
@@ -467,7 +468,7 @@ const MENU = [
   }
   @media (max-width: 720px) {
     .nav {
-      padding: 8px 16px;
+      padding: 6px 16px;
     }
   }
   /* Nothing to open once the desktop nav is back */

@@ -53,9 +53,10 @@
   /* Navbar geometry, pinned to the design's fixed px at desktop.
      The design's logo sits in a 230×96 slot but the author zoomed it to
      s=2.716, so the mark actually reads at 137×37 — that is the size to
-     match, while the 96px slot is what makes the header 124px tall.
+     match. The design's 96px slot made the header 124px tall; it was cut to
+     92px so the bar and its fade cover less of the page.
      `--header-h` also offsets anchor scrolling and the top of every view. */
-  --header-h: 124px;
+  --header-h: 92px;
   --logo-w: 137px;
 }
 
@@ -377,7 +378,7 @@ img[data-failed] {
    which puts the mark (0.6 of the slot width, see --logo-w) at 107 and 83px. */
 @media (max-width: 1080px) {
   :root {
-    --header-h: 94px;
+    --header-h: 76px;
     --logo-w: 107px;
     --gutter: 32px;
     --fs-hero: 52px;
@@ -390,7 +391,7 @@ img[data-failed] {
 }
 @media (max-width: 720px) {
   :root {
-    --header-h: 74px;
+    --header-h: 62px;
     --logo-w: 83px;
     --gutter: 20px;
     --fs-hero: 40px;

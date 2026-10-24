@@ -1,5 +1,7 @@
 ---
 import { COPY, VALUES, FOUNDERS, IMG, FOCUS } from "../../data/copy";
+import Contact from "../Contact.astro";
+import Footer from "../Footer.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
 import ArrowUpRight from "../icons/ArrowUpRight.astro";
 
@@ -103,6 +105,9 @@ const founderFocus = [FOCUS.founder1, undefined];
       <ArrowUpRight />
     </button>
   </div>
+
+  <Contact inView />
+  <Footer />
 </div>
 
 <style>

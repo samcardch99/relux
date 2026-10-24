@@ -2,10 +2,16 @@
 import ContactForm from "./ContactForm.jsx";
 import { COPY, FOUNDERS, INSTAGRAM } from "../data/copy";
 
+interface Props {
+  /** A copy at the end of a full-screen view: same section, no #contact anchor. */
+  inView?: boolean;
+}
+
+const { inView = false } = Astro.props;
 const en = COPY.en;
 ---
 
-<section class="contact" id="contact">
+<section class="contact" id={inView ? undefined : "contact"} data-contact>
   <div class="contact__inner">
     <div class="contact__left">
       <h2 class="contact__title">

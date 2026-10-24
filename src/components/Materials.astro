@@ -45,8 +45,10 @@ const tab = (key: "glass" | "floor") => ({
         <div class="mat-stage__veil"></div>
 
         {
-          /* One clipped copy of the render per polygon. Hidden until its
-             material is active, then lifted and lit in place. */
+          /* One masked copy of the render per material. Hidden until its
+             material is active, then lifted and lit in place. Masks don't take
+             the pointer, so the stage is hit tested against their alpha in
+             the script instead. */
           scenes.map(({ scene, img }) =>
             regionsFor(scene).map((r) => (
               <div
@@ -58,8 +60,7 @@ const tab = (key: "glass" | "floor") => ({
               >
                 <div
                   class="mat-region__clip"
-                  data-mat={r.mat}
-                  style={`clip-path:polygon(${r.clipPath})`}
+                  style={`mask-image:url(${r.maskSrc});-webkit-mask-image:url(${r.maskSrc})`}
                 >
                   <img src={img} alt="" draggable="false" loading="lazy" />
                 </div>
@@ -210,8 +211,11 @@ const tab = (key: "glass" | "floor") => ({
     position: absolute;
     inset: 0;
     opacity: 0;
-    cursor: none;
-    pointer-events: auto;
+    pointer-events: none;
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
     transition:
       opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
       filter 0.42s ease;
@@ -464,7 +468,7 @@ const tab = (key: "glass" | "floor") => ({
     .mat-cursor {
       display: none;
     }
-    .mat-region__clip {
+    .mat-stage {
       cursor: pointer;
     }
   }
@@ -537,10 +541,63 @@ const tab = (key: "glass" | "floor") => ({
         getComputedStyle(document.documentElement).getPropertyValue("--zoom")
       ) || 1;
 
-    const keyAt = (target: EventTarget | null): MaterialKey | null => {
-      const el = (target as Element | null)?.closest?.("[data-mat]");
-      return (el?.getAttribute("data-mat") as MaterialKey) ?? null;
+    /* ── Hit test: each mask's alpha, read once into a coarse grid, per
+       scene and only when that scene is first shown. Where masks overlap,
+       the most opaque one wins. ── */
+    const GW = 512;
+    type Grid = { w: number; h: number; alpha: Partial<Record<MaterialKey, Uint8Array>> };
+    const grids: Partial<Record<Scene, Grid>> = {};
+
+    const loadGrid = (name: Scene) => {
+      if (grids[name]) return;
+      const def = SCENES[name];
+      const grid: Grid = { w: GW, h: 0, alpha: {} };
+      grids[name] = grid;
+      def.order.forEach((key) => {
+        const m = def.masks[key];
+        if (!m) return;
+        const im = new Image();
+        im.onload = () => {
+          const h = Math.round((GW * im.naturalHeight) / im.naturalWidth);
+          const c = document.createElement("canvas");
+          c.width = GW;
+          c.height = h;
+          const x = c.getContext("2d");
+          if (!x) return;
+          x.drawImage(im, 0, 0, GW, h);
+          const d = x.getImageData(0, 0, GW, h).data;
+          const a = new Uint8Array(GW * h);
+          for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3];
+          grid.h = h;
+          grid.alpha[key] = a;
+        };
+        im.src = m.src;
+      });
     };
+
+    const hitAt = (u: number, v: number): MaterialKey | null => {
+      const grid = grids[scene()];
+      if (!grid?.h || u < 0 || v < 0 || u >= 1 || v >= 1) return null;
+      const i = Math.floor(v * grid.h) * grid.w + Math.floor(u * grid.w);
+      let best: MaterialKey | null = null;
+      let alpha = 110;
+      SCENES[scene()].order.forEach((k) => {
+        const a = grid.alpha[k];
+        if (a && a[i] > alpha) {
+          alpha = a[i];
+          best = k;
+        }
+      });
+      return best;
+    };
+
+    /** The material under the pointer. */
+    const keyFrom = (e: MouseEvent): MaterialKey | null => {
+      const r = stage.getBoundingClientRect();
+      return hitAt((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+    };
+
+    loadGrid(scene());
 
     const fill = (key: MaterialKey) => {
       const m = mats()[key];
@@ -629,26 +686,24 @@ const tab = (key: "glass" | "floor") => ({
     }
 
     phone.addEventListener("change", () => {
+      loadGrid(scene());
       pinned = false;
       setMat(null);
       regions.forEach((r) => r.classList.remove("is-on"));
       regions = allRegions.filter((r) => r.dataset.scene === scene());
     });
 
-    stage.addEventListener("mouseover", (e) => {
-      if (touch.matches) return;
-      const k = keyAt(e.target);
-      if (k) setMat(k);
-      else if (!pinned) setMat(null);
-    });
-
+    // Hovering a material selects it, unless one is pinned by a click
     stage.addEventListener("mousemove", (e: MouseEvent) => {
       if (touch.matches) return;
       const r = stage.getBoundingClientRect();
       const z = zoom();
       cursor.style.left = `${(e.clientX - r.left) / z + 62}px`;
       cursor.style.top = `${(e.clientY - r.top) / z}px`;
-      cursor.style.opacity = keyAt(e.target) ? "1" : "0";
+      const k = keyFrom(e);
+      cursor.style.opacity = k ? "1" : "0";
+      if (k) setMat(k);
+      else if (!pinned) setMat(null);
     });
 
     stage.addEventListener("mouseleave", () => {
@@ -658,7 +713,7 @@ const tab = (key: "glass" | "floor") => ({
     });
 
     stage.addEventListener("click", (e) => {
-      const k = keyAt(e.target);
+      const k = keyFrom(e);
       pinned = !!k;
       setMat(k);
     });

@@ -2,6 +2,16 @@ import { COPY, DETAIL, PROJECTS, SHOTS, VIEW_PATHS, WORK, projectPath, type Lang
 
 const STORAGE_KEY = "relux:lang";
 
+/** The two proportions the renders come in. */
+const LANDSCAPE = 16 / 9;
+const PORTRAIT = 4 / 5;
+/** Sum of proportions that fills a gallery row (see renderShots). */
+const ROW_SPAN = 2.3;
+/** Gap between gallery photos; matches `.detail__row` in DetailView.astro. */
+const GALLERY_GAP = 20;
+/** Gap inside the video row; matches `.vid__row`. */
+const VIDEO_GAP = 16;
+
 /* ──────────────────────────────────────────────
    Images
    A photo that fails to load fades out and leaves
@@ -164,11 +174,26 @@ function renderDetail(index: number) {
   if (title) title.textContent = t[project.titleKey];
   if (summary) summary.textContent = entry.summary;
 
-  setImage(
-    document.getElementById("detail-hero") as HTMLImageElement | null,
-    shots.hero,
-    t[project.titleKey]
-  );
+  // A single cropped banner, or three whole portraits in its place.
+  const heroImg = document.getElementById("detail-hero") as HTMLImageElement | null;
+  const heroSet = document.getElementById("detail-hero-set");
+  document.getElementById("detail-hero-box")?.classList.toggle("is-set", !!shots.heroSet);
+  if (heroSet) heroSet.hidden = !shots.heroSet;
+  if (heroImg) {
+    heroImg.hidden = !!shots.heroSet;
+    heroImg.style.objectPosition = shots.heroFocus ?? "";
+  }
+  if (shots.heroSet) {
+    shots.heroSet.forEach((src, n) =>
+      setImage(
+        document.getElementById(`detail-hero-${n + 1}`) as HTMLImageElement | null,
+        src,
+        n === 1 ? t[project.titleKey] : ""
+      )
+    );
+  } else {
+    setImage(heroImg, shots.hero, t[project.titleKey]);
+  }
 
   const paras = document.getElementById("detail-paras");
   if (paras) {
@@ -206,16 +231,13 @@ function renderDetail(index: number) {
     }
   }
 
-  // Video row. Without `side`, the first two shots move up beside the video
-  // and the grid starts at the third, keeping the captions aligned.
-  const side = shots.side ?? [shots.shots[0] ?? shots.hero, shots.shots[1] ?? shots.hero];
-  const offset = shots.side ? 0 : 2;
-  const grid = shots.shots.slice(offset);
-
+  // Video row, only when there is a video: the clip and one portrait, in
+  // columns as wide as their proportions so both share one height.
+  const vid = document.getElementById("detail-vid");
+  if (vid) vid.hidden = !shots.video;
   const vidTag = document.getElementById("detail-vid-tag");
   if (vidTag) vidTag.textContent = t[project.tagKey];
   const video = document.getElementById("detail-video") as HTMLVideoElement | null;
-  const videoPending = document.getElementById("detail-video-ph");
   if (video) {
     if (shots.video) {
       if (video.getAttribute("src") !== shots.video) video.src = shots.video;
@@ -223,36 +245,143 @@ function renderDetail(index: number) {
       video.removeAttribute("src");
       video.load();
     }
-    video.hidden = !shots.video;
   }
-  if (videoPending) videoPending.hidden = !!shots.video;
-  side.forEach((src, n) =>
-    setImage(document.getElementById(`detail-side-${n + 1}`) as HTMLImageElement | null, src, t[project.titleKey])
+  if (shots.video) {
+    const ratio = shots.videoRatio ?? 9 / 16;
+    document.getElementById("detail-vid-frame")?.style.setProperty("--ratio", String(ratio));
+    // Same height as a gallery row of three portraits, centred.
+    const total = ratio + PORTRAIT;
+    const row = document.getElementById("detail-vid-row");
+    row?.style.setProperty("--cols", `minmax(0, ${ratio / total}fr) minmax(0, ${PORTRAIT / total}fr)`);
+    row?.style.setProperty(
+      "--row-width",
+      `calc((100% - ${2 * GALLERY_GAP}px) * ${total / (3 * PORTRAIT)} + ${VIDEO_GAP}px)`
+    );
+    if (shots.videoSide) {
+      setImage(document.getElementById("detail-side") as HTMLImageElement | null, shots.videoSide, t[project.titleKey]);
+    }
+  }
+
+  renderShots(shots.shots, shots.tall ?? [], entry.captions);
+  tagGallery();
+}
+
+/**
+ * Numbers every photo on screen in the detail view, in reading order, for the
+ * full-screen viewer (ProjectLightbox). A photo that appears twice keeps the
+ * number it got first, so both open the same slide.
+ */
+function tagGallery() {
+  const imgs = document.querySelectorAll<HTMLImageElement>(
+    "#detail-hero:not([hidden]), #detail-hero-set:not([hidden]) img, #detail-vid:not([hidden]) #detail-side, #detail-shots img"
+  );
+  const seen = new Map<string, number>();
+  document.querySelectorAll<HTMLImageElement>("#view-detail img[data-lb-index]").forEach((img) => {
+    delete img.dataset.lbIndex;
+    img.removeAttribute("role");
+    img.removeAttribute("tabindex");
+  });
+  imgs.forEach((img) => {
+    const src = img.getAttribute("src");
+    if (!src) return;
+    if (!seen.has(src)) seen.set(src, seen.size);
+    img.dataset.lbIndex = String(seen.get(src));
+    img.setAttribute("role", "button");
+    img.setAttribute("tabindex", "0");
+    img.setAttribute("aria-haspopup", "dialog");
+  });
+}
+
+/* ── Gallery ── */
+
+/**
+ * Lays the gallery out in rows and makes each column as wide as its photo's
+ * proportion: the row then has one height and every photo shows whole.
+ * Proportions start from `tall` and are corrected from the file itself once
+ * it loads (the rows stay as first grouped).
+ */
+function renderShots(srcs: string[], tall: number[], captions: string[]) {
+  const shotsEl = document.getElementById("detail-shots");
+  if (!shotsEl) return;
+
+  const figures = srcs.map((src, i) => {
+    const figure = document.createElement("figure");
+    const frame = document.createElement("div");
+    frame.className = "media";
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    frame.append(img);
+
+    const caption = document.createElement("figcaption");
+    caption.textContent = captions[i] ?? "";
+
+    figure.append(frame, caption);
+    setImage(img, src, captions[i] ?? "");
+    return { figure, frame, img, ratio: tall.includes(i) ? PORTRAIT : LANDSCAPE };
+  });
+
+  // A row closes once its proportions add up to ROW_SPAN: two landscapes,
+  // three portraits, or one of each.
+  type Item = (typeof figures)[number];
+  const groups: Item[][] = [[]];
+  let span = 0;
+  for (const it of figures) {
+    if (span >= ROW_SPAN) {
+      groups.push([]);
+      span = 0;
+    }
+    groups[groups.length - 1].push(it);
+    span += it.ratio;
+  }
+
+  const sum = (items: Item[]) => items.reduce((s, it) => s + it.ratio, 0);
+  const rows = groups.map((items) => {
+    const el = document.createElement("div");
+    el.className = "detail__row";
+    el.append(...items.map((it) => it.figure));
+    return { el, items };
+  });
+
+  // A short last row keeps the height of the row above (or of a full row of
+  // portraits when it is the only one) and is centred, instead of stretching.
+  const layout = () => {
+    rows.forEach(({ el, items }, r) => {
+      items.forEach((it) => it.frame.style.setProperty("--ratio", String(it.ratio)));
+      // Normalised so the tracks always add up to 1fr: below that, a lone
+      // portrait's column would only fill part of its row.
+      const s = sum(items);
+      el.style.setProperty("--cols", items.map((it) => `minmax(0, ${it.ratio / s}fr)`).join(" "));
+      const isShort = r === rows.length - 1 && s < ROW_SPAN;
+      if (!isShort) {
+        el.style.removeProperty("--row-width");
+        return;
+      }
+      const ref = rows[r - 1]?.items;
+      const refSpan = ref ? sum(ref) : 3 * PORTRAIT;
+      const refGaps = ((ref?.length ?? 3) - 1) * GALLERY_GAP;
+      el.style.setProperty(
+        "--row-width",
+        `calc((100% - ${refGaps}px) * ${s / refSpan} + ${(items.length - 1) * GALLERY_GAP}px)`
+      );
+    });
+  };
+  layout();
+
+  rows.forEach(({ items }) =>
+    items.forEach((it) => {
+      const correct = () => {
+        if (!it.img.naturalWidth) return;
+        const ratio = it.img.naturalWidth / it.img.naturalHeight;
+        if (Math.abs(ratio - it.ratio) < 0.01) return;
+        it.ratio = ratio;
+        layout();
+      };
+      if (it.img.complete) correct();
+      else it.img.addEventListener("load", correct, { once: true });
+    })
   );
 
-  const shotsEl = document.getElementById("detail-shots");
-  if (shotsEl) {
-    shotsEl.replaceChildren(
-      ...grid.map((src, i) => {
-        const n = i + offset;
-        const figure = document.createElement("figure");
-        if (shots.tall?.includes(i)) figure.classList.add("is-tall");
-
-        const frame = document.createElement("div");
-        frame.className = "media";
-        const img = document.createElement("img");
-        img.loading = "lazy";
-        frame.append(img);
-
-        const caption = document.createElement("figcaption");
-        caption.textContent = entry.captions[n] ?? "";
-
-        figure.append(frame, caption);
-        setImage(img, src, entry.captions[n] ?? "");
-        return figure;
-      })
-    );
-  }
+  shotsEl.replaceChildren(...rows.map(({ el }) => el));
 }
 
 /* ── Before / after slider ── */
@@ -472,6 +601,10 @@ document.addEventListener("click", (event) => {
   // Open a named view
   const opener = target.closest<HTMLElement>("[data-open]");
   if (opener) {
+    // A menu link to a view is a real address: modified clicks open it in a new tab
+    if (opener.matches("a") && (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
+    event.preventDefault();
+    closeMenu();
     const name = opener.dataset.open as ViewName;
     if (stack.includes(name)) return;
     openView(name);
@@ -483,21 +616,34 @@ document.addEventListener("click", (event) => {
   const closer = target.closest<HTMLElement>("[data-close]");
   if (closer) {
     const goto = closer.dataset.goto;
+    if (goto === "contact" && scrollToViewContact()) return;
     if (goto) closeAllAndGo(goto);
     else closeTop();
     return;
   }
 
-  // Any in-page link returns to the homepage first
+  // Any in-page link returns to the homepage first — except "contact", which
+  // every view carries a copy of at its end
   const anchor = target.closest<HTMLAnchorElement>('a[href^="#"]');
   if (anchor) {
     closeMenu();
     if (stack.length) {
       event.preventDefault();
-      closeAllAndGo(anchor.getAttribute("href")!.slice(1));
+      const id = anchor.getAttribute("href")!.slice(1);
+      if (id === "contact" && scrollToViewContact()) return;
+      closeAllAndGo(id);
     }
   }
 });
+
+/** Scrolls the open view down to its own contact section, if it has one. */
+function scrollToViewContact(): boolean {
+  const top = stack[stack.length - 1];
+  const contact = top ? document.getElementById(`view-${top}`)?.querySelector<HTMLElement>("[data-contact]") : null;
+  if (!contact) return false;
+  contact.scrollIntoView({ behavior: "smooth", block: "start" });
+  return true;
+}
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && stack.length) closeTop();
