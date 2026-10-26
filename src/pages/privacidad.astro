@@ -1,0 +1,250 @@
+---
+/**
+ * Privacy policy, in both languages: the article matching <html lang> shows
+ * (the site's toggle sets it). Written from what the site actually collects —
+ * keep it in step when that changes (a new form field, analytics, a pixel).
+ */
+import Layout from "../layouts/Layout.astro";
+import Cursor from "../components/Cursor.astro";
+import Navbar from "../components/Navbar.astro";
+import WhatsApp from "../components/WhatsApp.astro";
+import Footer from "../components/Footer.astro";
+import { EMAIL, FOUNDERS } from "../data/copy";
+
+const UPDATED = { en: "October 26, 2026", es: "26 de octubre de 2026" };
+const phone = FOUNDERS[0];
+---
+
+<Layout
+  title="Privacy policy — RE-LUX Construction"
+  description="How RE-LUX Construction collects, uses and protects the information you share through relux-construction.com."
+>
+  <Cursor />
+  <Navbar />
+  <WhatsApp />
+
+  <main class="legal" data-standalone>
+    <article lang="en">
+      <span class="kicker">Last updated {UPDATED.en}</span>
+      <h1 class="sec-head__title">Privacy <em>policy</em></h1>
+
+      <p>
+        RE-LUX Construction ("RE-LUX", "we") is an interior remodeling and custom woodwork company in
+        Miami, Florida. This policy explains what information we collect through
+        relux-construction.com, how we use it and the choices you have.
+      </p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li>
+          <strong>What you send us through the contact form:</strong> your first and last name,
+          email address, phone number (optional), the service you are interested in and your message.
+        </li>
+        <li>
+          <strong>What you share when you contact us directly</strong> by phone, email, WhatsApp or
+          Instagram.
+        </li>
+        <li>
+          <strong>Basic technical data</strong> that our hosting provider records for every visit,
+          such as IP address, browser type and the pages requested, to keep the site running and secure.
+        </li>
+        <li>
+          <strong>Your language preference</strong> (English or Spanish), stored only in your own
+          browser so the site remembers it.
+        </li>
+        <li>
+          <strong>Google reviews.</strong> The profile photos of the people who reviewed us are
+          loaded from Google's servers, which receive your IP address and browser details as with any
+          image request.
+        </li>
+        <li>
+          <strong>Usage statistics.</strong> We may use Google Analytics to understand how visitors
+          use the site (pages viewed, approximate location, device type, whether a form was sent or a
+          phone number was tapped). Google Analytics uses cookies; you can block them in your browser
+          or with Google's
+          <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">opt-out add-on</a>.
+        </li>
+      </ul>
+
+      <h2>How we use it</h2>
+      <p>
+        To answer your inquiry, prepare estimates and designs, schedule visits and carry out the work
+        you hire us for; to improve the site; and to meet our legal obligations. We do not sell your
+        personal information, and we do not use it for advertising by third parties.
+      </p>
+
+      <h2>Who we share it with</h2>
+      <p>
+        Only the service providers that make the site and our communication work, and only for that
+        purpose: our web host (Hostinger), the service that delivers form messages to our inbox
+        (EmailJS and Google Gmail), Google Analytics if enabled, and Meta (WhatsApp, Instagram) when you
+        choose to message us there. On a project, we may share the details needed with the partner
+        contractors and suppliers involved in it. We may also disclose information when the law
+        requires it.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <p>
+        We keep inquiry messages for as long as needed to follow up on them, and project records for as
+        long as the law and our warranty obligations require.
+      </p>
+
+      <h2>Your choices</h2>
+      <p>
+        You can ask us at any time to see, correct or delete the personal information we hold about
+        you by writing to <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. We will answer within 30 days.
+      </p>
+
+      <h2>Children</h2>
+      <p>This site is not directed to children under 13, and we do not knowingly collect their information.</p>
+
+      <h2>Changes</h2>
+      <p>If we change this policy, we will post the new version here with a new date at the top.</p>
+
+      <h2>Contact</h2>
+      <p>
+        RE-LUX Construction, Miami, Florida ·
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a> ·
+        <a href={`tel:${phone.tel}`}>{phone.phone}</a>
+      </p>
+    </article>
+
+    <article lang="es">
+      <span class="kicker">Última actualización: {UPDATED.es}</span>
+      <h1 class="sec-head__title">Política de <em>privacidad</em></h1>
+
+      <p>
+        RE-LUX Construction ("RE-LUX", "nosotros") es una empresa de remodelación de interiores y
+        carpintería a medida en Miami, Florida. Esta política explica qué información recogemos a través
+        de relux-construction.com, cómo la usamos y qué opciones tienes.
+      </p>
+
+      <h2>Qué recogemos</h2>
+      <ul>
+        <li>
+          <strong>Lo que nos envías con el formulario de contacto:</strong> tu nombre y apellido,
+          correo electrónico, teléfono (opcional), el servicio que te interesa y tu mensaje.
+        </li>
+        <li>
+          <strong>Lo que compartes cuando nos contactas directamente</strong> por teléfono, correo,
+          WhatsApp o Instagram.
+        </li>
+        <li>
+          <strong>Datos técnicos básicos</strong> que nuestro proveedor de alojamiento registra en cada
+          visita, como la dirección IP, el tipo de navegador y las páginas solicitadas, para mantener el
+          sitio en marcha y seguro.
+        </li>
+        <li>
+          <strong>Tu idioma preferido</strong> (inglés o español), guardado solo en tu propio navegador
+          para que el sitio lo recuerde.
+        </li>
+        <li>
+          <strong>Reseñas de Google.</strong> Las fotos de perfil de quienes nos dejaron una reseña se
+          cargan desde los servidores de Google, que reciben tu dirección IP y los datos de tu navegador
+          como con cualquier imagen.
+        </li>
+        <li>
+          <strong>Estadísticas de uso.</strong> Podemos usar Google Analytics para entender cómo se usa
+          el sitio (páginas vistas, ubicación aproximada, tipo de dispositivo, si se envió un formulario o
+          se tocó un teléfono). Google Analytics usa cookies; puedes bloquearlas en tu navegador o con el
+          <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">complemento de inhabilitación</a>
+          de Google.
+        </li>
+      </ul>
+
+      <h2>Para qué la usamos</h2>
+      <p>
+        Para responder a tu consulta, preparar presupuestos y diseños, agendar visitas y realizar el
+        trabajo que nos encargues; para mejorar el sitio; y para cumplir nuestras obligaciones legales.
+        No vendemos tu información personal ni la usamos para publicidad de terceros.
+      </p>
+
+      <h2>Con quién la compartimos</h2>
+      <p>
+        Solo con los proveedores que hacen funcionar el sitio y nuestra comunicación, y solo para eso:
+        nuestro alojamiento web (Hostinger), el servicio que entrega los mensajes del formulario en
+        nuestro correo (EmailJS y Gmail de Google), Google Analytics si está activo, y Meta (WhatsApp,
+        Instagram) cuando decides escribirnos por ahí. En un proyecto, podemos compartir los datos
+        necesarios con los contratistas y proveedores aliados que participen en él. También podemos
+        revelar información cuando la ley lo exija.
+      </p>
+
+      <h2>Cuánto tiempo la guardamos</h2>
+      <p>
+        Guardamos los mensajes de consulta el tiempo necesario para darles seguimiento, y los registros
+        de proyecto el tiempo que exijan la ley y nuestras garantías.
+      </p>
+
+      <h2>Tus opciones</h2>
+      <p>
+        Puedes pedirnos en cualquier momento ver, corregir o borrar la información personal que tenemos
+        sobre ti escribiendo a <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. Te responderemos en un plazo de
+        30 días.
+      </p>
+
+      <h2>Menores</h2>
+      <p>Este sitio no está dirigido a menores de 13 años y no recogemos su información a sabiendas.</p>
+
+      <h2>Cambios</h2>
+      <p>Si cambiamos esta política, publicaremos aquí la nueva versión con la fecha actualizada arriba.</p>
+
+      <h2>Contacto</h2>
+      <p>
+        RE-LUX Construction, Miami, Florida ·
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a> ·
+        <a href={`tel:${phone.tel}`}>{phone.phone}</a>
+      </p>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal {
+    max-width: 760px;
+    padding: calc(var(--header-h) + 72px) var(--gutter) 100px;
+  }
+  /* The site's language toggle sets <html lang>; show the matching article */
+  :global(html[lang="es"]) .legal article[lang="en"],
+  :global(html:not([lang="es"])) .legal article[lang="es"] {
+    display: none;
+  }
+  .legal article {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .legal h1 {
+    margin-bottom: 18px;
+  }
+  .legal h2 {
+    margin-top: 22px;
+    font-size: var(--fs-h3);
+    font-weight: 400;
+    color: var(--color-cream);
+  }
+  .legal p,
+  .legal li {
+    font-size: var(--fs-body);
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgb(239 226 196 / 0.72);
+  }
+  .legal ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 1.1em;
+    list-style: disc;
+  }
+  .legal strong {
+    font-weight: 500;
+    color: var(--color-cream);
+  }
+  .legal a {
+    color: var(--color-sand);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

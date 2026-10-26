@@ -55,7 +55,7 @@ const Title = project ? "h1" : "h2";
     />
     <div class="detail__set" id="detail-hero-set" hidden={!shots?.heroSet}>
       {[0, 1, 2].map((n) => (
-        <div class="media"><img id={`detail-hero-${n + 1}`} src={shots?.heroSet?.[n]} alt="" /></div>
+        <div class="media"><img id={`detail-hero-${n + 1}`} src={shots?.heroSet?.[n]} alt={title} /></div>
       ))}
     </div>
     <div class="detail__hero-scrim"></div>

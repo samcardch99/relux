@@ -14,7 +14,8 @@ const en = COPY.en;
   <div class="media pcard__media">
     <img
       src={project.img}
-      alt=""
+      alt={en[project.titleKey]}
+      data-i18n-alt={project.titleKey}
       loading="lazy"
       style={"focus" in project ? `object-position:${project.focus}` : undefined}
     />

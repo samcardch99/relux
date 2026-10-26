@@ -23,7 +23,7 @@ const en = COPY.en;
           data-svc
           style={`--flex-base:${s.grow};--flex-hover:${s.hover}`}
         >
-          <img src={s.img} alt="" loading="lazy" aria-hidden="true" />
+          <img src={s.img} alt={en[s.titleKey]} data-i18n-alt={s.titleKey} loading="lazy" />
           <div class="panel__scrim" />
           <div class="panel__body">
             <span class="num">{s.n}</span>

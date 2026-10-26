@@ -16,7 +16,7 @@ interface Props {
 }
 
 const {
-  title = "RE-LUX Construction — Designed & Built | Miami",
+  title = "Kitchen Remodeling & Custom Cabinets in Miami | RE-LUX Construction",
   description = "Interior remodeling and custom woodwork for homes and businesses across Miami. Kitchens, closets, bathrooms and complete interiors, designed and built by our own team.",
   image = "/assets/liz-1.webp",
   locked = false,
@@ -25,6 +25,9 @@ const {
 } = Astro.props;
 
 const url = new URL(Astro.url.pathname, Astro.site);
+/** Google Analytics 4, only once its measurement ID is set (secret PUBLIC_GA_ID
+ *  in GitHub, passed to the build by publish.yml). Events: see site.ts. */
+const gaId = import.meta.env.PUBLIC_GA_ID;
 const imageUrl = new URL(image, Astro.site);
 ---
 
@@ -75,6 +78,21 @@ const imageUrl = new URL(image, Astro.site);
         window.addEventListener("resize", apply, { passive: true });
       })();
     </script>
+    {
+      gaId && (
+        <>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+          <script is:inline define:vars={{ gaId }}>
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () {
+              dataLayer.push(arguments);
+            };
+            gtag("js", new Date());
+            gtag("config", gaId);
+          </script>
+        </>
+      )
+    }
   </head>
   <body class:list={{ "is-locked": locked }}>
     <slot />

@@ -65,7 +65,7 @@ const shots = SHOP.filter((s) => s.img);
           {
             IMG.machine.map((src) => (
               <div class="media processview__shot">
-                <img src={src} alt="" loading="lazy" />
+                <img src={src} alt={en.altMachine} data-i18n-alt="altMachine" loading="lazy" />
               </div>
             ))
           }
@@ -104,7 +104,7 @@ const shots = SHOP.filter((s) => s.img);
           {shots.map((s) => (
             <li class="processview__item">
               <div class:list={["media processview__photo", { "is-tall": s.tall }]}>
-                <img src={s.img} alt="" loading="lazy" />
+                <img src={s.img} alt={en[s.capKey]} data-i18n-alt={s.capKey} loading="lazy" />
               </div>
               <p data-i18n={s.capKey}>{en[s.capKey]}</p>
             </li>

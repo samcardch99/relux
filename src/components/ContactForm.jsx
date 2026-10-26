@@ -84,6 +84,8 @@ export default function ContactForm() {
         formRef.current,
         { publicKey: import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY }
       );
+      // Google Analytics, when enabled (Layout.astro)
+      window.gtag?.("event", "generate_lead", { service: formRef.current.service.value });
       toast.success(t.sentTitle, { description: t.sentDesc });
       setSent(true);
       reset();

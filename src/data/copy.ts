@@ -26,10 +26,10 @@ export const COPY = {
       "Interiors, floors, bathrooms, walls and finishes — plus the woodwork we build ourselves: kitchens, closets, TV walls and wall panels.",
     s1Title: "Kitchens",
     s1Desc:
-      "Cabinetry built in our own shop, stone countertops and integrated lighting, fitted to the room down to the millimetre.",
+      "Cabinetry built in our own shop, stone countertops and integrated lighting, fitted to the room down to the millimeter.",
     s2Title: "Closets & Wall Panels",
     s2Desc:
-      "Walk-in closets, TV walls and wood panelling designed as one continuous piece of joinery.",
+      "Walk-in closets, TV walls and wood paneling designed as one continuous piece of joinery.",
     s3Title: "Bathrooms",
     s3Desc:
       "Full bathroom remodels — tile, stone, lighting and fixtures, handled end to end.",
@@ -81,7 +81,7 @@ export const COPY = {
     p8Tag: "Interiors",
     p8Title: "Living room and TV wall",
     p9Tag: "Woodwork",
-    p9Title: "Entry hall and wood panelling",
+    p9Title: "Entry hall and wood paneling",
     p10Tag: "Bathrooms",
     p10Title: "Bathroom in black marble and walnut",
     p11Tag: "Kitchens",
@@ -91,9 +91,9 @@ export const COPY = {
     p13Tag: "Commercial",
     p13Title: "EnvySky office reception",
     p14Tag: "Bathrooms",
-    p14Title: "Bathroom in grey stone and oak",
+    p14Title: "Bathroom in gray stone and oak",
     p15Tag: "Kitchens",
-    p15Title: "Grey and dark wood kitchen",
+    p15Title: "Gray and dark wood kitchen",
     p16Tag: "Kitchens",
     p16Title: "Kitchen with a black marble floor",
     p17Tag: "Kitchens",
@@ -128,10 +128,10 @@ export const COPY = {
     aboutTitle: "About",
     aboutTitleEm: "RE-LUX",
     aboutIntro:
-      "A firm specialised in high-end residential and commercial projects, dedicated to transforming spaces through full renovations, design and construction to premium standards.",
+      "A firm specialized in high-end residential and commercial projects, dedicated to transforming spaces through full renovations, design and construction to premium standards.",
     aboutH1: "Two brothers, one crew, one standard.",
     aboutP1:
-      "RE-LUX Construction was founded by Enmanuel and Randy Cagigas around a simple idea: the people who design the job should be the same people who build it. Nothing is subcontracted away and forgotten — kitchens, closets and panelling are drawn, fabricated in our own shop, and installed by the team that measured the space.",
+      "RE-LUX Construction was founded by Enmanuel and Randy Cagigas around a simple idea: the people who design the job should be the same people who build it. Nothing is subcontracted away and forgotten — kitchens, closets and paneling are drawn, fabricated in our own shop, and installed by the team that measured the space.",
     aboutP2:
       "We work across Miami on homes and businesses: full interior remodels, floors, walls, bathrooms, finish carpentry and paint. Every job starts with drawings and material boards, so you approve exactly what will be built before anything is demolished.",
     aboutP3:
@@ -141,7 +141,7 @@ export const COPY = {
 
     v1Title: "Technical precision",
     v1Desc:
-      "Measured, drawn and detailed before the first cut, so the finished piece fits the room down to the millimetre.",
+      "Measured, drawn and detailed before the first cut, so the finished piece fits the room down to the millimeter.",
     v2Title: "Materials & finishes",
     v2Desc:
       "Wood, stone, tile and hardware chosen with you and specified to last, not to hit a number.",
@@ -163,12 +163,12 @@ export const COPY = {
     pxIntro:
       "Kitchens, closets and wall panels are cut and assembled in our own shop in Miami, on the same equipment, by the same team that installs them.",
     mKicker: "Equipment",
-    mP1: "Every cabinet and panel starts on our Biesse Rover Multi Up NG S 1531, a CNC machining centre that cuts, drills and edges each part from the digital drawing you approved.",
+    mP1: "Every cabinet and panel starts on our Biesse Rover Multi Up NG S 1531, a CNC machining center that cuts, drills and edges each part from the digital drawing you approved.",
     mP2: "Working straight from the file removes hand measurements from the process. Parts come off the machine ready to assemble, and the fit on site matches the drawing.",
     mSpecK1: "Machine",
     mSpecV1: "Biesse Rover Multi Up NG S 1531",
     mSpecK2: "Type",
-    mSpecV2: "CNC machining centre",
+    mSpecV2: "CNC machining center",
     mSpecK3: "Work",
     mSpecV3: "Cutting, drilling, routing",
     mSpecK4: "Used for",
@@ -182,7 +182,7 @@ export const COPY = {
     shopCap3: "Edge and finish check.",
     shopCap4: "Cabinet boxes before installation.",
     shopCap5: "Hardware and fittings.",
-    shopCap6: "Parts labelled by project.",
+    shopCap6: "Parts labeled by project.",
     w1Title: "Consultation & Site Visit",
     w1Desc:
       "We visit the space, measure it, and listen to how you actually want to use it.",
@@ -194,7 +194,7 @@ export const COPY = {
       "Wood, stone, tile and hardware chosen with you and ordered ahead of the build.",
     w4Title: "Custom Fabrication",
     w4Desc:
-      "Kitchens, closets and panelling built to your exact measurements in our own shop.",
+      "Kitchens, closets and paneling built to your exact measurements in our own shop.",
     w5Title: "Installation & Build",
     w5Desc: "One crew on site, working clean, to the schedule agreed up front.",
     w6Title: "Final Walkthrough",
@@ -251,6 +251,8 @@ export const COPY = {
     errPhone: "Please enter a valid phone number",
     waLabel: "Chat on WhatsApp",
     waText: "Hi RE-LUX, I'd like to talk about a project.",
+    altMachine: "Biesse CNC machine in the RE-LUX workshop",
+    altPhoto: "photo",
     nfKicker: "Error 404",
     nfTitle: "This page",
     nfTitleEm: "isn't here",
@@ -276,7 +278,7 @@ export const COPY = {
     navProcess: "Proceso",
     navQuote: "Pedir Presupuesto",
 
-    heroEyebrow: "Miami Premier Construction",
+    heroEyebrow: "Construcción de lujo en Miami",
     heroTitle: "DISEÑO Y OBRA",
     heroSub:
       "Remodelación interior y carpintería a medida para casas y negocios en todo Miami.",
@@ -299,7 +301,7 @@ export const COPY = {
       "Remodelación completa de baños: cerámica, piedra, iluminación y grifería, de principio a fin.",
     s4Title: "Pisos y Acabados",
     s4Desc:
-      "Pisos, paredes, finish y pintura: la capa que decide si un espacio se ve realmente terminado.",
+      "Pisos, paredes, carpintería de acabado y pintura: la capa que decide si un espacio se ve realmente terminado.",
 
     matTitle: "LOS",
     matTitleEm: "MATERIALES",
@@ -516,6 +518,8 @@ export const COPY = {
     errPhone: "Introduce un teléfono válido",
     waLabel: "Escríbenos por WhatsApp",
     waText: "Hola RE-LUX, me gustaría hablar sobre un proyecto.",
+    altMachine: "Máquina CNC Biesse en el taller de RE-LUX",
+    altPhoto: "foto",
     nfKicker: "Error 404",
     nfTitle: "Esta página",
     nfTitleEm: "no existe",
@@ -918,7 +922,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "Reception and waiting area for a wellness center in Miami, designed around a feature wall in oak with deep teal niches and the backlit brand logo at its centre.",
+        "Reception and waiting area for a wellness center in Miami, designed around a feature wall in oak with deep teal niches and the backlit brand logo at its center.",
       paras: [
         "The feature wall is built as staggered oak modules with recessed LED strips, open display niches and teal back panels that frame the logo. The reception desk repeats the same oak with a curved end panel and a teal counter.",
         "Across the room, a second run of oak joinery holds lit open shelving, a low cabinet with bronze-framed glass doors and a wall panel for the screen, with lounge seating for clients in between.",
@@ -978,27 +982,27 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "A living room built around a panelled TV wall, with the media unit, storage and lighting drawn as one piece.",
+        "A living room built around a paneled TV wall, with the media unit, storage and lighting drawn as one piece.",
       paras: [
         "Every cable, speaker and outlet was planned before fabrication, so nothing is visible once the wall is closed.",
         "The panel rhythm continues past the TV into the storage bays, which keeps the wall reading as joinery rather than furniture.",
       ],
       meta: [["Scope", "Living room"], ["Materials", "Walnut veneer, lacquer"], ["Duration", "5 weeks"]],
       captions: [
-        "Backlighting washes the panelling from behind the unit.",
+        "Backlighting washes the paneling from behind the unit.",
         "Closed bays hide the media equipment.",
       ],
     },
     {
       summary:
-        "An entry hall lined in wood panelling, with a bench, concealed coat storage and a stone floor run through to the living area.",
+        "An entry hall lined in wood paneling, with a bench, concealed coat storage and a stone floor run through to the living area.",
       paras: [
-        "The hall was the last room in the remodel, so the panelling had to pick up the exact lines of the joinery already installed elsewhere.",
+        "The hall was the last room in the remodel, so the paneling had to pick up the exact lines of the joinery already installed elsewhere.",
         "Coat storage sits behind two of the panels, with no handles and no visible break in the run.",
       ],
-      meta: [["Scope", "Entry hall"], ["Materials", "Oak panelling, stone"], ["Duration", "4 weeks"]],
+      meta: [["Scope", "Entry hall"], ["Materials", "Oak paneling, stone"], ["Duration", "4 weeks"]],
       captions: [
-        "The bench is cantilevered off the panelling.",
+        "The bench is cantilevered off the paneling.",
         "Floor stone continues into the living area.",
       ],
     },
@@ -1019,7 +1023,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "A walnut kitchen with a rounded, fluted island topped in black granite, a window seat and a wall of lit glass cabinets.",
       paras: [
         "The island is an oval in fluted walnut with a black and white granite top, and seats four along one side. The same granite runs up the backsplash and around the window.",
-        "Tall walnut units hide the refrigerator and frame lit glass display cabinets. Under the window, a built-in bench with grey cushions sits between the cabinetry and a glass-door bar unit.",
+        "Tall walnut units hide the refrigerator and frame lit glass display cabinets. Under the window, a built-in bench with gray cushions sits between the cabinetry and a glass-door bar unit.",
       ],
       meta: [["Scope", "Kitchen + window seat"], ["Materials", "Walnut, black granite, glass"]],
       captions: [
@@ -1053,7 +1057,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "Reception and waiting area for EnvySky, wrapped in oak panelling with deep teal niches, a stone-clad desk and a lounge in soft grey.",
+        "Reception and waiting area for EnvySky, wrapped in oak paneling with deep teal niches, a stone-clad desk and a lounge in soft gray.",
       paras: [
         "Oak panels run floor to ceiling, broken by vertical slats and lit niches with teal back panels. The EnvySky logo sits on the oak wall behind the reception desk, which is clad in white stone with an oak front.",
         "The waiting area has a low curved sofa and a pair of stone side tables, with an aeroplane model on the teal wall as a nod to the client's business.",
@@ -1069,12 +1073,12 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "A bathroom in grey stone and light oak, with a long double vanity, arched backlit mirrors and a lit ceiling frame.",
+        "A bathroom in gray stone and light oak, with a long double vanity, arched backlit mirrors and a lit ceiling frame.",
       paras: [
-        "The grey stone covers the walls, and an oak frame with an LED line wraps the vanity from the ceiling down. The counter is white marble with two wooden vessel sinks, and steps into a dressing table at one end.",
+        "The gray stone covers the walls, and an oak frame with an LED line wraps the vanity from the ceiling down. The counter is white marble with two wooden vessel sinks, and steps into a dressing table at one end.",
         "Opposite the vanity, open oak shelves hold towels and baskets, leading to the walk-in shower at the end of the room.",
       ],
-      meta: [["Scope", "Bathroom"], ["Materials", "Grey stone, oak, marble"]],
+      meta: [["Scope", "Bathroom"], ["Materials", "Gray stone, oak, marble"]],
       captions: [
         "The vanity and the dressing table under the lit frame.",
         "The open shelves and the shower at the end of the room.",
@@ -1085,14 +1089,14 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "A grey kitchen framed by dark wood tall units, with lit glass cabinets on both walls and a white stone island with a wooden front.",
+        "A gray kitchen framed by dark wood tall units, with lit glass cabinets on both walls and a white stone island with a wooden front.",
       paras: [
-        "Two dark wood columns stand at the ends of the kitchen, each with full-height glass cabinets and a vertical LED line. The grey base units run round the room under a stone backsplash.",
+        "Two dark wood columns stand at the ends of the kitchen, each with full-height glass cabinets and a vertical LED line. The gray base units run round the room under a stone backsplash.",
         "The island is white stone with a waterfall end and a wooden front lit from below, with two stools under a pair of glass pendants.",
       ],
-      meta: [["Scope", "Full kitchen"], ["Materials", "Dark wood, grey lacquer, stone, glass"]],
+      meta: [["Scope", "Full kitchen"], ["Materials", "Dark wood, gray lacquer, stone, glass"]],
       captions: [
-        "The grey run between the two lit glass columns.",
+        "The gray run between the two lit glass columns.",
       ],
     },
     {
@@ -1140,10 +1144,10 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
     },
     {
       summary:
-        "A kitchen in oak panelling with a rounded island clad in fluted stone, orange leather stools and a curved, lit ceiling panel.",
+        "A kitchen in oak paneling with a rounded island clad in fluted stone, orange leather stools and a curved, lit ceiling panel.",
       paras: [
         "The island is an oval in fluted marble with a pale stone top, lit from below on the seating side. Above it, a lowered ceiling panel with rounded corners carries an LED line and three pendant lights.",
-        "Vertical oak panelling covers the walls and hides the tall units, with lit glass cabinets and a marble backsplash on the cooking wall.",
+        "Vertical oak paneling covers the walls and hides the tall units, with lit glass cabinets and a marble backsplash on the cooking wall.",
       ],
       meta: [["Scope", "Full kitchen"], ["Materials", "Oak, fluted marble, leather"]],
       captions: [

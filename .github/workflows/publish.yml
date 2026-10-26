@@ -32,6 +32,8 @@ jobs:
           PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.PUBLIC_EMAILJS_SERVICE_ID }}
           PUBLIC_EMAILJS_TEMPLATE_ID: ${{ secrets.PUBLIC_EMAILJS_TEMPLATE_ID }}
           PUBLIC_EMAILJS_PUBLIC_KEY: ${{ secrets.PUBLIC_EMAILJS_PUBLIC_KEY }}
+          # Google Analytics 4 (G-…); unset, the site ships without it
+          PUBLIC_GA_ID: ${{ secrets.PUBLIC_GA_ID }}
 
       # Hostinger vigila la rama 'build' y despliega lo que encuentre ahi.
       # force_orphan la reescribe con un unico commit en cada publicacion, para

@@ -70,6 +70,11 @@ function applyLang(next: Lang) {
       : value;
   });
 
+  document.querySelectorAll<HTMLImageElement>("[data-i18n-alt]").forEach((img) => {
+    const value = t[img.dataset.i18nAlt ?? ""];
+    if (typeof value === "string") img.alt = value;
+  });
+
   document
     .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-i18n-ph]")
     .forEach((el) => {
@@ -90,6 +95,9 @@ function applyLang(next: Lang) {
 
   if (openDetail !== null) renderDetail(openDetail);
   refreshReview?.();
+  // The tab title follows the language too — on the pages this script titles
+  // (the homepage and its views; the 404 and privacy pages keep their own)
+  if (hasHome || stack.length) document.title = titleFor(current());
   labelMenu();
 
   try {
@@ -202,7 +210,7 @@ function renderDetail(index: number) {
       setImage(
         document.getElementById(`detail-hero-${n + 1}`) as HTMLImageElement | null,
         src,
-        n === 1 ? t[project.titleKey] : ""
+        t[project.titleKey]
       )
     );
   } else {
@@ -276,7 +284,7 @@ function renderDetail(index: number) {
     }
   }
 
-  renderShots(shots.shots, shots.tall ?? [], entry.captions);
+  renderShots(shots.shots, shots.tall ?? [], entry.captions, t[project.titleKey]);
   tagGallery();
 }
 
@@ -314,7 +322,7 @@ function tagGallery() {
  * Proportions start from `tall` and are corrected from the file itself once
  * it loads (the rows stay as first grouped).
  */
-function renderShots(srcs: string[], tall: number[], captions: string[]) {
+function renderShots(srcs: string[], tall: number[], captions: string[], title: string) {
   const shotsEl = document.getElementById("detail-shots");
   if (!shotsEl) return;
 
@@ -330,7 +338,9 @@ function renderShots(srcs: string[], tall: number[], captions: string[]) {
     caption.textContent = captions[i] ?? "";
 
     figure.append(frame, caption);
-    setImage(img, src, captions[i] ?? "");
+    // Uncaptioned photos still say what they show, for screen readers and search
+    const t = COPY[lang] as unknown as Record<string, string>;
+    setImage(img, src, captions[i] || `${title} — ${t.altPhoto} ${i + 1}`);
     return { figure, frame, img, ratio: tall.includes(i) ? PORTRAIT : LANDSCAPE };
   });
 
@@ -488,19 +498,22 @@ const current = (): Route => ({ views: [...stack], project: openDetail });
 /** Tab titles, matching the <title> each page is built with (src/pages). */
 const SITE_TITLE = "RE-LUX Construction";
 const VIEW_TITLES = {
-  work: "All projects",
-  about: "About RE-LUX",
-  process: "Our process",
+  en: { work: "All projects", about: "About RE-LUX", process: "Our process" },
+  es: { work: "Todos los proyectos", about: "Sobre RE-LUX", process: "Nuestro proceso" },
+} as const;
+const HOME_TITLES = {
+  en: "Kitchen Remodeling & Custom Cabinets in Miami",
+  es: "Remodelación de cocinas y muebles a medida en Miami",
 } as const;
 
 function titleFor({ views, project }: Route) {
   const top = views[views.length - 1];
-  if (!top) return `${SITE_TITLE} — Designed & Built | Miami`;
+  if (!top) return `${HOME_TITLES[lang]} | ${SITE_TITLE}`;
   if (top === "detail") {
     const t = COPY[lang] as unknown as Record<string, string>;
     return project === null ? SITE_TITLE : `${t[PROJECTS[project].titleKey]} — ${SITE_TITLE}`;
   }
-  return `${VIEW_TITLES[top]} — ${SITE_TITLE}`;
+  return `${VIEW_TITLES[lang][top]} — ${SITE_TITLE}`;
 }
 
 function record(push: boolean, hash = "") {
@@ -779,6 +792,19 @@ function markScrolled() {
 }
 document.addEventListener("scroll", markScrolled, { capture: true, passive: true });
 markScrolled();
+
+/* Contact clicks reach Google Analytics as events, once it is enabled
+   (Layout.astro); without it window.gtag doesn't exist and this does nothing.
+   The form reports its own "generate_lead" (ContactForm.jsx). */
+document.addEventListener("click", (e) => {
+  const gtag = (window as { gtag?: (...args: unknown[]) => void }).gtag;
+  const link = (e.target as Element).closest<HTMLAnchorElement>("a[href]");
+  if (!gtag || !link) return;
+  const href = link.getAttribute("href") ?? "";
+  if (link.hasAttribute("data-wa")) gtag("event", "whatsapp_click");
+  else if (href.startsWith("tel:")) gtag("event", "phone_click", { number: href.slice(4) });
+  else if (href.startsWith("mailto:")) gtag("event", "email_click");
+});
 
 /* Before the form's island hydrates, its markup is a plain <form> with no
    action: a submit then would reload the page and lose the message. Hold it;
