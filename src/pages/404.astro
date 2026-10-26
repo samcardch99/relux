@@ -1,0 +1,61 @@
+---
+/**
+ * Served by Hostinger for any address that doesn't exist (ErrorDocument in
+ * public/.htaccess). Same header, footer and language toggle as the rest of
+ * the site; its hash links load the homepage (site.ts).
+ */
+import Layout from "../layouts/Layout.astro";
+import Cursor from "../components/Cursor.astro";
+import Navbar from "../components/Navbar.astro";
+import WhatsApp from "../components/WhatsApp.astro";
+import Footer from "../components/Footer.astro";
+import { COPY, VIEW_PATHS } from "../data/copy";
+
+const en = COPY.en;
+---
+
+<Layout title="Page not found — RE-LUX Construction" description={en.nfText} noindex>
+  <Cursor />
+  <Navbar />
+  <WhatsApp />
+
+  <main class="nf" data-standalone>
+    <span class="kicker" data-i18n="nfKicker">{en.nfKicker}</span>
+    <h1 class="sec-head__title nf__title">
+      <span data-i18n="nfTitle">{en.nfTitle}</span><br />
+      <em data-i18n="nfTitleEm">{en.nfTitleEm}</em>
+    </h1>
+    <p class="nf__text" data-i18n="nfText">{en.nfText}</p>
+    <div class="nf__actions">
+      <a href="/" class="btn btn--solid" data-i18n="nfHome">{en.nfHome}</a>
+      <a href={VIEW_PATHS.work} class="btn btn--ghost" data-i18n="nfWork">{en.nfWork}</a>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .nf {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 28px;
+    min-height: 80vh;
+    padding: calc(var(--header-h) + 80px) var(--gutter) 100px;
+  }
+  .nf__text {
+    max-width: 460px;
+    font-size: var(--fs-body);
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgb(239 226 196 / 0.66);
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+  }
+</style>

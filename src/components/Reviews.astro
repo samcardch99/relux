@@ -341,6 +341,13 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
     border: 0;
     cursor: pointer;
   }
+  /* Phones: a 44px tap target around the same 2px track, without moving it */
+  @media (max-width: 720px) {
+    .reviews__bar {
+      height: 44px;
+      margin-block: -11px;
+    }
+  }
   .reviews__bar-track {
     position: relative;
     display: block;

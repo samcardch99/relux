@@ -34,6 +34,11 @@ export default function ContactForm() {
         first_name: z.string().min(2, t.errFirst),
         last_name: z.string().min(2, t.errLast),
         email: z.string().email(t.errEmail),
+        // Optional, but if given it must hold at least a US-length number
+        phone: z
+          .string()
+          .trim()
+          .refine((v) => v === "" || v.replace(/\D/g, "").length >= 10, t.errPhone),
         service: z.string().min(1, t.errService),
         message: z.string().min(10, t.errMessage),
       }),
@@ -52,6 +57,7 @@ export default function ContactForm() {
       first_name: "",
       last_name: "",
       email: "",
+      phone: "",
       service: "",
       message: "",
     },
@@ -126,19 +132,38 @@ export default function ContactForm() {
           </label>
         </div>
 
-        <label className="field">
-          <span className="field-label">{t.labelEmail}</span>
-          <input
-            {...register("email")}
-            type="email"
-            placeholder={t.phEmail}
-            className="input"
-            autoComplete="email"
-          />
-          {errors.email && (
-            <span className="field__error">{errors.email.message}</span>
-          )}
-        </label>
+        <div className="form__row">
+          <label className="field">
+            <span className="field-label">{t.labelEmail}</span>
+            <input
+              {...register("email")}
+              type="email"
+              placeholder={t.phEmail}
+              className="input"
+              autoComplete="email"
+            />
+            {errors.email && (
+              <span className="field__error">{errors.email.message}</span>
+            )}
+          </label>
+
+          <label className="field">
+            <span className="field-label">
+              {t.labelPhone} <span className="field-label__hint">({t.labelOptional})</span>
+            </span>
+            <input
+              {...register("phone")}
+              type="tel"
+              inputMode="tel"
+              placeholder={t.phPhone}
+              className="input"
+              autoComplete="tel"
+            />
+            {errors.phone && (
+              <span className="field__error">{errors.phone.message}</span>
+            )}
+          </label>
+        </div>
 
         <label className="field">
           <span className="field-label">{t.labelService}</span>

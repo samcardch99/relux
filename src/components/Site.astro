@@ -9,6 +9,7 @@
 import Layout from "../layouts/Layout.astro";
 import Cursor from "./Cursor.astro";
 import Navbar from "./Navbar.astro";
+import WhatsApp from "./WhatsApp.astro";
 import Hero from "./Hero.astro";
 import Story from "./Story.astro";
 import Services from "./Services.astro";
@@ -43,6 +44,7 @@ const withDetail = home || view === "work" || view === "detail";
 <Layout title={title} description={description} image={image} locked={!home} jsonLd={jsonLd}>
   <Cursor />
   <Navbar />
+  <WhatsApp />
 
   {
     home && (

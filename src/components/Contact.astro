@@ -178,6 +178,13 @@ const en = COPY.en;
     line-height: 1.6;
   }
 
+  /* "(optional)" after a label: same line, quieter, not shouted in capitals */
+  .field-label__hint {
+    letter-spacing: 0.12em;
+    text-transform: none;
+    color: rgb(239 226 196 / 0.28);
+  }
+
   .field__error {
     font-size: var(--fs-label);
     font-weight: 300;

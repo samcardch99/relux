@@ -434,6 +434,13 @@ img[data-failed] {
     --fs-h2-lg: 32px;
     --fs-h2: 32px;
     --fs-h2-sm: 28px;
+    /* The design's 9–10px caps are unreadable at phone size: labels go to 11px
+       and buttons to 12px (.btn below), still small caps in the same spirit */
+    --fs-label: 11px;
+    --fs-label-sm: 11px;
+  }
+  .btn {
+    font-size: 12px;
   }
   .sec-head {
     grid-template-columns: minmax(0, 1fr);

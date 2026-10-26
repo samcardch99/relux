@@ -116,6 +116,23 @@ const MENU = [
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
   }
+  /* Past the top the fade gives way to a solid band, so titles scrolling under
+     the header don't show through it. Faded in as a layer: gradients don't
+     transition. */
+  .nav::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(6 5 4 / 0.94);
+    border-bottom: 1px solid rgb(239 226 196 / 0.08);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .nav.is-scrolled::before {
+    opacity: 1;
+  }
 
   .nav__logo {
     justify-self: start;
@@ -469,6 +486,10 @@ const MENU = [
   @media (max-width: 720px) {
     .nav {
       padding: 6px 16px;
+    }
+    .nav__burger,
+    .sheet__cta {
+      font-size: 12px;
     }
   }
   /* Nothing to open once the desktop nav is back */

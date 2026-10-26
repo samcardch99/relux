@@ -13,3 +13,17 @@
   RewriteCond %{REQUEST_URI} ^/test(?:/(.*))?$
   RewriteRule ^ https://relux-construction.com/%1 [R=301,L]
 </IfModule>
+
+# Unknown addresses get the site's own 404 page (src/pages/404.astro)
+ErrorDocument 404 /404.html
+
+# Security headers. HSTS stays on this host only (no includeSubDomains) until
+# every subdomain is known to serve HTTPS. No CSP yet: the inline scripts and
+# EmailJS would need it written and tested on its own.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+</IfModule>

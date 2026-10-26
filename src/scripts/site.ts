@@ -82,6 +82,12 @@ function applyLang(next: Lang) {
     btn.setAttribute("aria-pressed", String(btn.dataset.lang === next));
   });
 
+  // WhatsApp links open a chat with a greeting in the visitor's language
+  document.querySelectorAll<HTMLAnchorElement>("[data-wa]").forEach((a) => {
+    a.href = `https://wa.me/${a.dataset.wa}?text=${encodeURIComponent(t.waText)}`;
+    a.setAttribute("aria-label", t.waLabel);
+  });
+
   if (openDetail !== null) renderDetail(openDetail);
   refreshReview?.();
   labelMenu();
@@ -118,7 +124,8 @@ const views: Record<ViewName, HTMLElement | null> = {
 
 /** Only the homepage carries the page underneath the views; a view's own
  *  page has nothing to close onto, so it loads the homepage instead. */
-const hasHome = !!document.querySelector("main");
+// The 404 has its own <main>, marked so it isn't taken for the homepage
+const hasHome = !!document.querySelector("main:not([data-standalone])");
 
 /** Views currently on screen, innermost last. */
 const stack: ViewName[] = [];
@@ -137,6 +144,8 @@ function openView(name: ViewName) {
   document.body.classList.add("is-locked");
 
   el.querySelector<HTMLElement>("[data-close]")?.focus({ preventScroll: true });
+  // Deferred: on landing this runs before the header handlers below are set up
+  requestAnimationFrame(() => markScrolled());
 }
 
 function closeView(name: ViewName) {
@@ -152,6 +161,7 @@ function closeView(name: ViewName) {
     lastFocused?.focus({ preventScroll: true });
     lastFocused = null;
   }
+  requestAnimationFrame(() => markScrolled());
 }
 
 function closeAllViews() {
@@ -672,11 +682,12 @@ document.addEventListener("click", (event) => {
   }
 
   // Any in-page link returns to the homepage first — except "contact", which
-  // every view carries a copy of at its end
+  // every view carries a copy of at its end. A page without the homepage (the
+  // 404) has nothing to scroll to, so it loads it.
   const anchor = target.closest<HTMLAnchorElement>('a[href^="#"]');
   if (anchor) {
     closeMenu();
-    if (stack.length) {
+    if (stack.length || !hasHome) {
       event.preventDefault();
       const id = anchor.getAttribute("href")!.slice(1);
       if (id === "contact" && scrollToViewContact()) return;
@@ -757,6 +768,29 @@ document.addEventListener("keydown", (event) => {
 window.matchMedia("(min-width: 1081px)").addEventListener("change", (e) => {
   if (e.matches) closeMenu();
 });
+
+/* Once whatever is on screen (the page, or an open view, which scrolls on its
+   own) has moved past the top, the header gets a solid backing so titles
+   don't show through it. Scroll doesn't bubble, so listen in the capture phase. */
+const siteNav = document.getElementById("site-nav");
+function markScrolled() {
+  const top = stack.length ? views[stack[stack.length - 1]]?.scrollTop ?? 0 : window.scrollY;
+  siteNav?.classList.toggle("is-scrolled", top > 24);
+}
+document.addEventListener("scroll", markScrolled, { capture: true, passive: true });
+markScrolled();
+
+/* Before the form's island hydrates, its markup is a plain <form> with no
+   action: a submit then would reload the page and lose the message. Hold it;
+   once hydrated, react-hook-form handles the event itself (and calls
+   preventDefault regardless). */
+document.addEventListener(
+  "submit",
+  (e) => {
+    if ((e.target as Element).closest("[data-contact]")) e.preventDefault();
+  },
+  true
+);
 
 /* ── Client reviews slider ── */
 

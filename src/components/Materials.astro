@@ -302,6 +302,14 @@ const tab = (key: "glass" | "floor") => ({
       color 0.35s ease,
       border-color 0.35s ease;
   }
+  /* Fingers need ~44px; the extra height is padding, so the underline keeps its place */
+  @media (max-width: 720px) {
+    .mat-tab,
+    .mat-sub {
+      min-height: 44px;
+      align-items: center;
+    }
+  }
   .mat-tab__n {
     font-size: 9px;
     letter-spacing: 0.2em;

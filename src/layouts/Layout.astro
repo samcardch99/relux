@@ -11,6 +11,8 @@ interface Props {
   locked?: boolean;
   /** Page-specific JSON-LD, added after the business block every page carries. */
   jsonLd?: object[];
+  /** Keep the page out of search results (the 404). */
+  noindex?: boolean;
 }
 
 const {
@@ -19,6 +21,7 @@ const {
   image = "/assets/liz-1.webp",
   locked = false,
   jsonLd = [],
+  noindex = false,
 } = Astro.props;
 
 const url = new URL(Astro.url.pathname, Astro.site);
@@ -40,7 +43,7 @@ const imageUrl = new URL(image, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:image" content={imageUrl} />
-    <link rel="canonical" href={url} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={url} />}
     <meta name="theme-color" content="#060505" />
     {[siteGraph, ...jsonLd].map((data) => (
       <script type="application/ld+json" set:html={JSON.stringify(data)} />
