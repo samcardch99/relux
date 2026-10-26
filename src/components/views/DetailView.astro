@@ -1,6 +1,7 @@
 ---
 import { responsive, SIZES } from "../../data/images";
-import { COPY, DETAIL, PROJECTS, SHOTS, langOfPath } from "../../data/copy";
+import { COPY, DETAIL, PROJECTS, SHOTS, langOfPath, relatedProjects } from "../../data/copy";
+import ProjectCard from "../ProjectCard.astro";
 import Contact from "../Contact.astro";
 import Footer from "../Footer.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
@@ -141,6 +142,15 @@ const Title = project ? "h1" : "h2";
 
   <div class="detail__shots" id="detail-shots"></div>
 
+  {/* Rendered here for a project's own page; site.ts refills it from the
+      all-projects grid when a project opens over the homepage or /work/. */}
+  <section class="detail__more" aria-labelledby="detail-more-title">
+    <h2 class="ba__title detail__more-title" id="detail-more-title" data-i18n="moreProjects">{t.moreProjects}</h2>
+    <div class="grid-3" id="detail-more-grid">
+      {index !== undefined && relatedProjects(index).map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
   <div class="view__foot detail__foot">
     <p data-i18n="detailFoot">{t.detailFoot}</p>
     <div class="detail__actions">
@@ -242,6 +252,13 @@ const Title = project ? "h1" : "h2";
     align-self: start;
     margin: 0;
     border-top: 1px solid rgb(239 226 196 / 0.14);
+  }
+
+  .detail__more {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 0 var(--gutter) 88px;
   }
 
   .detail__shots {

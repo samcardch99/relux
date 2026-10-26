@@ -301,6 +301,7 @@ export const COPY = {
     lblPrevReview: "Previous review",
     lblNextReview: "Next review",
     lblNotifications: "Notifications",
+    moreProjects: "More projects",
     lblBeforeAfter: "Before / after",
     viewWork: "All projects",
     viewAbout: "About RE-LUX",
@@ -620,6 +621,7 @@ export const COPY = {
     lblPrevReview: "Reseña anterior",
     lblNextReview: "Reseña siguiente",
     lblNotifications: "Notificaciones",
+    moreProjects: "Más proyectos",
     lblBeforeAfter: "Antes / después",
     viewWork: "Todos los proyectos",
     viewAbout: "Sobre RE-LUX",
@@ -854,6 +856,15 @@ export const WORK = [3, 1, 4, 19, 2, 6, 0, 5, 11, 10, 12, 18, 9, 13, 17, 16, 15,
 
 /** The homepage shows the first six of them. */
 export const FEATURED = WORK.slice(0, 6);
+
+/** "More projects" under a project: the same kind of job first, then the rest in
+ *  the order of the all-projects view (real work leads it). */
+export function relatedProjects(index: number, n = 3) {
+  const kind = COPY.en[PROJECTS[index].tagKey];
+  const others = WORK.filter((p) => p.i !== index);
+  const same = others.filter((p) => COPY.en[p.tagKey] === kind);
+  return [...same, ...others.filter((p) => !same.includes(p))].slice(0, n);
+}
 
 /**
  * Every page exists in both languages: English at the root, Spanish under

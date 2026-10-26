@@ -10,6 +10,7 @@ import {
   WORK,
   counterpartPath,
   projectPath,
+  relatedProjects,
   projectTitle,
   type Lang,
 } from "../data/copy";
@@ -332,6 +333,7 @@ function renderDetail(index: number) {
 
   renderShots(shots.shots, shots.tall ?? [], entry.captions, t[project.titleKey]);
   tagGallery();
+  renderRelated(index);
 }
 
 /**
@@ -368,6 +370,18 @@ function tagGallery() {
  * Proportions start from `tall` and are corrected from the file itself once
  * it loads (the rows stay as first grouped).
  */
+/** "More projects": copies of the cards in the all-projects grid, when the page
+ *  has one (a project's own page is built with its related cards instead). */
+function renderRelated(index: number) {
+  const grid = document.getElementById("detail-more-grid");
+  const source = document.getElementById("view-work");
+  if (!grid || !source) return;
+  const cards = relatedProjects(index)
+    .map((p) => source.querySelector(`[data-project="${p.i}"]`)?.cloneNode(true))
+    .filter((c): c is Node => !!c);
+  grid.replaceChildren(...cards);
+}
+
 function renderShots(srcs: string[], tall: number[], captions: string[], title: string) {
   const shotsEl = document.getElementById("detail-shots");
   if (!shotsEl) return;
@@ -696,8 +710,10 @@ document.addEventListener("click", (event) => {
   // the project's page in a new tab.
   const card = target.closest<HTMLElement>("[data-project]");
   if (card) {
-    // No detail view on this page: the card's link loads the project's page
-    if (!views.detail) return;
+    // No detail view on this page: the card's link loads the project's page.
+    // Nor on a project's own page, for its related cards: the page they lead to
+    // carries their own related projects.
+    if (!views.detail || (card.closest("#detail-more-grid") && !views.work)) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     const index = Number(card.dataset.project);

@@ -49,23 +49,3 @@ const en = COPY.en;
     }
   }
 </style>
-
-<style is:global>
-  /* Shared by the homepage grid and the all-projects view */
-  .grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
-  }
-
-  @media (max-width: 1080px) {
-    .grid-3 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 720px) {
-    .grid-3 {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-</style>
