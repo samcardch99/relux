@@ -130,7 +130,8 @@ export const COPY = {
     famTitle: "A family that",
     famTitleEm: "builds as a team",
     famP1:
-      "RE-LUX is run by family. The same people who sit down with you to plan the project are on site while it is built, and answer the phone when you call.",
+      "RE-LUX is run by a family. The same people who sit down with you to plan the project are on site while it is built, and answer the phone when you call.",
+    altFamily: "The RE-LUX Construction family team",
     famP2:
       "That keeps decisions quick, standards shared and every job treated as if it were our own home.",
 
@@ -430,6 +431,7 @@ export const COPY = {
     famTitleEm: "construye en equipo",
     famP1:
       "RE-LUX la dirige una familia. Las mismas personas que se sientan contigo a planificar el proyecto están en obra mientras se construye y contestan el teléfono cuando llamas.",
+    altFamily: "El equipo familiar de RE-LUX Construction",
     famP2:
       "Así las decisiones son rápidas, el estándar es compartido y cada trabajo se trata como si fuera nuestra propia casa.",
 
@@ -440,7 +442,7 @@ export const COPY = {
       "Cada mueble y cada panel se corta en nuestra CNC Biesse Rover, directamente desde el plano que aprobaste. Sin medidas a mano y sin talleres externos de por medio.",
     cnBtn: "Ver nuestro proceso",
     cnA1T: "Encaje exacto",
-    cnA1D: "Las piezas se cortan desde el archivo digital, así lo que se instala coincide con el plano.",
+    cnA1D: "Las piezas se cortan desde el archivo digital, así que lo que se instala coincide con el plano.",
     cnA2T: "Plazos más cortos",
     cnA2D: "Corte, taladrado y canteado se hacen en una sola pasada en nuestro propio taller.",
     cnA3T: "Acabado constante",
