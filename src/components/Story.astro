@@ -1,6 +1,6 @@
 ---
 import { responsive, SIZES } from "../data/images";
-import { IMG, FOUNDERS } from "../data/copy";
+import { COPY, IMG, FOUNDERS } from "../data/copy";
 import ArrowUpRight from "./icons/ArrowUpRight.astro";
 ---
 
@@ -24,11 +24,7 @@ import ArrowUpRight from "./icons/ArrowUpRight.astro";
       <span data-i18n="storyTitle2">Not Shortcuts</span>
     </h2>
 
-    <p class="lead story__lead" data-i18n="storyLead">
-      RE-LUX Construction is a Miami firm working on high-end residential and
-      commercial interiors — founded and run by two brothers who are on site
-      with the crew.
-    </p>
+    <p class="lead story__lead" data-i18n="storyLead">{COPY.en.storyLead}</p>
 
     <p class="quote story__quote" data-i18n="storyQuote">
       &ldquo;Tu proyecto, nuestro compromiso de lujo.&rdquo;
