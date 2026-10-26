@@ -241,9 +241,10 @@ const STAGE_SIZES = "(max-width: 720px) 100vw, 500px";
 
 <script>
   /* The stage shows one case at a time and steps through its photos every
-     3 s, then on to the next case. A click picks a case. It stands still for
-     visitors who prefer reduced motion, while the pointer or focus is on the
-     section, and while it is off screen. */
+     3 s, then on to the next case; a click jumps to a case and carries on from
+     there. It stands still for visitors who prefer reduced motion, while it is
+     off screen, and while the keyboard is moving through the cases (a mouse
+     click focuses the button too, but that must not stop it). */
   const section = document.getElementById("cases");
   const items = [...document.querySelectorAll<HTMLButtonElement>("[data-case-go]")];
   const sets = [...document.querySelectorAll<HTMLElement>("[data-case-set]")];
@@ -309,9 +310,10 @@ const STAGE_SIZES = "(max-width: 720px) 100vw, 500px";
       onScreen = entry.isIntersecting;
       run();
     }).observe(section);
-    section.addEventListener("pointerenter", () => ((held = true), run()));
-    section.addEventListener("pointerleave", () => ((held = false), run()));
-    section.addEventListener("focusin", () => ((held = true), run()));
+    section.addEventListener("focusin", (e) => {
+      held = (e.target as Element).matches(":focus-visible");
+      run();
+    });
     section.addEventListener("focusout", () => ((held = false), run()));
   }
   still.addEventListener("change", run);
