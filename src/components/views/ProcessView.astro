@@ -8,9 +8,12 @@ import ArrowUpRight from "../icons/ArrowUpRight.astro";
 interface Props {
   /** Rendered already open, for the page at this view's own address. */
   open?: boolean;
+  /** The page's one contact section moves into this view while it is on top
+   *  (site.ts), instead of the view carrying a copy of its own. */
+  shareContact?: boolean;
 }
 
-const { open = false } = Astro.props;
+const { open = false, shareContact = false } = Astro.props;
 /** Open on load means this view is the page, so its title is the page's h1. */
 const Title = open ? "h1" : "h2";
 const en = COPY.en;
@@ -122,7 +125,7 @@ const shots = SHOP.filter((s) => s.img);
     </button>
   </div>
 
-  <Contact inView />
+  {shareContact ? <div data-contact-slot /> : <Contact inView />}
   <Footer />
 </div>
 

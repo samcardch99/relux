@@ -67,9 +67,9 @@ const withDetail = home || view === "work" || view === "detail";
   }
 
   <!-- Full-screen views, opened from the grid and the About / Process buttons -->
-  {(home || view === "work") && <WorkView open={view === "work"} />}
-  {(home || view === "about") && <AboutView open={view === "about"} />}
-  {(home || view === "process") && <ProcessView open={view === "process"} />}
-  {withDetail && <DetailView index={view === "detail" ? project : undefined} />}
+  {(home || view === "work") && <WorkView open={view === "work"} shareContact={home} />}
+  {(home || view === "about") && <AboutView open={view === "about"} shareContact={home} />}
+  {(home || view === "process") && <ProcessView open={view === "process"} shareContact={home} />}
+  {withDetail && <DetailView index={view === "detail" ? project : undefined} shareContact={view !== "detail"} />}
   {withDetail && <ProjectLightbox />}
 </Layout>

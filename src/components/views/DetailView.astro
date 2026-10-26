@@ -12,9 +12,12 @@ interface Props {
    * engines); site.ts fills in the rest and redraws it all on language change.
    */
   index?: number;
+  /** The page's one contact section moves into this view while it is on top
+   *  (site.ts), instead of the view carrying a copy of its own. */
+  shareContact?: boolean;
 }
 
-const { index } = Astro.props;
+const { index, shareContact = false } = Astro.props;
 const en = COPY.en;
 const project = index === undefined ? undefined : PROJECTS[index];
 const entry = index === undefined ? undefined : DETAIL.en[index];
@@ -152,7 +155,7 @@ const Title = project ? "h1" : "h2";
     </div>
   </div>
 
-  <Contact inView />
+  {shareContact ? <div data-contact-slot /> : <Contact inView />}
   <Footer />
 </div>
 

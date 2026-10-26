@@ -135,6 +135,25 @@ const views: Record<ViewName, HTMLElement | null> = {
 // The 404 has its own <main>, marked so it isn't taken for the homepage
 const hasHome = !!document.querySelector("main:not([data-standalone])");
 
+/* A page carries one contact section (the homepage's, or that of the view the
+   page is about). Views without their own hold an empty slot, and the section
+   moves into the view on top, returning to its place when none is. */
+const contactSection = document.querySelector<HTMLElement>("[data-contact]");
+const contactHome = contactSection && {
+  parent: contactSection.parentNode!,
+  next: contactSection.nextSibling,
+};
+function placeContact() {
+  if (!contactSection || !contactHome) return;
+  const top = stack[stack.length - 1];
+  const slot = top ? views[top]?.querySelector("[data-contact-slot]") : null;
+  if (slot) {
+    if (contactSection.parentNode !== slot) slot.append(contactSection);
+  } else if (contactSection.parentNode !== contactHome.parent) {
+    contactHome.parent.insertBefore(contactSection, contactHome.next);
+  }
+}
+
 /** Views currently on screen, innermost last. */
 const stack: ViewName[] = [];
 let openDetail: number | null = null;
@@ -152,6 +171,7 @@ function openView(name: ViewName) {
   document.body.classList.add("is-locked");
 
   el.querySelector<HTMLElement>("[data-close]")?.focus({ preventScroll: true });
+  placeContact();
   // Deferred: on landing this runs before the header handlers below are set up
   requestAnimationFrame(() => markScrolled());
 }
@@ -169,6 +189,7 @@ function closeView(name: ViewName) {
     lastFocused?.focus({ preventScroll: true });
     lastFocused = null;
   }
+  placeContact();
   requestAnimationFrame(() => markScrolled());
 }
 
