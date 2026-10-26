@@ -594,6 +594,8 @@ export const FOCUS = {
   blackKitchenCard: "35% center",
   greyBathCard: "35% center",
   whiteKitchenCard: "65% center",
+  /** The kitchen photo is 3:2, so the banner keeps the island and stools, not the ceiling. */
+  kitchen3Hero: "center 70%",
   processBand: "center bottom",
   ctaBand: "center 72%",
   ownersWide: "center center",
@@ -743,12 +745,28 @@ const all = (n: number) => Array.from({ length: n }, (_, k) => k);
 
 export const SHOTS: ProjectShots[] = [
   { hero: IMG.liz[0], shots: IMG.liz.slice(1), tall: [2] },
-  { hero: IMG.closet2[0], shots: pick(IMG.closet2, 2, 4, 3, 5), tall: all(4) },
-  { hero: IMG.bath2[2], shots: pick(IMG.bath2, 2, 6, 7, 8, 9, 10, 4, 1, 5, 11) },
-  { hero: IMG.kitchen3[4], shots: pick(IMG.kitchen3, 3, 1, 6, 4, 2, 7) },
-  { hero: IMG.crystalLuxe[0], shots: pick(IMG.crystalLuxe, 2, 4, 3, 5, 6, 7), tall: all(6) },
+  {
+    hero: IMG.closet2[0],
+    heroSet: [IMG.closet2[3], IMG.closet2[0], IMG.closet2[2]],
+    shots: pick(IMG.closet2, 2, 5),
+    tall: all(2),
+  },
+  { hero: IMG.bath2[2], shots: pick(IMG.bath2, 2, 6, 7, 8, 9, 10, 4, 1, 5, 11), tall: [1, 4, 8, 9] },
+  { hero: IMG.kitchen3[4], heroFocus: FOCUS.kitchen3Hero, shots: pick(IMG.kitchen3, 3, 1, 6, 4, 2, 7), tall: [1, 2, 3, 4, 5] },
+  {
+    hero: IMG.crystalLuxe[0],
+    heroSet: [IMG.crystalLuxe[1], IMG.crystalLuxe[0], IMG.crystalLuxe[4]],
+    shots: pick(IMG.crystalLuxe, 4, 3, 6, 7),
+    tall: all(4),
+  },
   { hero: IMG.blackKitchen[8], shots: pick(IMG.blackKitchen, 12, 7, 10, 11, 8, 3, 2, 5, 6, 4, 1) },
-  { hero: IMG.goldCloset[4], shots: pick(IMG.goldCloset, 6, 8, 2, 4, 10, 3, 1, 9, 11, 7), tall: all(10) },
+  {
+    hero: IMG.goldCloset[4],
+    heroSet: [IMG.goldCloset[3], IMG.goldCloset[4], IMG.goldCloset[8]],
+    // gw-6 is the only landscape one
+    shots: pick(IMG.goldCloset, 6, 8, 2, 10, 3, 1, 11, 7),
+    tall: [1, 2, 3, 4, 5, 6, 7],
+  },
   { hero: IMG.kitchenDining, shots: [IMG.kitchenWood, IMG.kitchenDark] },
   { hero: IMG.closet, shots: [IMG.interiorEmpty, IMG.kitchenWood] },
   {
