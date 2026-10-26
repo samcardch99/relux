@@ -1,9 +1,11 @@
 ---
-import { COPY, REVIEWS_URL } from "../data/copy";
+import { COPY, REVIEWS_URL, langOfPath } from "../data/copy";
 import data from "../data/reviews.json";
 import ArrowUpRight from "./icons/ArrowUpRight.astro";
 
 const en = COPY.en;
+/** Dates are built here, not keyed: they come out in the page's language. */
+const t = COPY[langOfPath(Astro.url.pathname)];
 
 /**
  * Las reseñas vienen de src/data/reviews.json, que escribe
@@ -65,17 +67,28 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
           </a>
         </aside>
 
+        {/* Every review, in full, for screen readers and search engines: the
+            slider beside it shows one at a time and changes on a timer, which
+            a screen reader can't follow, so its text is hidden from them. */}
+        <ul class="sr-only">
+          {reviews.map((r) => (
+            <li>
+              <blockquote lang={r.lang ?? undefined}>{r.text}</blockquote>
+              <p>{r.name} — {antiguedad(r.monthsAgo, t)}, Google</p>
+            </li>
+          ))}
+        </ul>
+
         <figure class="reviews__quote">
           <span class="reviews__mark" aria-hidden="true">
             “
           </span>
 
-          <div class="reviews__main">
+          <div class="reviews__main" aria-hidden="true">
             <blockquote
               class:list={["reviews__text", tramo(first.text.length)]}
               id="review-text"
               lang={first.lang}
-              aria-live="polite"
             >
               {first.text}
             </blockquote>
@@ -100,7 +113,7 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
                   {first.name}
                 </span>
                 <span class="reviews__meta">
-                  <span id="review-when">{antiguedad(first.monthsAgo, en)}</span>
+                  <span id="review-when">{antiguedad(first.monthsAgo, t)}</span>
                   — Google
                 </span>
               </span>
