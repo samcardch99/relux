@@ -103,6 +103,8 @@ export const COPY = {
     p18Title: "White and light oak kitchen",
     p19Tag: "Kitchens",
     p19Title: "Kitchen with a fluted stone island",
+    p20Tag: "Commercial",
+    p20Title: "Laira Balance studio",
 
     workTitle: "All",
     workTitleEm: "Projects",
@@ -403,6 +405,8 @@ export const COPY = {
     p18Title: "Cocina blanca y roble claro",
     p19Tag: "Cocinas",
     p19Title: "Cocina con isla acanalada de piedra",
+    p20Tag: "Comercial",
+    p20Title: "Estudio Laira Balance",
 
     workTitle: "Todos los",
     workTitleEm: "Proyectos",
@@ -439,7 +443,7 @@ export const COPY = {
     cnTitle: "Cortado a máquina,",
     cnTitleEm: "al milímetro",
     cnIntro:
-      "Cada mueble y cada panel se corta en nuestra CNC Biesse Rover, directamente desde el plano que aprobaste. Sin medidas a mano y sin talleres externos de por medio.",
+      "Cada gabinete y cada panel se corta en nuestra CNC Biesse Rover, directamente desde el plano que aprobaste. Sin medidas a mano y sin talleres externos de por medio.",
     cnBtn: "Ver nuestro proceso",
     cnA1T: "Encaje exacto",
     cnA1D: "Las piezas se cortan desde el archivo digital, así que lo que se instala coincide con el plano.",
@@ -647,6 +651,8 @@ const IMG = {
   bath2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/bath2-${n}.webp`),
   kitchen3: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/k3-${n}.webp`),
   crystalLuxe: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/cl-${n}.webp`),
+  /** Project 20, the Laira Balance studio in Wynwood: real photos, 1–5 landscape, 6–8 portrait. */
+  lairaBalance: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `/assets/lb-${n}.webp`),
   /** Project 7, the white and gold walk-in closet. */
   goldCloset: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/gw-${n}.webp`),
   /** Project 6: 1–6 are the light walnut version of the same kitchen, 7–12 the black one. */
@@ -804,14 +810,15 @@ export const PROJECTS = [
   { i: 16, slug: "cocina-roble-dos-islas", tagKey: "p17Tag", titleKey: "p17Title", img: IMG.oakKitchen[0] },
   { i: 17, slug: "cocina-blanca-y-roble-claro", tagKey: "p18Tag", titleKey: "p18Title", img: IMG.whiteKitchen[0], focus: FOCUS.whiteKitchenCard },
   { i: 18, slug: "cocina-isla-acanalada", tagKey: "p19Tag", titleKey: "p19Title", img: IMG.flutedKitchen[6] },
+  { i: 19, slug: "laira-balance", tagKey: "p20Tag", titleKey: "p20Title", img: IMG.lairaBalance[1] },
 ] as const;
 
 /**
- * The "Our work" view, in this order. Projects 2–5 and 7 are real photos of
- * finished work, so they lead and fill the homepage; the renders follow.
+ * The "Our work" view, in this order. Projects 2–5, 7 and 20 are real photos
+ * of finished work, so they lead and fill the homepage; the renders follow.
  * 8–9 had no project of their own.
  */
-export const WORK = [3, 1, 4, 2, 6, 0, 5, 11, 10, 12, 18, 9, 13, 17, 16, 15, 14].map((i) => PROJECTS[i]);
+export const WORK = [3, 1, 4, 19, 2, 6, 0, 5, 11, 10, 12, 18, 9, 13, 17, 16, 15, 14].map((i) => PROJECTS[i]);
 
 /** The homepage shows the first six of them. */
 export const FEATURED = WORK.slice(0, 6);
@@ -982,6 +989,12 @@ export const SHOTS: ProjectShots[] = [
     videoSide: IMG.flutedKitchen[5],
     shots: pick(IMG.flutedKitchen, 4, 5),
     tall: all(2),
+  },
+  {
+    hero: IMG.lairaBalance[1],
+    // Rows: reception wide + portrait, the studio twice, lounge wide + portrait, the niche
+    shots: pick(IMG.lairaBalance, 4, 6, 1, 3, 5, 7, 8),
+    tall: [1, 5, 6],
   },
 ];
 
@@ -1296,6 +1309,24 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "The ceiling pendants coming on over the island.",
       ],
     },
+    {
+      summary:
+        "A boutique mat pilates, barre and yoga studio in Wynwood, Miami, finished in soft whites and light wood, with arches lit from behind and a curved ceiling washed in warm light.",
+      paras: [
+        "The studio runs along a wall of arched recesses, each lit from behind, under a curved soffit with cove lighting that keeps the room evenly warm for classes. A barre runs the length of the wall, and built-in shelving at the far end holds the props.",
+        "At the entrance, a rounded reception desk sits in front of the backlit logo wall, with cubbies for shoes, an arched niche and a lounge by the French doors where clients wait before class.",
+      ],
+      meta: [["Scope", "Studio, reception + lounge"], ["Materials", "White lacquer, light wood floors, LED cove lighting"], ["Location", "Wynwood, Miami, FL"]],
+      captions: [
+        "The reception desk under the curved ceiling, in front of the lit logo wall.",
+        "The rounded reception desk and its brass pendant lights.",
+        "The studio: lit arches along the wall under a cove-lit curved ceiling.",
+        "Mats laid out between the arches, with built-in shelving at the far end.",
+        "The entrance lounge, with French doors and an arched mirror.",
+        "Lounge seating by the window, with white storage behind.",
+        "An arched niche with its own downlight.",
+      ],
+    },
   ],
   es: [
     {
@@ -1598,6 +1629,24 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       captions: [
         "La isla y las vitrinas encendidas de noche.",
         "Las lámparas del techo encendiéndose sobre la isla.",
+      ],
+    },
+    {
+      summary:
+        "Estudio boutique de mat pilates, barre y yoga en Wynwood, Miami, terminado en blancos suaves y madera clara, con arcos iluminados desde atrás y un techo curvo bañado de luz cálida.",
+      paras: [
+        "La sala recorre una pared de arcos rehundidos, cada uno iluminado desde atrás, bajo un plafón curvo con luz indirecta que mantiene la sala cálida y uniforme durante las clases. Una barra recorre toda la pared, y al fondo unos estantes empotrados guardan los accesorios.",
+        "En la entrada, un mostrador de recepción redondeado se apoya frente a la pared del logo retroiluminado, con casilleros para el calzado, un nicho en arco y una sala de espera junto a las puertas francesas donde los clientes esperan antes de clase.",
+      ],
+      meta: [["Alcance", "Estudio, recepción y sala de espera"], ["Materiales", "Laca blanca, pisos de madera clara, iluminación LED indirecta"], ["Ubicación", "Wynwood, Miami, FL"]],
+      captions: [
+        "El mostrador de recepción bajo el techo curvo, frente a la pared del logo iluminado.",
+        "El mostrador redondeado y sus lámparas colgantes de latón.",
+        "La sala: arcos iluminados a lo largo de la pared bajo un techo curvo con luz indirecta.",
+        "Las colchonetas entre los arcos, con estantes empotrados al fondo.",
+        "La sala de espera de la entrada, con puertas francesas y un espejo en arco.",
+        "Asientos junto a la ventana, con armarios blancos detrás.",
+        "Un nicho en arco con su propia luz.",
       ],
     },
   ],
