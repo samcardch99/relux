@@ -31,14 +31,17 @@
 ErrorDocument 404 /404.html
 
 # Security headers. HSTS stays on this host only (no includeSubDomains) until
-# every subdomain is known to serve HTTPS. No CSP yet: the inline scripts and
-# EmailJS would need it written and tested on its own.
+# every subdomain is known to serve HTTPS. The CSP lists every outside origin
+# the site uses: Google Analytics, EmailJS (contact form) and Google's
+# reviewer photos. Inline scripts and styles stay allowed (Astro's islands,
+# the zoom script, style attributes); add any new outside origin here first.
 <IfModule mod_headers.c>
   Header always set Strict-Transport-Security "max-age=31536000"
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://api.emailjs.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
 </IfModule>
 
 # Caching. Pages revalidate on every visit, so a new deploy shows at once;
