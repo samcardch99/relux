@@ -276,8 +276,11 @@ const shots = SHOP.filter((s) => s.img);
   }
 
   @media (max-width: 720px) {
+    /* Phones show the whole shot of the line, at the photo's own proportions
+       (workshop-band.webp is 1600×1000), instead of cropping its sides */
     .processview__band {
-      height: 440px;
+      height: auto;
+      aspect-ratio: 16 / 10;
     }
     .processview__h3 {
       font-size: 28px;
