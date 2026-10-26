@@ -22,6 +22,8 @@ const shots = index === undefined ? undefined : SHOTS[index];
 const hero = shots?.hero ?? "";
 const tag = project ? en[project.tagKey] : "";
 const title = project ? en[project.titleKey] : "";
+/** A project loaded at its own address is the page: its title is the h1. */
+const Title = project ? "h1" : "h2";
 ---
 
 <div
@@ -47,6 +49,7 @@ const title = project ? en[project.titleKey] : "";
       id="detail-hero"
       src={hero}
       alt={title}
+      fetchpriority={project ? "high" : undefined}
       hidden={!!shots?.heroSet}
       style={shots?.heroFocus ? `object-position:${shots.heroFocus}` : undefined}
     />
@@ -60,7 +63,7 @@ const title = project ? en[project.titleKey] : "";
 
   <div class="detail__intro">
     <div class="detail__copy">
-      <h2 class="detail__title" id="detail-title">{title}</h2>
+      <Title class="detail__title" id="detail-title">{title}</Title>
       <p class="detail__summary" id="detail-summary">{entry?.summary}</p>
       <div class="detail__paras" id="detail-paras">{entry?.paras.map((text) => <p>{text}</p>)}</div>
     </div>

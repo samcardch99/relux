@@ -519,6 +519,8 @@ export const FOUNDERS = [
   { name: "Randy Cagigas", tel: "+17862719256", phone: "(786) 271-9256" },
 ] as const;
 
+export const EMAIL = "info@relux-construction.com";
+
 export const INSTAGRAM = {
   handle: "@re.lux.construction",
   url: "https://www.instagram.com/re.lux.construction",

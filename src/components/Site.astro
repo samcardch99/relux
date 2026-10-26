@@ -1,7 +1,10 @@
 ---
 /**
- * The whole one-page site. Every route renders it; `view` (and `project` for
- * a detail) say which full-screen view is already open when the page loads.
+ * Every route renders this. The homepage carries the whole one-page site with
+ * the full-screen views closed; a view's own address (`view`, plus `project`
+ * for a detail) carries only that view, open, so each page has content of its
+ * own. Opening another view from there, or closing this one, loads its page
+ * (see site.ts).
  */
 import Layout from "../layouts/Layout.astro";
 import Cursor from "./Cursor.astro";
@@ -28,33 +31,43 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  jsonLd?: object[];
 }
 
-const { view, project, title, description, image } = Astro.props;
+const { view, project, title, description, image, jsonLd } = Astro.props;
+const home = !view;
+/** The work grid opens projects in place, so its page keeps the detail view. */
+const withDetail = home || view === "work" || view === "detail";
 ---
 
-<Layout title={title} description={description} image={image} locked={!!view}>
+<Layout title={title} description={description} image={image} locked={!home} jsonLd={jsonLd}>
   <Cursor />
   <Navbar />
 
-  <main>
-    <Hero />
-    <Story />
-    <Services />
-    <Materials />
-    <Projects />
-    <Process />
-    <Reviews />
-    <CTA />
-    <Contact />
-  </main>
+  {
+    home && (
+      <>
+        <main>
+          <Hero />
+          <Story />
+          <Services />
+          <Materials />
+          <Projects />
+          <Process />
+          <Reviews />
+          <CTA />
+          <Contact />
+        </main>
 
-  <Footer />
+        <Footer />
+      </>
+    )
+  }
 
   <!-- Full-screen views, opened from the grid and the About / Process buttons -->
-  <WorkView open={view === "work"} />
-  <AboutView open={view === "about"} />
-  <ProcessView open={view === "process"} />
-  <DetailView index={view === "detail" ? project : undefined} />
-  <ProjectLightbox />
+  {(home || view === "work") && <WorkView open={view === "work"} />}
+  {(home || view === "about") && <AboutView open={view === "about"} />}
+  {(home || view === "process") && <ProcessView open={view === "process"} />}
+  {withDetail && <DetailView index={view === "detail" ? project : undefined} />}
+  {withDetail && <ProjectLightbox />}
 </Layout>

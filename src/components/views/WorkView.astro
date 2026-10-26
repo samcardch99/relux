@@ -12,6 +12,8 @@ interface Props {
 }
 
 const { open = false } = Astro.props;
+/** Open on load means this view is the page, so its title is the page's h1. */
+const Title = open ? "h1" : "h2";
 const en = COPY.en;
 ---
 
@@ -30,10 +32,10 @@ const en = COPY.en;
   </div>
 
   <div class="sec-head workview__head">
-    <h2 class="sec-head__title">
+    <Title class="sec-head__title">
       <span data-i18n="workTitle">All</span><br />
       <em data-i18n="workTitleEm">Projects</em>
-    </h2>
+    </Title>
     <p class="sec-head__intro" data-i18n="workIntro">{en.workIntro}</p>
   </div>
 

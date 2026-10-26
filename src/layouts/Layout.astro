@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { siteGraph } from "../data/schema";
 
 interface Props {
   title?: string;
@@ -8,6 +9,8 @@ interface Props {
   image?: string;
   /** A full-screen view is open on load, so the page underneath must not scroll. */
   locked?: boolean;
+  /** Page-specific JSON-LD, added after the business block every page carries. */
+  jsonLd?: object[];
 }
 
 const {
@@ -15,6 +18,7 @@ const {
   description = "Interior remodeling and custom woodwork for homes and businesses across Miami. Kitchens, closets, bathrooms and complete interiors, designed and built by our own team.",
   image = "/assets/liz-1.webp",
   locked = false,
+  jsonLd = [],
 } = Astro.props;
 
 const url = new URL(Astro.url.pathname, Astro.site);
@@ -38,6 +42,9 @@ const imageUrl = new URL(image, Astro.site);
     <meta property="og:image" content={imageUrl} />
     <link rel="canonical" href={url} />
     <meta name="theme-color" content="#060505" />
+    {[siteGraph, ...jsonLd].map((data) => (
+      <script type="application/ld+json" set:html={JSON.stringify(data)} />
+    ))}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

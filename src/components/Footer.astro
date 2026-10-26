@@ -1,5 +1,5 @@
 ---
-import { COPY, FOUNDERS, INSTAGRAM } from "../data/copy";
+import { COPY, EMAIL, FOUNDERS, INSTAGRAM } from "../data/copy";
 
 const en = COPY.en;
 const primary = FOUNDERS[0];
@@ -11,6 +11,7 @@ const primary = FOUNDERS[0];
   <nav class="footer__links" aria-label="Footer">
     <a href="#top" data-i18n="footerPrivacy">Privacy</a>
     <a href={INSTAGRAM.url} target="_blank" rel="noopener">Instagram</a>
+    <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
     <a href={`tel:${primary.tel}`}>{primary.phone}</a>
   </nav>
 </footer>

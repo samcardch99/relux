@@ -116,6 +116,10 @@ const views: Record<ViewName, HTMLElement | null> = {
   detail: document.getElementById("view-detail"),
 };
 
+/** Only the homepage carries the page underneath the views; a view's own
+ *  page has nothing to close onto, so it loads the homepage instead. */
+const hasHome = !!document.querySelector("main");
+
 /** Views currently on screen, innermost last. */
 const stack: ViewName[] = [];
 let openDetail: number | null = null;
@@ -449,6 +453,8 @@ let depth = 0;
 history.scrollRestoration = "manual";
 /** Where to scroll once a "close and go to…" has returned to the homepage. */
 let pendingGoto: string | null = null;
+/** View to open once a switch from the menu has returned to the starting entry. */
+let pendingOpen: ViewName | null = null;
 
 function pathFor({ views, project }: Route) {
   const top = views[views.length - 1];
@@ -526,8 +532,35 @@ function closeTop() {
     history.back();
     return;
   }
+  if (!hasHome) {
+    location.assign("/");
+    return;
+  }
   closeView(stack[stack.length - 1]);
   record(false);
+}
+
+/** Open a view in place of whatever is open. Views share one layer, so
+ *  stacking them would leave whichever comes later in the page on top; and
+ *  history returns to the entry the visit started from first, so Back and the
+ *  close button go straight to the homepage, not through the previous view. */
+function switchToView(name: ViewName) {
+  // A view's page carries only the views it opens itself; any other loads its page
+  if (!views[name] && name !== "detail") {
+    location.assign(VIEW_PATHS[name]);
+    return;
+  }
+  if (depth > 0) {
+    // A second click while the history step is under way only changes the target
+    const stepping = pendingOpen !== null;
+    pendingOpen = name;
+    if (!stepping) history.go(-depth);
+    return;
+  }
+  const replacing = stack.length > 0;
+  closeAllViews();
+  openView(name);
+  record(!replacing);
 }
 
 /** Close every view and scroll the homepage to a section. */
@@ -535,6 +568,10 @@ function closeAllAndGo(id: string) {
   if (depth > 0) {
     pendingGoto = id;
     history.go(-depth);
+    return;
+  }
+  if (!hasHome) {
+    location.assign(id ? `/#${id}` : "/");
     return;
   }
   closeAllViews();
@@ -545,7 +582,12 @@ function closeAllAndGo(id: string) {
 window.addEventListener("popstate", (event) => {
   const state = event.state as HistoryState | null;
   depth = state?.relux ? state.depth : 0;
-  applyRoute(state?.relux ? state : routeFromPath(location.pathname));
+  const route = state?.relux ? state : routeFromPath(location.pathname);
+  if (!hasHome && (!route.views.length || pendingGoto !== null)) {
+    location.assign(pendingGoto ? `/#${pendingGoto}` : "/");
+    return;
+  }
+  applyRoute(route);
   document.title = titleFor(current());
 
   if (pendingGoto !== null) {
@@ -557,6 +599,12 @@ window.addEventListener("popstate", (event) => {
       record(false, id ? `#${id}` : "");
     }
     scrollToSection(id);
+  }
+
+  if (pendingOpen !== null) {
+    const name = pendingOpen;
+    pendingOpen = null;
+    switchToView(name);
   }
 });
 
@@ -588,6 +636,8 @@ document.addEventListener("click", (event) => {
   // the project's page in a new tab.
   const card = target.closest<HTMLElement>("[data-project]");
   if (card) {
+    // No detail view on this page: the card's link loads the project's page
+    if (!views.detail) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     const index = Number(card.dataset.project);
@@ -606,9 +656,8 @@ document.addEventListener("click", (event) => {
     event.preventDefault();
     closeMenu();
     const name = opener.dataset.open as ViewName;
-    if (stack.includes(name)) return;
-    openView(name);
-    record(true);
+    if (stack.length === 1 && stack[0] === name) return;
+    switchToView(name);
     return;
   }
 

@@ -1,6 +1,7 @@
 ---
 import Site from "../../components/Site.astro";
 import { COPY, DETAIL, SHOTS, WORK } from "../../data/copy";
+import { projectSchema } from "../../data/schema";
 
 /** One page per project listed on the site; project 8 is left out with it. */
 export function getStaticPaths() {
@@ -14,6 +15,7 @@ const project = WORK.find((p) => p.i === index)!;
 <Site
   view="detail"
   project={index}
+  jsonLd={[projectSchema(index)]}
   title={`${COPY.en[project.titleKey]} — RE-LUX Construction`}
   description={DETAIL.en[index].summary}
   image={SHOTS[index].hero}

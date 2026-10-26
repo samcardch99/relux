@@ -11,6 +11,8 @@ interface Props {
 }
 
 const { open = false } = Astro.props;
+/** Open on load means this view is the page, so its title is the page's h1. */
+const Title = open ? "h1" : "h2";
 const en = COPY.en;
 /** Empty frames are left out; see SHOP. */
 const shots = SHOP.filter((s) => s.img);
@@ -26,10 +28,10 @@ const shots = SHOP.filter((s) => s.img);
   </div>
 
   <div class="sec-head processview__head">
-    <h2 class="sec-head__title">
+    <Title class="sec-head__title">
       <span data-i18n="pxTitle">{en.pxTitle}</span><br />
       <em data-i18n="pxTitleEm">{en.pxTitleEm}</em>
-    </h2>
+    </Title>
     <p class="sec-head__intro" data-i18n="pxIntro">{en.pxIntro}</p>
   </div>
 
