@@ -14,17 +14,11 @@ import {
   projectTitle,
   type Lang,
 } from "../data/copy";
+import { GALLERY_GAP, PORTRAIT, groupRows, rowVars, startRatios } from "../data/gallery";
 import { SIZES, srcsetFor } from "../data/images";
 
 const STORAGE_KEY = "relux:lang";
 
-/** The two proportions the renders come in. */
-const LANDSCAPE = 16 / 9;
-const PORTRAIT = 4 / 5;
-/** Sum of proportions that fills a gallery row (see renderShots). */
-const ROW_SPAN = 2.3;
-/** Gap between gallery photos; matches `.detail__row` in DetailView.astro. */
-const GALLERY_GAP = 20;
 /** Gap inside the video row; matches `.vid__row`. */
 const VIDEO_GAP = 16;
 
@@ -364,12 +358,6 @@ function tagGallery() {
 
 /* ── Gallery ── */
 
-/**
- * Lays the gallery out in rows and makes each column as wide as its photo's
- * proportion: the row then has one height and every photo shows whole.
- * Proportions start from `tall` and are corrected from the file itself once
- * it loads (the rows stay as first grouped).
- */
 /** "More projects": copies of the cards in the all-projects grid, when the page
  *  has one (a project's own page is built with its related cards instead). */
 function renderRelated(index: number) {
@@ -382,10 +370,18 @@ function renderRelated(index: number) {
   grid.replaceChildren(...cards);
 }
 
+/**
+ * Draws the gallery (layout in data/gallery.ts; a project's own page arrives
+ * with it already drawn the same way). Proportions start from `tall` and are
+ * corrected from the file itself once it loads (the rows stay as first grouped).
+ */
 function renderShots(srcs: string[], tall: number[], captions: string[], title: string) {
   const shotsEl = document.getElementById("detail-shots");
   if (!shotsEl) return;
 
+  // Uncaptioned photos still say what they show, for screen readers and search
+  const t = COPY[lang] as unknown as Record<string, string>;
+  const ratios = startRatios(srcs.length, tall);
   const figures = srcs.map((src, i) => {
     const figure = document.createElement("figure");
     const frame = document.createElement("div");
@@ -398,72 +394,41 @@ function renderShots(srcs: string[], tall: number[], captions: string[], title: 
     caption.textContent = captions[i] ?? "";
 
     figure.append(frame, caption);
-    // Uncaptioned photos still say what they show, for screen readers and search
-    const t = COPY[lang] as unknown as Record<string, string>;
     setImage(img, src, captions[i] || `${title} — ${t.altPhoto} ${i + 1}`, SIZES.half);
-    return { figure, frame, img, ratio: tall.includes(i) ? PORTRAIT : LANDSCAPE };
+    return { figure, frame, img };
   });
 
-  // A row closes once its proportions add up to ROW_SPAN: two landscapes,
-  // three portraits, or one of each.
-  type Item = (typeof figures)[number];
-  const groups: Item[][] = [[]];
-  let span = 0;
-  for (const it of figures) {
-    if (span >= ROW_SPAN) {
-      groups.push([]);
-      span = 0;
-    }
-    groups[groups.length - 1].push(it);
-    span += it.ratio;
-  }
-
-  const sum = (items: Item[]) => items.reduce((s, it) => s + it.ratio, 0);
-  const rows = groups.map((items) => {
+  // Rows stay as first grouped; their widths follow the real proportions
+  const rows = groupRows(ratios).map((items) => {
     const el = document.createElement("div");
     el.className = "detail__row";
-    el.append(...items.map((it) => it.figure));
+    el.append(...items.map((i) => figures[i].figure));
     return { el, items };
   });
 
-  // A short last row keeps the height of the row above (or of a full row of
-  // portraits when it is the only one) and is centred, instead of stretching.
   const layout = () => {
     rows.forEach(({ el, items }, r) => {
-      items.forEach((it) => it.frame.style.setProperty("--ratio", String(it.ratio)));
-      // Normalised so the tracks always add up to 1fr: below that, a lone
-      // portrait's column would only fill part of its row.
-      const s = sum(items);
-      el.style.setProperty("--cols", items.map((it) => `minmax(0, ${it.ratio / s}fr)`).join(" "));
-      const isShort = r === rows.length - 1 && s < ROW_SPAN;
-      if (!isShort) {
-        el.style.removeProperty("--row-width");
-        return;
-      }
-      const ref = rows[r - 1]?.items;
-      const refSpan = ref ? sum(ref) : 3 * PORTRAIT;
-      const refGaps = ((ref?.length ?? 3) - 1) * GALLERY_GAP;
-      el.style.setProperty(
-        "--row-width",
-        `calc((100% - ${refGaps}px) * ${s / refSpan} + ${(items.length - 1) * GALLERY_GAP}px)`
-      );
+      items.forEach((i) => figures[i].frame.style.setProperty("--ratio", String(ratios[i])));
+      const prev = rows[r - 1]?.items.map((i) => ratios[i]);
+      const vars = rowVars(items.map((i) => ratios[i]), prev, r === rows.length - 1);
+      el.style.setProperty("--cols", vars.cols);
+      if (vars.rowWidth) el.style.setProperty("--row-width", vars.rowWidth);
+      else el.style.removeProperty("--row-width");
     });
   };
   layout();
 
-  rows.forEach(({ items }) =>
-    items.forEach((it) => {
-      const correct = () => {
-        if (!it.img.naturalWidth) return;
-        const ratio = it.img.naturalWidth / it.img.naturalHeight;
-        if (Math.abs(ratio - it.ratio) < 0.01) return;
-        it.ratio = ratio;
-        layout();
-      };
-      if (it.img.complete) correct();
-      else it.img.addEventListener("load", correct, { once: true });
-    })
-  );
+  figures.forEach(({ img }, i) => {
+    const correct = () => {
+      if (!img.naturalWidth) return;
+      const ratio = img.naturalWidth / img.naturalHeight;
+      if (Math.abs(ratio - ratios[i]) < 0.01) return;
+      ratios[i] = ratio;
+      layout();
+    };
+    if (img.complete) correct();
+    else img.addEventListener("load", correct, { once: true });
+  });
 
   shotsEl.replaceChildren(...rows.map(({ el }) => el));
 }

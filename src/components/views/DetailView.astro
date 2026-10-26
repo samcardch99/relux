@@ -2,6 +2,7 @@
 import { responsive, SIZES } from "../../data/images";
 import { COPY, DETAIL, PROJECTS, SHOTS, langOfPath, relatedProjects } from "../../data/copy";
 import ProjectCard from "../ProjectCard.astro";
+import { groupRows, rowVars, startRatios } from "../../data/gallery";
 import Contact from "../Contact.astro";
 import Footer from "../Footer.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
@@ -29,6 +30,15 @@ const shots = index === undefined ? undefined : SHOTS[index];
 const hero = shots?.hero ?? "";
 const tag = project ? t[project.tagKey] : "";
 const title = project ? t[project.titleKey] : "";
+/** The gallery, drawn here too so it is in the page itself (site.ts redraws it
+ *  the same way and then corrects each photo's proportion). */
+const gallery = shots && entry ? startRatios(shots.shots.length, shots.tall) : [];
+const galleryRows = groupRows(gallery).filter((r) => r.length);
+const rowStyle = (row: number[], r: number) => {
+  const v = rowVars(row.map((i) => gallery[i]), galleryRows[r - 1]?.map((i) => gallery[i]), r === galleryRows.length - 1);
+  return `--cols:${v.cols}${v.rowWidth ? `;--row-width:${v.rowWidth}` : ""}`;
+};
+
 /** A project loaded at its own address is the page: its title is the h1. */
 const Title = project ? "h1" : "h2";
 ---
@@ -140,7 +150,28 @@ const Title = project ? "h1" : "h2";
     </div>
   </div>
 
-  <div class="detail__shots" id="detail-shots"></div>
+  <div class="detail__shots" id="detail-shots">
+    {
+      shots &&
+        entry &&
+        galleryRows.map((row, r) => (
+          <div class="detail__row" style={rowStyle(row, r)}>
+            {row.map((i) => (
+              <figure>
+                <div class="media" style={`--ratio:${gallery[i]}`}>
+                  <img
+                    {...responsive(shots.shots[i], SIZES.half)}
+                    alt={entry.captions[i] || `${title} — ${t.altPhoto} ${i + 1}`}
+                    loading="lazy"
+                  />
+                </div>
+                <figcaption>{entry.captions[i] ?? ""}</figcaption>
+              </figure>
+            ))}
+          </div>
+        ))
+    }
+  </div>
 
   {/* Rendered here for a project's own page; site.ts refills it from the
       all-projects grid when a project opens over the homepage or /work/. */}
