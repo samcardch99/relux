@@ -1,0 +1,97 @@
+---
+import { responsive, SIZES } from "../data/images";
+import { COPY, IMG } from "../data/copy";
+
+const en = COPY.en;
+---
+
+<section class="family" id="family">
+  <div class="family__txt">
+    <p class="kicker family__kicker" data-i18n="famKicker">{en.famKicker}</p>
+    <h2 class="family__title">
+      <span data-i18n="famTitle">{en.famTitle}</span><br />
+      <em data-i18n="famTitleEm">{en.famTitleEm}</em>
+    </h2>
+    <p class="family__p" data-i18n="famP1">{en.famP1}</p>
+    <p class="family__p" data-i18n="famP2">{en.famP2}</p>
+  </div>
+
+  <div class="media family__photo">
+    <img
+      {...responsive(IMG.family, SIZES.half)}
+      alt="The RE-LUX Construction family team"
+      loading="lazy"
+    />
+  </div>
+</section>
+
+<style>
+  .family {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: center;
+    padding: 128px 0 0;
+    background: var(--color-ink);
+  }
+
+  .family__txt {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    width: calc(100% - 144px);
+    max-width: 420px;
+  }
+  .family__kicker {
+    letter-spacing: 0.36em;
+  }
+  .family__title {
+    font-size: var(--fs-h2);
+    font-weight: 300;
+    line-height: 1.08;
+    color: var(--color-stone);
+    text-wrap: balance;
+  }
+  .family__title em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-cream);
+  }
+  .family__p {
+    max-width: 440px;
+    font-size: var(--fs-body);
+    font-weight: 300;
+    line-height: 1.72;
+    color: rgb(239 226 196 / 0.62);
+    text-wrap: pretty;
+  }
+
+  .family__photo {
+    justify-self: center;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 4 / 5;
+  }
+
+  @media (max-width: 1080px) {
+    .family {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 32px;
+      padding: 96px var(--gutter) 0;
+    }
+    .family__txt {
+      width: 100%;
+      max-width: none;
+    }
+    .family__title {
+      font-size: 30px;
+    }
+  }
+  @media (max-width: 720px) {
+    .family {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+      padding: 72px var(--gutter) 0;
+    }
+  }
+</style>

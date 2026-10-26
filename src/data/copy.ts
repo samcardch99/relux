@@ -126,6 +126,37 @@ export const COPY = {
     storyQuote: "“Tu proyecto, nuestro compromiso de lujo.”",
     aboutBtn: "More about us",
 
+    famKicker: "Family business",
+    famTitle: "A family that",
+    famTitleEm: "builds as a team",
+    famP1:
+      "RE-LUX is run by family. The same people who sit down with you to plan the project are on site while it is built, and answer the phone when you call.",
+    famP2:
+      "That keeps decisions quick, standards shared and every job treated as if it were our own home.",
+
+    cnKicker: "In-house fabrication",
+    cnTitle: "Cut by machine,",
+    cnTitleEm: "to the millimeter",
+    cnIntro:
+      "Every cabinet and panel is cut on our Biesse Rover CNC, straight from the drawing you approved. No hand measurements, no outside workshop in between.",
+    cnBtn: "See our process",
+    cnA1T: "Exact fit",
+    cnA1D: "Parts are cut from the digital file, so what is installed matches the drawing.",
+    cnA2T: "Shorter timelines",
+    cnA2D: "Cutting, drilling and edging happen in one pass in our own shop.",
+    cnA3T: "Consistent finish",
+    cnA3D: "Every door and panel comes off the same machine, with clean edges and repeatable detail.",
+
+    caseTitle: "BUILT &",
+    caseTitleEm: "DELIVERED",
+    caseIntro: "Finished projects, photographed on site after handover.",
+    c1Meta: "Kitchens",
+    c2Meta: "Walk-in closets",
+    c3Meta: "Bathrooms",
+    c4Meta: "Millwork",
+    c5Meta: "Bars & wine rooms",
+    c6Meta: "Commercial",
+
     aboutTitle: "About",
     aboutTitleEm: "RE-LUX",
     aboutIntro:
@@ -394,6 +425,37 @@ export const COPY = {
     storyQuote: "“Tu proyecto, nuestro compromiso de lujo.”",
     aboutBtn: "Conocer más",
 
+    famKicker: "Empresa familiar",
+    famTitle: "Una familia que",
+    famTitleEm: "construye en equipo",
+    famP1:
+      "RE-LUX la dirige una familia. Las mismas personas que se sientan contigo a planificar el proyecto están en obra mientras se construye y contestan el teléfono cuando llamas.",
+    famP2:
+      "Así las decisiones son rápidas, el estándar es compartido y cada trabajo se trata como si fuera nuestra propia casa.",
+
+    cnKicker: "Fabricación propia",
+    cnTitle: "Cortado a máquina,",
+    cnTitleEm: "al milímetro",
+    cnIntro:
+      "Cada mueble y cada panel se corta en nuestra CNC Biesse Rover, directamente desde el plano que aprobaste. Sin medidas a mano y sin talleres externos de por medio.",
+    cnBtn: "Ver nuestro proceso",
+    cnA1T: "Encaje exacto",
+    cnA1D: "Las piezas se cortan desde el archivo digital, así lo que se instala coincide con el plano.",
+    cnA2T: "Plazos más cortos",
+    cnA2D: "Corte, taladrado y canteado se hacen en una sola pasada en nuestro propio taller.",
+    cnA3T: "Acabado constante",
+    cnA3D: "Cada puerta y panel sale de la misma máquina, con cantos limpios y detalles repetibles.",
+
+    caseTitle: "CONSTRUIDO Y",
+    caseTitleEm: "ENTREGADO",
+    caseIntro: "Proyectos terminados, fotografiados en obra tras la entrega.",
+    c1Meta: "Cocinas",
+    c2Meta: "Walk-in closets",
+    c3Meta: "Baños",
+    c4Meta: "Carpintería a medida",
+    c5Meta: "Bares y cavas",
+    c6Meta: "Comercial",
+
     aboutTitle: "Sobre",
     aboutTitleEm: "RE-LUX",
     aboutIntro:
@@ -617,6 +679,10 @@ const IMG = {
   ownersWide: "/assets/relux-owners-wide.webp",
   founder1: "/assets/relux-founder-1.webp",
   founder2: "/assets/relux-founder-2.webp",
+  /** Homepage "family business" section: the whole team. */
+  family: "/assets/family-tall.webp",
+  /** Homepage in-house fabrication section: the Biesse Rover. */
+  cncHome: "/assets/cnc-biesse.webp",
   /** Process view: a render of the CNC (stands in for the machine video) and two details. */
   machineHero: "/assets/machine-hero.webp",
   machine: ["/assets/machine-1.webp", "/assets/machine-2.webp"],
@@ -644,6 +710,22 @@ export const FOCUS = {
 } as const;
 
 export { IMG };
+
+/**
+ * Homepage "Built & delivered": real photos of finished work, one set per
+ * kind of job (the design's ref/cases.json). Each set cycles on its own stage.
+ */
+const caseShots = (n: number, count: number) =>
+  Array.from({ length: count }, (_, i) => `/assets/cs-${n}-${i + 1}.webp`);
+
+export const CASES = [
+  { metaKey: "c1Meta", shots: caseShots(1, 6) },
+  { metaKey: "c2Meta", shots: caseShots(2, 2) },
+  { metaKey: "c3Meta", shots: caseShots(3, 5) },
+  { metaKey: "c4Meta", shots: caseShots(4, 2) },
+  { metaKey: "c5Meta", shots: caseShots(5, 2) },
+  { metaKey: "c6Meta", shots: caseShots(6, 4) },
+] as const;
 
 export const SERVICES = [
   { n: "01", titleKey: "s1Title", descKey: "s1Desc", img: IMG.kitchenDining, grow: 2.4, hover: 3.6 },

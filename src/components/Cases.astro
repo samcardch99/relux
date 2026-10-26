@@ -1,0 +1,318 @@
+---
+import { CASES, COPY } from "../data/copy";
+import { srcsetFor } from "../data/images";
+
+const en = COPY.en as unknown as Record<string, string>;
+const STAGE_SIZES = "(max-width: 720px) 100vw, 500px";
+---
+
+<section class="cases" id="cases">
+  <div class="sec-head cases__head">
+    <h2 class="sec-head__title">
+      <span data-i18n="caseTitle">{en.caseTitle}</span><br />
+      <em data-i18n="caseTitleEm">{en.caseTitleEm}</em>
+    </h2>
+    <p class="sec-head__intro" data-i18n="caseIntro">{en.caseIntro}</p>
+  </div>
+
+  <div class="cases__body">
+    <div class="cases__list">
+      {
+        CASES.map((c, i) => (
+          <button
+            type="button"
+            class:list={["cases__item", { "is-on": i === 0 }]}
+            data-case-go={i}
+            aria-controls="cases-stage"
+            aria-pressed={i === 0 ? "true" : "false"}
+          >
+            <span class="cases__n">{String(i + 1).padStart(2, "0")}</span>
+            <span class="cases__label">
+              <span class="cases__name" data-i18n={c.metaKey}>{en[c.metaKey]}</span>
+              <span class="cases__place">Miami, FL</span>
+            </span>
+            <span class="cases__thumb">
+              <img
+                src={c.shots[0]}
+                srcset={srcsetFor(c.shots[0])}
+                sizes="(max-width: 720px) 16vw, 46px"
+                alt=""
+                loading="lazy"
+              />
+            </span>
+          </button>
+        ))
+      }
+    </div>
+
+    {/* One box per case, stacked; only the active one shows, its photos
+        crossfading. Past the first case, photos carry data-src and load when
+        their case is about to show (script below). */}
+    <div class="cases__stage" id="cases-stage">
+      {
+        CASES.map((c, i) => (
+          <div class:list={["cases__set", { "is-on": i === 0 }]} data-case-set={i}>
+            {c.shots.map((src, k) => (
+              <img
+                class:list={["cases__shot", { "is-on": k === 0 }]}
+                {...(i === 0
+                  ? { src, srcset: srcsetFor(src), sizes: STAGE_SIZES, loading: "lazy" }
+                  : { "data-src": src, "data-srcset": srcsetFor(src), sizes: STAGE_SIZES })}
+                alt={en[c.metaKey]}
+                data-i18n-alt={c.metaKey}
+              />
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .cases {
+    padding: 128px var(--gutter);
+    background: var(--color-ink);
+    border-top: 1px solid rgb(239 226 196 / 0.06);
+  }
+  .cases__head {
+    margin-bottom: 56px;
+  }
+
+  .cases__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 500px);
+    gap: 72px;
+    align-items: center;
+  }
+
+  .cases__list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(239 226 196 / 0.1);
+  }
+  .cases__item {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 46px;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 14px 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(239 226 196 / 0.1);
+    font: inherit;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.42;
+    transition: opacity 0.4s ease;
+  }
+  .cases__item.is-on,
+  .cases__item:hover,
+  .cases__item:focus-visible {
+    opacity: 1;
+  }
+  .cases__n {
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: var(--color-stone);
+  }
+  .cases__label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .cases__name {
+    font-size: var(--fs-h3);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--color-cream);
+    transition: transform 0.4s ease;
+  }
+  .cases__item.is-on .cases__name {
+    transform: translateX(10px);
+  }
+  .cases__place {
+    font-size: var(--fs-label-sm);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+  }
+  .cases__thumb {
+    position: relative;
+    width: 46px;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--color-ink-3);
+    border: 1px solid rgb(239 226 196 / 0.1);
+  }
+  .cases__thumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cases__stage {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--color-ink-3);
+  }
+  .cases__set {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s ease;
+  }
+  .cases__set.is-on {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .cases__shot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .cases__shot.is-on {
+    opacity: 1;
+  }
+
+  @media (max-width: 1080px) {
+    .cases__body {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 32px;
+    }
+    .cases__item {
+      grid-template-columns: 32px minmax(0, 1fr) 40px;
+      gap: 12px;
+      padding: 12px 0;
+    }
+    .cases__name {
+      font-size: 18px;
+    }
+    .cases__thumb {
+      width: 40px;
+    }
+  }
+  /* Phones: the stage first, the list as a row of six thumbnails under it */
+  @media (max-width: 720px) {
+    .cases {
+      padding: 96px var(--gutter);
+    }
+    .cases__body {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+    .cases__stage {
+      order: -1;
+    }
+    .cases__list {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+      border-top: 0;
+    }
+    .cases__item {
+      display: block;
+      padding: 0;
+      border-bottom: 0;
+    }
+    .cases__n,
+    .cases__label {
+      display: none;
+    }
+    .cases__thumb {
+      display: block;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  /* The stage shows one case at a time and steps through its photos every
+     3 s, then on to the next case. A click picks a case. It stands still for
+     visitors who prefer reduced motion, while the pointer or focus is on the
+     section, and while it is off screen. */
+  const section = document.getElementById("cases");
+  const items = [...document.querySelectorAll<HTMLButtonElement>("[data-case-go]")];
+  const sets = [...document.querySelectorAll<HTMLElement>("[data-case-set]")];
+  const STEP = 3000;
+
+  let active = 0;
+  let shot = 0;
+  let timer = 0;
+  let onScreen = false;
+  let held = false;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  const shotsOf = (i: number) => [...sets[i].querySelectorAll<HTMLImageElement>("img")];
+
+  /** A case's photos are only fetched once it is about to show. */
+  function load(i: number) {
+    shotsOf(i).forEach((img) => {
+      if (!img.dataset.src) return;
+      if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+      delete img.dataset.srcset;
+    });
+  }
+
+  function show(i: number, k: number) {
+    load(i);
+    if (i !== active) {
+      sets[active].classList.remove("is-on");
+      sets[i].classList.add("is-on");
+      items.forEach((b, n) => {
+        b.classList.toggle("is-on", n === i);
+        b.setAttribute("aria-pressed", String(n === i));
+      });
+      active = i;
+    }
+    shotsOf(i).forEach((img, n) => img.classList.toggle("is-on", n === k));
+    shot = k;
+    // Get the next case ready while this one plays
+    load((i + 1) % sets.length);
+  }
+
+  function tick() {
+    const total = shotsOf(active).length;
+    if (shot + 1 < total) show(active, shot + 1);
+    else show((active + 1) % sets.length, 0);
+  }
+
+  function run() {
+    clearInterval(timer);
+    if (onScreen && !held && !still.matches) timer = window.setInterval(tick, STEP);
+  }
+
+  items.forEach((b) =>
+    b.addEventListener("click", () => {
+      show(Number(b.dataset.caseGo), 0);
+      run();
+    })
+  );
+
+  if (section) {
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      run();
+    }).observe(section);
+    section.addEventListener("pointerenter", () => ((held = true), run()));
+    section.addEventListener("pointerleave", () => ((held = false), run()));
+    section.addEventListener("focusin", () => ((held = true), run()));
+    section.addEventListener("focusout", () => ((held = false), run()));
+  }
+  still.addEventListener("change", run);
+</script>

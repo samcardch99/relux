@@ -12,6 +12,9 @@ import Navbar from "./Navbar.astro";
 import WhatsApp from "./WhatsApp.astro";
 import Hero from "./Hero.astro";
 import Story from "./Story.astro";
+import Family from "./Family.astro";
+import Workshop from "./Workshop.astro";
+import Cases from "./Cases.astro";
 import Services from "./Services.astro";
 import Materials from "./Materials.astro";
 import Projects from "./Projects.astro";
@@ -64,9 +67,12 @@ const viewsAttrs = home ? {} : { "data-standalone": "" };
         <main>
           <Hero />
           <Story />
+          <Family />
           <Services />
           <Materials />
+          <Workshop />
           <Projects />
+          <Cases />
           <Process />
           <Reviews />
           <CTA />

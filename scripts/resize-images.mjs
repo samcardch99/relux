@@ -16,6 +16,8 @@ import path from "node:path";
 import sharp from "sharp";
 
 const WIDTHS = [800, 1200];
+/** Las fotos de los casos salen tambien como miniaturas en su lista (Cases.astro). */
+const THUMB = 160;
 const SRC = "public/assets";
 const OUT = path.join(SRC, "w");
 const MANIFEST = "src/data/image-widths.json";
@@ -36,7 +38,7 @@ for (const name of (await readdir(SRC)).sort()) {
   if (!/\.(webp|jpe?g|png)$/i.test(name) || name.startsWith("mask-")) continue;
   const file = path.join(SRC, name);
   const { width } = await sharp(file).metadata();
-  const widths = WIDTHS.filter((w) => w < width * 0.85);
+  const widths = [...(name.startsWith("cs-") ? [THUMB] : []), ...WIDTHS].filter((w) => w < width * 0.85);
   if (!widths.length) continue;
 
   const mtime = (await stat(file)).mtimeMs;

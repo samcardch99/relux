@@ -1,0 +1,159 @@
+---
+import { responsive } from "../data/images";
+import { COPY, IMG } from "../data/copy";
+import ArrowUpRight from "./icons/ArrowUpRight.astro";
+
+const en = COPY.en;
+const POINTS = [
+  { n: "01", t: "cnA1T", d: "cnA1D" },
+  { n: "02", t: "cnA2T", d: "cnA2D" },
+  { n: "03", t: "cnA3T", d: "cnA3D" },
+] as const;
+---
+
+<section class="cnc" id="cnc">
+  <div class="media cnc__photo">
+    <img
+      {...responsive(IMG.cncHome, "(max-width: 720px) 100vw, 60vw")}
+      alt={en.altMachine}
+      data-i18n-alt="altMachine"
+      loading="lazy"
+    />
+  </div>
+
+  <div class="cnc__txt">
+    <p class="kicker cnc__kicker" data-i18n="cnKicker">{en.cnKicker}</p>
+    <h2 class="cnc__title">
+      <span data-i18n="cnTitle">{en.cnTitle}</span><br />
+      <em data-i18n="cnTitleEm">{en.cnTitleEm}</em>
+    </h2>
+    <p class="cnc__intro" data-i18n="cnIntro">{en.cnIntro}</p>
+
+    <ol class="cnc__points">
+      {
+        POINTS.map((p) => (
+          <li>
+            <span class="cnc__n">{p.n}</span>
+            <span class="cnc__point">
+              <span class="cnc__point-t" data-i18n={p.t}>{en[p.t]}</span>
+              <span class="cnc__point-d" data-i18n={p.d}>{en[p.d]}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+
+    <button type="button" class="btn btn--ghost cnc__btn" data-open="process">
+      <span data-i18n="cnBtn">{en.cnBtn}</span>
+      <ArrowUpRight />
+    </button>
+  </div>
+</section>
+
+<style>
+  .cnc {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: 64px;
+    align-items: center;
+    padding: 128px var(--gutter) 0;
+    background: var(--color-ink);
+  }
+
+  /* The render sits on a light studio backdrop */
+  .cnc__photo {
+    aspect-ratio: 8 / 5;
+    background: #e9e9e9;
+  }
+
+  .cnc__txt {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .cnc__kicker {
+    letter-spacing: 0.36em;
+  }
+  .cnc__title {
+    font-size: var(--fs-h2-sm);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--color-stone);
+    text-wrap: balance;
+  }
+  .cnc__title em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-cream);
+  }
+  .cnc__intro {
+    font-size: var(--fs-sm);
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgb(239 226 196 / 0.6);
+    text-wrap: pretty;
+  }
+
+  .cnc__points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid rgb(239 226 196 / 0.12);
+  }
+  .cnc__points li {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid rgb(239 226 196 / 0.12);
+  }
+  .cnc__n {
+    padding-top: 4px;
+    font-size: var(--fs-label);
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: var(--color-stone);
+  }
+  .cnc__point {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .cnc__point-t {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-cream);
+  }
+  .cnc__point-d {
+    font-size: var(--fs-sm);
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgb(239 226 196 / 0.6);
+    text-wrap: pretty;
+  }
+
+  .cnc__btn {
+    align-self: flex-start;
+  }
+
+  @media (max-width: 1080px) {
+    .cnc {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 32px;
+    }
+    .cnc__title {
+      font-size: 30px;
+    }
+  }
+  @media (max-width: 720px) {
+    .cnc {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+    .cnc__photo {
+      aspect-ratio: 16 / 10;
+      max-height: 40vh;
+    }
+  }
+</style>
