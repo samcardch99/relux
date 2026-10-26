@@ -685,10 +685,11 @@ export const PROJECTS = [
 ] as const;
 
 /**
- * The "Our work" view, in this order. Projects 2–5 and 7 (the photographed
- * ones) are off the site for now, and 8–9 had no project of their own.
+ * The "Our work" view, in this order. Projects 2–5 and 7 are real photos of
+ * finished work, so they lead and fill the homepage; the renders follow.
+ * 8–9 had no project of their own.
  */
-export const WORK = [0, 5, 11, 10, 12, 18, 9, 13, 17, 16, 15, 14].map((i) => PROJECTS[i]);
+export const WORK = [3, 1, 4, 2, 6, 0, 5, 11, 10, 12, 18, 9, 13, 17, 16, 15, 14].map((i) => PROJECTS[i]);
 
 /** The homepage shows the first six of them. */
 export const FEATURED = WORK.slice(0, 6);
