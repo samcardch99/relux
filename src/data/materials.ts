@@ -103,7 +103,7 @@ export const MATERIALS: Record<MaterialKey, Material> = {
   },
   glass: {
     index: "03",
-    swatch: "/assets/swatch-glass.webp",
+    swatch: "/assets/swatch-glass-ref.webp",
     labelKey: "matGlass",
     lift: true,
     en: {
@@ -150,7 +150,7 @@ export const BATH: Partial<Record<MaterialKey, Material>> = {
   wood: {
     index: "01",
     group: "wood",
-    swatch: "/assets/swatch-bath-wood.webp",
+    swatch: "/assets/swatch-m-wood.webp",
     labelKey: "matWood",
     lift: true,
     en: {
@@ -170,7 +170,7 @@ export const BATH: Partial<Record<MaterialKey, Material>> = {
   },
   onyx: {
     index: "02",
-    swatch: "/assets/swatch-bath-onyx.webp",
+    swatch: "/assets/swatch-m-marble.webp",
     labelKey: "matMarble",
     lift: true,
     en: {
@@ -190,7 +190,7 @@ export const BATH: Partial<Record<MaterialKey, Material>> = {
   },
   glass: {
     index: "03",
-    swatch: "/assets/swatch-bath-glass.webp",
+    swatch: "/assets/swatch-glass-ref.webp",
     labelKey: "matGlass",
     lift: true,
     en: {
@@ -210,7 +210,7 @@ export const BATH: Partial<Record<MaterialKey, Material>> = {
   },
   floor: {
     index: "04",
-    swatch: "/assets/swatch-bath-floor.webp",
+    swatch: "/assets/swatch-m-floor.webp",
     labelKey: "matFloor",
     lift: false,
     en: {
