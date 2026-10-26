@@ -22,11 +22,11 @@ const MENU = [
 ---
 
 <header class="nav" id="site-nav">
-  <a href="#top" class="nav__logo" aria-label="RE-LUX Construction — home">
+  <a href="#top" class="nav__logo" aria-label="RE-LUX Construction — home" data-i18n-label="lblHome">
     <Logo class="nav__logo-mark" />
   </a>
 
-  <nav class="nav__menu" aria-label="Main">
+  <nav class="nav__menu" aria-label="Main" data-i18n-label="lblMain">
     <a href="#services" data-i18n="navServices">Services</a>
     <a href={paths.work} data-open="work" data-i18n="navProjects">Work</a>
     <a href={paths.about} data-open="about" data-i18n="navAbout">About</a>
@@ -34,7 +34,7 @@ const MENU = [
   </nav>
 
   <div class="nav__right">
-    <div class="lang" role="group" aria-label="Language">
+    <div class="lang" role="group" aria-label="Language" data-i18n-label="lblLanguage">
       <a href={langHref("en")} hreflang="en" lang="en" class:list={["lang__btn", { "is-active": lang === "en" }]} data-lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a>
       <span class="lang__sep" aria-hidden="true"></span>
       <a href={langHref("es")} hreflang="es" lang="es" class:list={["lang__btn", { "is-active": lang === "es" }]} data-lang="es" aria-current={lang === "es" ? "page" : undefined}>ES</a>
@@ -72,7 +72,7 @@ const MENU = [
      burger stays in place as the close button. -->
 <div class="sheet" id="nav-sheet" hidden>
   <span class="sheet__edge" aria-hidden="true"></span>
-  <nav class="sheet__nav" aria-label="Main">
+  <nav class="sheet__nav" aria-label="Main" data-i18n-label="lblMain">
     {
       MENU.map((m, i) => (
         <a href={m.href} data-open={"open" in m ? m.open : undefined} style={`--i:${i}`}>
@@ -86,7 +86,7 @@ const MENU = [
   </nav>
 
   <div class="sheet__foot">
-    <div class="lang sheet__lang" role="group" aria-label="Language">
+    <div class="lang sheet__lang" role="group" aria-label="Language" data-i18n-label="lblLanguage">
       <a href={langHref("en")} hreflang="en" lang="en" class:list={["lang__btn", { "is-active": lang === "en" }]} data-lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a>
       <span class="lang__sep" aria-hidden="true"></span>
       <a href={langHref("es")} hreflang="es" lang="es" class:list={["lang__btn", { "is-active": lang === "es" }]} data-lang="es" aria-current={lang === "es" ? "page" : undefined}>ES</a>

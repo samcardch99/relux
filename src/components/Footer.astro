@@ -8,7 +8,7 @@ const primary = FOUNDERS[0];
 <footer class="footer">
   <span class="footer__copy" data-i18n="footerCopy">{en.footerCopy}</span>
 
-  <nav class="footer__links" aria-label="Footer">
+  <nav class="footer__links" aria-label="Footer" data-i18n-label="lblFooter">
     <a href={PRIVACY_PATH[langOfPath(Astro.url.pathname)]} data-i18n="footerPrivacy">Privacy</a>
     <a href={INSTAGRAM.url} target="_blank" rel="noopener">Instagram</a>
     <a href={`mailto:${EMAIL}`}>{EMAIL}</a>

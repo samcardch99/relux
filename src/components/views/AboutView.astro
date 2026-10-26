@@ -22,7 +22,7 @@ const founderPhotos = [IMG.founder1, IMG.founder2];
 const founderFocus = [FOCUS.founder1, undefined];
 ---
 
-<div class="view" id="view-about" role="dialog" aria-modal="true" aria-label="About RE-LUX" hidden={!open}>
+<div class="view" id="view-about" role="dialog" aria-modal="true" aria-label="About RE-LUX" data-i18n-label="viewAbout" hidden={!open}>
   <div class="view__bar">
     <button type="button" class="btn btn--ghost btn--back" data-close="about">
       <ArrowBack />
@@ -43,6 +43,7 @@ const founderFocus = [FOCUS.founder1, undefined];
     <img
       {...responsive(IMG.ownersWide)}
       alt="The RE-LUX team"
+      data-i18n-alt="altTeam"
       loading="lazy"
       style={`object-position:${FOCUS.ownersWide}`}
     />

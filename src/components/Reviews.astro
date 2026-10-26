@@ -43,7 +43,13 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
               {en.revKicker}
             </span>
             <span class="reviews__num">{nota}</span>
-            <span class="reviews__stars" aria-label={`${nota} out of 5`} role="img">
+            <span
+              class="reviews__stars"
+              aria-label={`${nota} out of 5`}
+              data-i18n-label="lblStars"
+              data-n={nota}
+              role="img"
+            >
               {[0, 1, 2, 3, 4].map((i) => (
                 <span class={i < llenas ? "" : "is-empty"}>★</span>
               ))}
@@ -110,6 +116,8 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
                   class="reviews__bar"
                   data-rev-go={n}
                   aria-label={`Review ${pad(n + 1)}`}
+                  data-i18n-label="lblReview"
+                  data-n={pad(n + 1)}
                   aria-controls="review-text"
                 >
                   <span class="reviews__bar-track">
@@ -124,6 +132,7 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
                 class="reviews__arrow"
                 id="review-prev"
                 aria-label="Previous review"
+                data-i18n-label="lblPrevReview"
                 aria-controls="review-text"
               >
                 <svg
@@ -146,6 +155,7 @@ const tramo = (n: number) => (n > 460 ? "is-xl" : n > 260 ? "is-l" : "");
                 class="reviews__arrow"
                 id="review-next"
                 aria-label="Next review"
+                data-i18n-label="lblNextReview"
                 aria-controls="review-text"
               >
                 <svg

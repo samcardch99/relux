@@ -102,7 +102,7 @@ export default function ContactForm({ lang: pageLang = "en" }) {
 
   return (
     <>
-      <Toaster position="bottom-right" theme="dark" />
+      <Toaster position="bottom-right" theme="dark" containerAriaLabel={t.lblNotifications} />
 
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="form" noValidate>
         <div className="form__row">

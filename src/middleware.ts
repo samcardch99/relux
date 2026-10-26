@@ -1,9 +1,9 @@
 /**
  * Builds the Spanish pages (/es/…) out of the same components as the English
  * ones. Every translatable text in the markup carries its COPY key
- * (data-i18n, data-i18n-alt, data-i18n-ph), so here they are swapped for the
- * Spanish copy before the page is written, and search engines read each
- * language at its own address. The browser doesn't redo it: the language
+ * (data-i18n, data-i18n-alt, data-i18n-ph, data-i18n-label), so here they are
+ * swapped for the Spanish copy before the page is written, and search engines
+ * read each language at its own address. The browser doesn't redo it: the language
  * toggle loads the page in the other language. Text the components render
  * without a key (project details, titles, JSON-LD) is chosen by language where
  * it is built.
@@ -16,7 +16,7 @@ const ES = COPY.es as unknown as Record<string, string>;
 const escapeText = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const escapeAttr = (s: string) => escapeText(s).replace(/"/g, "&quot;");
 
-/** Elements holding only text, as applyLang requires (it sets textContent). */
+/** Elements holding only text: their content is replaced whole. */
 const TEXT = /(<([a-z0-9-]+)\b[^>]*?\sdata-i18n="([^"]+)"[^>]*>)([^<]*)(<\/\2>)/gi;
 const N = /\sdata-n="([^"]*)"/;
 
@@ -28,6 +28,15 @@ function toSpanish(html: string) {
       if (typeof value !== "string") return all;
       const n = open.match(N)?.[1];
       return open + escapeText(n ? value.replace("{n}", n) : value) + close;
+    })
+    // aria-label on any element, `{n}` filled from its data-n
+    .replace(/<[a-z][^>]*\sdata-i18n-label="[^"]+"[^>]*>/gi, (tag) => {
+      const key = tag.match(/\sdata-i18n-label="([^"]+)"/)![1];
+      const value = ES[key];
+      if (typeof value !== "string") return tag;
+      const n = tag.match(N)?.[1];
+      const label = escapeAttr(n ? value.replace("{n}", n) : value);
+      return tag.replace(/\saria-label="[^"]*"/, ` aria-label="${label}"`);
     })
     .replace(/<(img|input|textarea)\b[^>]*>/gi, (tag) =>
       tag
