@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import { siteGraph } from "../data/schema";
-import { counterpartPath, langOfPath } from "../data/copy";
+import { counterpartPath, langOfPath, metaDescription } from "../data/copy";
 
 interface Props {
   title?: string;
@@ -28,6 +28,8 @@ const {
   ogType = "website",
 } = Astro.props;
 
+/** What search results show under the title, trimmed to fit. */
+const metaDesc = metaDescription(description);
 const url = new URL(Astro.url.pathname, Astro.site);
 const lang = langOfPath(Astro.url.pathname);
 /** Both language versions of this page, for search engines (none on the 404). */
@@ -50,9 +52,9 @@ const imageUrl = new URL(image, Astro.site);
     <meta name="generator" content={Astro.generator} />
 
     <title>{title}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={metaDesc} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={metaDesc} />
     <meta property="og:type" content={ogType} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:url" content={url} />

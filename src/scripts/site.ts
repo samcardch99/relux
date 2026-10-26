@@ -10,6 +10,7 @@ import {
   WORK,
   counterpartPath,
   projectPath,
+  projectTitle,
   type Lang,
 } from "../data/copy";
 import { SIZES, srcsetFor } from "../data/images";
@@ -547,7 +548,7 @@ function titleFor({ views, project }: Route) {
   if (!top) return PAGE_TITLES[lang].home;
   if (top === "detail") {
     const t = COPY[lang] as unknown as Record<string, string>;
-    return project === null ? SITE_NAME : `${t[PROJECTS[project].titleKey]} — ${SITE_NAME}`;
+    return project === null ? SITE_NAME : projectTitle(t[PROJECTS[project].titleKey], lang);
   }
   return PAGE_TITLES[lang][top];
 }

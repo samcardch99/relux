@@ -329,7 +329,7 @@ export const COPY = {
     navProjects: "Trabajos",
     navAbout: "Nosotros",
     navProcess: "Proceso",
-    navQuote: "Pedir Presupuesto",
+    navQuote: "Pedir cotización",
 
     heroEyebrow: "Construcción de lujo en Miami",
     heroTitle: "DISEÑO Y OBRA",
@@ -345,7 +345,7 @@ export const COPY = {
       "Interiores, pisos, baños, paredes y acabados, más la carpintería que fabricamos nosotros mismos: cocinas, closets, TV walls y wall panels.",
     s1Title: "Cocinas",
     s1Desc:
-      "Carpintería fabricada en nuestro propio taller, encimeras en piedra e iluminación integrada, ajustadas al espacio al milímetro.",
+      "Carpintería fabricada en nuestro propio taller, topes de piedra e iluminación integrada, ajustados al espacio al milímetro.",
     s2Title: "Closets y Wall Panels",
     s2Desc:
       "Walk-in closets, TV walls y paneles de madera diseñados como una sola pieza continua.",
@@ -431,7 +431,7 @@ export const COPY = {
     workBack: "Volver",
     workFoot:
       "¿Tienes un espacio en mente? Envíanos las medidas y te respondemos con un diseño y un precio.",
-    workCta: "Pedir Presupuesto",
+    workCta: "Pedir cotización",
 
     detailFoot:
       "¿Quieres algo así en tu espacio? Envíanos las medidas y te respondemos con un diseño y un precio.",
@@ -488,9 +488,9 @@ export const COPY = {
     aboutP2:
       "Trabajamos en todo Miami, en casas y negocios: remodelación interior completa, pisos, paredes, baños, carpintería de acabado y pintura, y obra comercial como la madera, el cuarzo y la cristalería de The Perry Marina en Key West o la clínica Miami Hair Transplant. Cada trabajo empieza con planos, renders en 3D y muestras de materiales, para que apruebes exactamente lo que se va a construir antes de demoler nada.",
     aboutP3:
-      "El resultado es lo que hace que nuestros clientes vuelvan: ideas únicas, ejecución limpia y un espacio terminado que se lee como lujo, elegancia y durabilidad, no como una reforma rápida.",
+      "El resultado es lo que hace que nuestros clientes vuelvan: ideas únicas, ejecución limpia y un espacio terminado que se lee como lujo, elegancia y durabilidad, no como una remodelación rápida.",
     aboutFoot:
-      "Cuéntanos cómo es el espacio y te respondemos con planos, materiales y un presupuesto claro y gratuito.",
+      "Cuéntanos cómo es el espacio y te respondemos con planos, materiales y una cotización clara y gratuita.",
 
     v1Title: "Precisión técnica",
     v1Desc:
@@ -565,7 +565,7 @@ export const COPY = {
     baHint: "Arrastra para comparar",
     baBefore: "Antes",
     baAfter: "Después",
-    vidTitle: "Vídeo del proyecto",
+    vidTitle: "Video del proyecto",
     lbGallery: "Fotos del proyecto",
     lbClose: "Cerrar",
     lbPrev: "Foto anterior",
@@ -890,6 +890,18 @@ export const PAGE_TITLES = {
     privacy: `Política de privacidad — ${SITE_NAME}`,
   },
 } as const;
+
+/** A project page's tab title: the project, where, and the company. */
+export const projectTitle = (title: string, lang: Lang) =>
+  `${title} ${lang === "es" ? "en" : "in"} Miami — ${SITE_NAME}`;
+
+/** Search results cut descriptions at about 160 characters: past that, end at a
+ *  word with an ellipsis instead of mid-word. */
+export function metaDescription(text: string, max = 158) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  return `${cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:—–-]\s*$/, "")}…`;
+}
 
 /** Homepage description, the one search results show under the title. */
 export const HOME_DESCRIPTION = {
@@ -1394,7 +1406,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       summary:
         "Un baño principal construido como una sola pieza de carpintería en nogal: marco de techo iluminado, tres espejos retroiluminados, lavabos de ónix y vitrinas de cristal a ambos lados.",
       paras: [
-        "La pared del lavabo va enmarcada en nogal con canales LED cortados en el panel del techo, así la luz sigue la línea de la carpintería en lugar de salir de lámparas. La encimera baja en dos niveles y flota sobre un zócalo iluminado.",
+        "La pared del lavabo va enmarcada en nogal con canales LED cortados en el panel del techo, así la luz sigue la línea de la carpintería en lugar de salir de lámparas. El tope baja en dos niveles y flota sobre un zócalo iluminado.",
         "La ducha walk-in va revestida de piso a techo en porcelánico gran formato efecto ónix, con un nicho iluminado a lo largo de toda la pared, rociador de techo en latón cepillado y columna termostática.",
       ],
       meta: [["Alcance", "Baño principal"], ["Materiales", "Nogal, ónix, latón cepillado"], ["Ubicación", "Miami, FL"]],
@@ -1424,7 +1436,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "La isla y la campana de piedra frente a la pared de nogal.",
         "La isla desde el extremo, con los muebles altos de nogal y la vitrina iluminada.",
         "Taburetes bajo el voladizo iluminado de la isla.",
-        "La columna de nogal con estantes de esquina y la encimera en cascada.",
+        "La columna de nogal con estantes de esquina y el tope en cascada.",
         "Estantería de nogal iluminada entre el salón y la cocina.",
       ],
     },
@@ -1432,7 +1444,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       summary:
         "Recepción y sala de espera para un wellness center en Miami, diseñadas alrededor de una pared protagonista en roble con nichos en verde petróleo y el logo retroiluminado en el centro.",
       paras: [
-        "La pared se construyó con módulos de roble escalonados, tiras LED empotradas, nichos abiertos de exhibición y fondos en verde petróleo que enmarcan el logo. El mostrador de recepción repite el mismo roble con un lateral curvo y una encimera en verde petróleo.",
+        "La pared se construyó con módulos de roble escalonados, tiras LED empotradas, nichos abiertos de exhibición y fondos en verde petróleo que enmarcan el logo. El mostrador de recepción repite el mismo roble con un lateral curvo y un tope en verde petróleo.",
         "Al otro lado, una segunda pared de carpintería en roble reúne estantes abiertos iluminados, un mueble bajo con puertas de cristal enmarcadas en bronce y un panel para la pantalla, con zona de espera para los clientes.",
       ],
       meta: [["Alcance", "Recepción y sala de espera"], ["Materiales", "Laminado roble, laca verde petróleo, cristal bronce"], ["Ubicación", "Miami, FL"]],
@@ -1536,7 +1548,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       meta: [["Alcance", "Cocina y banco de ventana"], ["Materiales", "Nogal, granito negro, cristal"]],
       captions: [
         "La cubierta de granito de la isla desde arriba.",
-        "La encimera de granito junto a la ventana.",
+        "El tope de granito junto a la ventana.",
         "La estación de café contra el salpicadero de granito.",
         "El banco bajo la ventana, enmarcado en nogal.",
         "El banco junto al mueble bar de cristal iluminado.",
@@ -1547,7 +1559,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "Una academia de belleza con recepción, sala de espera, filas de puestos de peinado y zona de lavado, todo en roble claro con detalles en blanco y negro.",
       paras: [
         "El mostrador de recepción y la pared de detrás son de roble con extremos curvos y zócalo iluminado, junto al logo de la academia y un espejo ovalado alto. La sala de espera es un banco curvo de roble bajo un rótulo retroiluminado.",
-        "Cada puesto de peinado es una encimera larga de roble con espejos ovalados altos y sillones negros, separada por columnas de roble iluminadas para productos. Un techo de lamas negras con líneas LED recorre todo el local.",
+        "Cada puesto de peinado es un tope largo de roble con espejos ovalados altos y sillones negros, separado por columnas de roble iluminadas para productos. Un techo de lamas negras con líneas LED recorre todo el local.",
       ],
       meta: [["Alcance", "Interior comercial"], ["Materiales", "Roble, piedra, techo de lamas negras"]],
       captions: [
@@ -1560,7 +1572,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
         "El logo, el espejo ovalado y la recepción.",
         "Placas de roble a lo largo de la pared curva.",
         "Puestos entre las columnas de exhibición de roble.",
-        "Detalle de una encimera de peinado.",
+        "Detalle de un tope de peinado.",
       ],
     },
     {
@@ -1583,7 +1595,7 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       summary:
         "Un baño en piedra gris y roble claro, con un lavabo doble largo, espejos en arco retroiluminados y un marco de techo iluminado.",
       paras: [
-        "La piedra gris reviste las paredes, y un marco de roble con una línea LED envuelve el lavabo desde el techo. La encimera es de mármol blanco con dos lavabos de madera sobre encimera, y se prolonga en un tocador en un extremo.",
+        "La piedra gris reviste las paredes, y un marco de roble con una línea LED envuelve el lavabo desde el techo. El tope es de mármol blanco con dos lavabos de madera sobre el tope, y se prolonga en un tocador en un extremo.",
         "Frente al lavabo, unos estantes abiertos de roble guardan toallas y cestas, y llevan hasta la ducha walk-in al fondo del baño.",
       ],
       meta: [["Alcance", "Baño"], ["Materiales", "Piedra gris, roble, mármol"]],
