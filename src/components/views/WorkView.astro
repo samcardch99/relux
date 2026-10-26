@@ -43,7 +43,8 @@ const en = COPY.en;
   </div>
 
   <div class="grid-3 workview__grid">
-    {WORK.map((p) => <ProjectCard project={p} />)}
+    {/* At its own address the first row is what loads on screen */}
+    {WORK.map((p, i) => <ProjectCard project={p} priority={open && i < 3 ? (i === 0 ? "high" : "auto") : undefined} />)}
   </div>
 
   <div class="view__foot">

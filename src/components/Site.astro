@@ -39,9 +39,21 @@ const { view, project, title, description, image, jsonLd } = Astro.props;
 const home = !view;
 /** The work grid opens projects in place, so its page keeps the detail view. */
 const withDetail = home || view === "work" || view === "detail";
+/** At its own address the view is the page's main content; on the homepage the
+ *  views are overlays beside its <main>. `data-standalone` keeps site.ts from
+ *  taking this one for the homepage's. */
+const Views = home ? Fragment : "main";
+const viewsAttrs = home ? {} : { "data-standalone": "" };
 ---
 
-<Layout title={title} description={description} image={image} locked={!home} jsonLd={jsonLd}>
+<Layout
+  title={title}
+  description={description}
+  image={image}
+  locked={!home}
+  jsonLd={jsonLd}
+  ogType={view === "detail" ? "article" : "website"}
+>
   <Cursor />
   <Navbar />
   <WhatsApp />
@@ -67,9 +79,11 @@ const withDetail = home || view === "work" || view === "detail";
   }
 
   <!-- Full-screen views, opened from the grid and the About / Process buttons -->
-  {(home || view === "work") && <WorkView open={view === "work"} shareContact={home} />}
-  {(home || view === "about") && <AboutView open={view === "about"} shareContact={home} />}
-  {(home || view === "process") && <ProcessView open={view === "process"} shareContact={home} />}
-  {withDetail && <DetailView index={view === "detail" ? project : undefined} shareContact={view !== "detail"} />}
+  <Views {...viewsAttrs}>
+    {(home || view === "work") && <WorkView open={view === "work"} shareContact={home} />}
+    {(home || view === "about") && <AboutView open={view === "about"} shareContact={home} />}
+    {(home || view === "process") && <ProcessView open={view === "process"} shareContact={home} />}
+    {withDetail && <DetailView index={view === "detail" ? project : undefined} shareContact={view !== "detail"} />}
+  </Views>
   {withDetail && <ProjectLightbox />}
 </Layout>

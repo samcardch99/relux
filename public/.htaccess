@@ -20,6 +20,11 @@
   RewriteRule ^proceso/?$ /process/ [R=301,L]
   RewriteRule ^proyectos/(.*)$ /projects/$1 [R=301,L]
   RewriteRule ^privacidad/?$ /privacy/ [R=301,L]
+
+  # The project folders have no index of their own: send them to the gallery
+  # (otherwise the server answers 403 Forbidden)
+  RewriteRule ^projects/?$ /work/ [R=301,L]
+  RewriteRule ^es/proyectos/?$ /es/trabajos/ [R=301,L]
 </IfModule>
 
 # Unknown addresses get the site's own 404 page (src/pages/404.astro)
@@ -34,4 +39,17 @@ ErrorDocument 404 /404.html
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+</IfModule>
+
+# Caching. Pages revalidate on every visit, so a new deploy shows at once;
+# scripts and styles (Astro's bundles) carry a content hash in their name and
+# fonts never change,
+# so the browser can keep them for a year without asking.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "max-age=0, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
 </IfModule>

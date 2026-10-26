@@ -110,6 +110,8 @@ export default function ContactForm({ lang: pageLang = "en" }) {
             <span className="field-label">{t.labelFirst}</span>
             <input
               {...register("first_name")}
+              required
+              aria-invalid={errors.first_name ? "true" : undefined}
               type="text"
               placeholder={t.phFirst}
               className="input"
@@ -124,6 +126,8 @@ export default function ContactForm({ lang: pageLang = "en" }) {
             <span className="field-label">{t.labelLast}</span>
             <input
               {...register("last_name")}
+              required
+              aria-invalid={errors.last_name ? "true" : undefined}
               type="text"
               placeholder={t.phLast}
               className="input"
@@ -140,6 +144,8 @@ export default function ContactForm({ lang: pageLang = "en" }) {
             <span className="field-label">{t.labelEmail}</span>
             <input
               {...register("email")}
+              required
+              aria-invalid={errors.email ? "true" : undefined}
               type="email"
               placeholder={t.phEmail}
               className="input"
@@ -156,6 +162,7 @@ export default function ContactForm({ lang: pageLang = "en" }) {
             </span>
             <input
               {...register("phone")}
+              aria-invalid={errors.phone ? "true" : undefined}
               type="tel"
               inputMode="tel"
               placeholder={t.phPhone}
@@ -170,7 +177,13 @@ export default function ContactForm({ lang: pageLang = "en" }) {
 
         <label className="field">
           <span className="field-label">{t.labelService}</span>
-          <select {...register("service")} className="input input--select" defaultValue="">
+          <select
+            {...register("service")}
+            required
+            aria-invalid={errors.service ? "true" : undefined}
+            className="input input--select"
+            defaultValue=""
+          >
             <option value="" disabled>
               {t.phService}
             </option>
@@ -189,6 +202,8 @@ export default function ContactForm({ lang: pageLang = "en" }) {
           <span className="field-label">{t.labelMessage}</span>
           <textarea
             {...messageProps}
+            required
+            aria-invalid={errors.message ? "true" : undefined}
             ref={(el) => {
               registerMessageRef(el);
               textareaRef.current = el;

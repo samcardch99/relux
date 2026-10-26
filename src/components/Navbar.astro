@@ -1,9 +1,14 @@
 ---
 import Logo from "./icons/Logo.astro";
-import { COPY, FOUNDERS, INSTAGRAM, VIEW_PATHS, langOfPath } from "../data/copy";
+import { COPY, FOUNDERS, HOME_PATH, INSTAGRAM, VIEW_PATHS, counterpartPath, langOfPath, type Lang } from "../data/copy";
 
 const en = COPY.en;
-const paths = VIEW_PATHS[langOfPath(Astro.url.pathname)];
+const lang = langOfPath(Astro.url.pathname);
+/** EN / ES are links to this page in each language (crawlable; site.ts keeps
+ *  an open view or project when the visitor switches). */
+const langHref = (l: Lang) =>
+  l === lang ? Astro.url.pathname : (counterpartPath(Astro.url.pathname) ?? HOME_PATH[l]);
+const paths = VIEW_PATHS[lang];
 const primary = FOUNDERS[0];
 
 /* Work, About and Process open their own full-screen views (at their own
@@ -30,9 +35,9 @@ const MENU = [
 
   <div class="nav__right">
     <div class="lang" role="group" aria-label="Language">
-      <button type="button" class="lang__btn is-active" data-lang="en">EN</button>
+      <a href={langHref("en")} hreflang="en" lang="en" class:list={["lang__btn", { "is-active": lang === "en" }]} data-lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a>
       <span class="lang__sep" aria-hidden="true"></span>
-      <button type="button" class="lang__btn" data-lang="es">ES</button>
+      <a href={langHref("es")} hreflang="es" lang="es" class:list={["lang__btn", { "is-active": lang === "es" }]} data-lang="es" aria-current={lang === "es" ? "page" : undefined}>ES</a>
     </div>
     <a href="#contact" class="btn btn--solid nav__cta" data-i18n="navQuote"
       >Get a Quote</a
@@ -82,9 +87,9 @@ const MENU = [
 
   <div class="sheet__foot">
     <div class="lang sheet__lang" role="group" aria-label="Language">
-      <button type="button" class="lang__btn is-active" data-lang="en">EN</button>
+      <a href={langHref("en")} hreflang="en" lang="en" class:list={["lang__btn", { "is-active": lang === "en" }]} data-lang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a>
       <span class="lang__sep" aria-hidden="true"></span>
-      <button type="button" class="lang__btn" data-lang="es">ES</button>
+      <a href={langHref("es")} hreflang="es" lang="es" class:list={["lang__btn", { "is-active": lang === "es" }]} data-lang="es" aria-current={lang === "es" ? "page" : undefined}>ES</a>
     </div>
     <a href="#contact" class="btn btn--solid sheet__cta" data-i18n="navQuote"
       >Get a Quote</a
@@ -185,6 +190,9 @@ const MENU = [
     gap: 10px;
   }
   .lang__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     appearance: none;
     border: 0;
     background: transparent;
@@ -448,6 +456,11 @@ const MENU = [
   }
   .sheet__lang {
     gap: 14px;
+  }
+  /* EN / ES in the phone menu: 44px tap targets around the small labels */
+  .sheet__lang .lang__btn {
+    min-width: 44px;
+    min-height: 44px;
   }
   .sheet__contact {
     display: flex;

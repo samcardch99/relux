@@ -1,8 +1,15 @@
 ---
 import { COPY, IMG } from "../data/copy";
+import { srcsetFor } from "../data/images";
 import { MATERIALS, regionsFor, type Scene } from "../data/materials";
 
 const en = COPY.en as unknown as Record<string, string>;
+
+/* The stage spans the column beside the 320px panel, full width on phones.
+   Every layer of a scene gets the same srcset and sizes, so all pick the same
+   file: the masks are sized to the stage, and only line up over the copy the
+   base shows. */
+const STAGE_SIZES = "(max-width: 1080px) 100vw, calc(100vw - 440px)";
 
 /* Both scenes are in the markup; CSS shows the kitchen above 720px and the
    bathroom below, and the script reads the same breakpoint. */
@@ -34,10 +41,12 @@ const tab = (key: "glass" | "floor") => ({
     <div class="materials__main">
       <div class="mat-stage" id="mat-stage">
         <picture>
-          <source media="(max-width: 720px)" srcset={IMG.materialBath} />
+          <source media="(max-width: 720px)" srcset={srcsetFor(IMG.materialBath) ?? IMG.materialBath} sizes={STAGE_SIZES} />
           <img
             class="mat-stage__base"
             src={IMG.materialKitchen}
+            srcset={srcsetFor(IMG.materialKitchen)}
+            sizes={STAGE_SIZES}
             alt="A RE-LUX interior, used to identify each material"
             draggable="false"
           />
@@ -62,7 +71,7 @@ const tab = (key: "glass" | "floor") => ({
                   class="mat-region__clip"
                   style={`mask-image:url(${r.maskSrc});-webkit-mask-image:url(${r.maskSrc})`}
                 >
-                  <img src={img} alt="" draggable="false" loading="lazy" />
+                  <img src={img} srcset={srcsetFor(img)} sizes={STAGE_SIZES} alt="" draggable="false" loading="lazy" />
                 </div>
               </div>
             ))

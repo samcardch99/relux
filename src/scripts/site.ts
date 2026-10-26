@@ -99,37 +99,13 @@ function goToLang(next: Lang, replace = false) {
   if (preferred && counterpartPath(location.pathname)) goToLang(preferred, true);
 }
 
-/** Fill in what the server can't: the pressed toggle, the WhatsApp greeting,
- *  the parts drawn in the browser (project detail, reviews) and the form. */
+/** On load, fill in what the server can't: the WhatsApp greeting, the parts drawn in the browser (project detail, reviews) and the
+ *  form. Changing language loads the other page (goToLang). */
 function applyLang(next: Lang) {
-
+  // Keyed texts (data-i18n…) are already in the page's language, written by
+  // the server (middleware.ts): rewriting them here would repaint the hero
+  // and delay its first paint
   const t = COPY[next] as unknown as Record<string, string>;
-
-  document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
-    const value = t[el.dataset.i18n ?? ""];
-    if (typeof value !== "string") return;
-    // `{n}` lo rellena el propio nodo con su data-n (numero de reseñas de Google)
-    el.textContent = el.dataset.n
-      ? value.replace("{n}", el.dataset.n)
-      : value;
-  });
-
-  document.querySelectorAll<HTMLImageElement>("[data-i18n-alt]").forEach((img) => {
-    const value = t[img.dataset.i18nAlt ?? ""];
-    if (typeof value === "string") img.alt = value;
-  });
-
-  document
-    .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-i18n-ph]")
-    .forEach((el) => {
-      const value = t[el.dataset.i18nPh ?? ""];
-      if (typeof value === "string") el.placeholder = value;
-    });
-
-  document.querySelectorAll<HTMLElement>("[data-lang]").forEach((btn) => {
-    btn.classList.toggle("is-active", btn.dataset.lang === next);
-    btn.setAttribute("aria-pressed", String(btn.dataset.lang === next));
-  });
 
   // WhatsApp links open a chat with a greeting in the visitor's language
   document.querySelectorAll<HTMLAnchorElement>("[data-wa]").forEach((a) => {
@@ -148,10 +124,13 @@ function applyLang(next: Lang) {
   window.dispatchEvent(new CustomEvent("relux:lang", { detail: { lang: next } }));
 }
 
+// EN / ES are links to the page's counterpart; the script goes to the one
+// matching what is on screen now (an open view or project) instead
 document.querySelectorAll<HTMLElement>("[data-lang]").forEach((btn) => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", (event) => {
     const next = btn.dataset.lang;
     if (next !== "en" && next !== "es") return;
+    event.preventDefault();
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
@@ -849,6 +828,19 @@ function markScrolled() {
 }
 document.addEventListener("scroll", markScrolled, { capture: true, passive: true });
 markScrolled();
+
+/* The floating WhatsApp button steps aside while the contact section is on
+   screen: it would cover the form, and the section lists every way to reach
+   us anyway. The section moves into whichever view is open; the observer
+   follows the element. */
+{
+  const wa = document.querySelector<HTMLElement>(".wa");
+  if (wa && contactSection && "IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) => wa.classList.toggle("is-away", entry.isIntersecting), {
+      threshold: 0.15,
+    }).observe(contactSection);
+  }
+}
 
 /* Contact clicks reach Google Analytics as events, once it is enabled
    (Layout.astro); without it window.gtag doesn't exist and this does nothing.

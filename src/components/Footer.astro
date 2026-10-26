@@ -59,7 +59,13 @@ const primary = FOUNDERS[0];
       margin-top: 64px;
     }
     .footer__links {
-      gap: 16px 24px;
+      gap: 0 24px;
+    }
+    /* A 44px tap target per link; the extra height is empty space around it */
+    .footer__links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
     }
   }
 </style>

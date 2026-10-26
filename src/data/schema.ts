@@ -6,6 +6,7 @@
 import {
   COPY,
   DETAIL,
+  HOME_DESCRIPTION,
   HOME_PATH,
   EMAIL,
   FOUNDERS,
@@ -29,17 +30,20 @@ const MIAMI = {
   containedInPlace: { "@type": "State", name: "Florida" },
 };
 
-/** The business and the site; on every page. */
-export const siteGraph = {
+/**
+ * The business, the site and the page itself; on every page, in its language
+ * (the business keeps one @id across both, so it is one entity).
+ */
+export const siteGraph = (lang: Lang, path: string, title: string) => ({
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "GeneralContractor",
       "@id": ORG,
       name: "RE-LUX Construction",
-      url: `${SITE}/`,
-      description:
-        "Interior remodeling and custom woodwork for homes and businesses across Miami. Kitchens, closets, bathrooms and complete interiors, designed and built by our own team.",
+      url: abs(HOME_PATH[lang]),
+      description: HOME_DESCRIPTION[lang],
+      logo: abs("/logo-512.png"),
       image: abs("/assets/liz-1.webp"),
       email: EMAIL,
       telephone: FOUNDERS[0].tel,
@@ -61,7 +65,7 @@ export const siteGraph = {
       })),
       knowsLanguage: ["en", "es"],
       hasMap: REVIEWS_URL,
-      sameAs: [INSTAGRAM.url, REVIEWS_URL],
+      sameAs: [INSTAGRAM.url],
     },
     {
       "@type": "WebSite",
@@ -71,8 +75,17 @@ export const siteGraph = {
       inLanguage: ["en", "es"],
       publisher: { "@id": ORG },
     },
+    {
+      "@type": "WebPage",
+      "@id": `${abs(path)}#webpage`,
+      url: abs(path),
+      name: title,
+      inLanguage: lang,
+      isPartOf: { "@id": WEBSITE },
+      about: { "@id": ORG },
+    },
   ],
-};
+});
 
 /** The four services; homepage only, in its language. */
 export const servicesGraph = (lang: Lang) => ({

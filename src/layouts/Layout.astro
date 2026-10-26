@@ -14,6 +14,8 @@ interface Props {
   jsonLd?: object[];
   /** Keep the page out of search results (the 404). */
   noindex?: boolean;
+  /** Open Graph type: a project page is an "article", the rest the "website". */
+  ogType?: "website" | "article";
 }
 
 const {
@@ -23,6 +25,7 @@ const {
   locked = false,
   jsonLd = [],
   noindex = false,
+  ogType = "website",
 } = Astro.props;
 
 const url = new URL(Astro.url.pathname, Astro.site);
@@ -50,7 +53,8 @@ const imageUrl = new URL(image, Astro.site);
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:url" content={url} />
     <meta property="og:image" content={imageUrl} />
     <meta property="og:locale" content={lang === "es" ? "es_US" : "en_US"} />
@@ -65,7 +69,7 @@ const imageUrl = new URL(image, Astro.site);
     }
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={url} />}
     <meta name="theme-color" content="#060505" />
-    {[siteGraph, ...jsonLd].map((data) => (
+    {[siteGraph(lang, Astro.url.pathname, title), ...jsonLd].map((data) => (
       <script type="application/ld+json" set:html={JSON.stringify(data)} />
     ))}
 

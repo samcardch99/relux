@@ -119,6 +119,12 @@ const en = COPY.en;
     .contact {
       padding-top: 80px;
     }
+    /* Phone numbers and email are tapped: give each a 44px target */
+    a.contact__value {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
     .contact__inner {
       grid-template-columns: minmax(0, 1fr);
       gap: 48px;

@@ -42,6 +42,7 @@ const href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(t.waText)}`;
     transition:
       color 0.3s ease,
       border-color 0.3s ease,
+      opacity 0.3s ease,
       transform 0.3s ease;
   }
   .wa:hover {
@@ -57,6 +58,13 @@ const href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(t.waText)}`;
       width: 52px;
       height: 52px;
     }
+  }
+
+  /* Over the contact section (site.ts) */
+  .wa.is-away {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
   }
 
   /* The open phone menu carries its own contacts */

@@ -5,9 +5,11 @@ import ArrowRight from "./icons/ArrowRight.astro";
 
 interface Props {
   project: (typeof PROJECTS)[number];
+  /** On screen when the page loads: fetch now, the first one before anything else. */
+  priority?: "high" | "auto";
 }
 
-const { project } = Astro.props;
+const { project, priority } = Astro.props;
 const en = COPY.en;
 ---
 
@@ -17,7 +19,8 @@ const en = COPY.en;
       {...responsive(project.img, SIZES.card)}
       alt={en[project.titleKey]}
       data-i18n-alt={project.titleKey}
-      loading="lazy"
+      loading={priority ? "eager" : "lazy"}
+      fetchpriority={priority === "high" ? "high" : undefined}
       style={"focus" in project ? `object-position:${project.focus}` : undefined}
     />
   </div>

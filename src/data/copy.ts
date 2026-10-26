@@ -1,8 +1,9 @@
 export type Lang = "en" | "es";
 
 /**
- * Every visible string on the page, keyed so the client-side language
- * toggle can swap `[data-i18n]` nodes without a round trip.
+ * Every visible string on the page. Markup names its string with
+ * `data-i18n` (and -alt, -ph), so the Spanish pages are built by swapping
+ * those keys (src/middleware.ts).
  */
 export const COPY = {
   en: {
@@ -106,7 +107,7 @@ export const COPY = {
     workTitle: "All",
     workTitleEm: "Projects",
     workIntro:
-      "Every job here was designed, fabricated and installed by our own team — kitchens, closets, bathrooms and complete interiors across Miami.",
+      "Kitchens, closets, bathrooms and complete interiors across Miami, designed by our own team — finished projects alongside the 3D renders our clients approve before we build.",
     workBack: "Back",
     workFoot:
       "Have a space in mind? Send us the measurements and we will come back with a design and a price.",
@@ -374,7 +375,7 @@ export const COPY = {
     workTitle: "Todos los",
     workTitleEm: "Proyectos",
     workIntro:
-      "Cada trabajo aquí fue diseñado, fabricado e instalado por nuestro propio equipo: cocinas, closets, baños e interiores completos en todo Miami.",
+      "Cocinas, closets, baños e interiores completos en todo Miami, diseñados por nuestro propio equipo: obras terminadas junto a los renders en 3D que nuestros clientes aprueban antes de construir.",
     workBack: "Volver",
     workFoot:
       "¿Tienes un espacio en mente? Envíanos las medidas y te respondemos con un diseño y un precio.",

@@ -1,11 +1,12 @@
 /**
  * Builds the Spanish pages (/es/…) out of the same components as the English
  * ones. Every translatable text in the markup carries its COPY key
- * (data-i18n, data-i18n-alt, data-i18n-ph) — the same keys the language toggle
- * uses in the browser (applyLang in site.ts) — so here they are swapped for
- * the Spanish copy before the page is written, and search engines read each
- * language at its own address. Text the components render without a key
- * (project details, titles, JSON-LD) is chosen by language where it is built.
+ * (data-i18n, data-i18n-alt, data-i18n-ph), so here they are swapped for the
+ * Spanish copy before the page is written, and search engines read each
+ * language at its own address. The browser doesn't redo it: the language
+ * toggle loads the page in the other language. Text the components render
+ * without a key (project details, titles, JSON-LD) is chosen by language where
+ * it is built.
  */
 import { defineMiddleware } from "astro:middleware";
 import { COPY, langOfPath } from "./data/copy";
