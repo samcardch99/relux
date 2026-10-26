@@ -10,10 +10,11 @@ import { COPY } from "../data/copy.ts";
  *  same whichever language the visitor used; only the label is translated. */
 const SERVICE_KEYS = ["s1Title", "s2Title", "s3Title", "s4Title"];
 
-export default function ContactForm() {
+/** `lang` is the page's, so the server renders the form in it (Contact.astro). */
+export default function ContactForm({ lang: pageLang = "en" }) {
   const formRef = useRef(null);
   const textareaRef = useRef(null);
-  const [lang, setLang] = useState("en");
+  const [lang, setLang] = useState(pageLang);
   const [sent, setSent] = useState(false);
 
   // Follow the site-wide language toggle (see src/scripts/site.ts)

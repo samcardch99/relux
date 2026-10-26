@@ -1,0 +1,25 @@
+---
+/** A full-screen view at its own address, in either language. */
+import Site from "../Site.astro";
+import { COPY, IMG, PAGE_TITLES, SITE_NAME, type Lang } from "../../data/copy";
+import { viewSchema } from "../../data/schema";
+
+type View = "work" | "about" | "process";
+const { lang, view } = Astro.props as { lang: Lang; view: View };
+
+const t = COPY[lang];
+const META = {
+  work: { description: t.workIntro, image: IMG.liz[0] },
+  about: { description: t.aboutIntro, image: IMG.ownersWide },
+  process: { description: t.pxIntro, image: IMG.machineHero },
+} as const;
+const title = PAGE_TITLES[lang][view];
+---
+
+<Site
+  view={view}
+  jsonLd={[viewSchema(view, title.replace(` — ${SITE_NAME}`, ""), lang)]}
+  title={title}
+  description={META[view].description}
+  image={META[view].image}
+/>

@@ -1,6 +1,6 @@
 ---
 import { responsive, SIZES } from "../../data/images";
-import { COPY, DETAIL, PROJECTS, SHOTS } from "../../data/copy";
+import { COPY, DETAIL, PROJECTS, SHOTS, langOfPath } from "../../data/copy";
 import Contact from "../Contact.astro";
 import Footer from "../Footer.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
@@ -19,13 +19,15 @@ interface Props {
 }
 
 const { index, shareContact = false } = Astro.props;
-const en = COPY.en;
+/** Project text has no data-i18n keys, so it is picked by the page's language here. */
+const lang = langOfPath(Astro.url.pathname);
+const t = COPY[lang];
 const project = index === undefined ? undefined : PROJECTS[index];
-const entry = index === undefined ? undefined : DETAIL.en[index];
+const entry = index === undefined ? undefined : DETAIL[lang][index];
 const shots = index === undefined ? undefined : SHOTS[index];
 const hero = shots?.hero ?? "";
-const tag = project ? en[project.tagKey] : "";
-const title = project ? en[project.titleKey] : "";
+const tag = project ? t[project.tagKey] : "";
+const title = project ? t[project.titleKey] : "";
 /** A project loaded at its own address is the page: its title is the h1. */
 const Title = project ? "h1" : "h2";
 ---
@@ -88,16 +90,16 @@ const Title = project ? "h1" : "h2";
        photo (see SHOTS in src/data/copy.ts). -->
   <div class="ba" id="detail-ba" hidden>
     <div class="ba__head">
-      <h3 class="ba__title" data-i18n="baTitle">{en.baTitle}</h3>
-      <span class="ba__hint" data-i18n="baHint">{en.baHint}</span>
+      <h3 class="ba__title" data-i18n="baTitle">{t.baTitle}</h3>
+      <span class="ba__hint" data-i18n="baHint">{t.baHint}</span>
     </div>
     <div class="ba__stage media" id="ba-stage">
       <img id="ba-after" alt="" draggable="false" />
       <div class="ba__clip" id="ba-clip">
         <img id="ba-before" alt="" draggable="false" />
       </div>
-      <span class="ba__tag" data-i18n="baBefore">{en.baBefore}</span>
-      <span class="ba__tag ba__tag--after" data-i18n="baAfter">{en.baAfter}</span>
+      <span class="ba__tag" data-i18n="baBefore">{t.baBefore}</span>
+      <span class="ba__tag ba__tag--after" data-i18n="baAfter">{t.baAfter}</span>
       <div
         class="ba__handle"
         id="ba-handle"
@@ -123,7 +125,7 @@ const Title = project ? "h1" : "h2";
        portrait. site.ts sizes both columns so they share one height. -->
   <div class="vid" id="detail-vid" hidden>
     <div class="ba__head">
-      <h3 class="ba__title" data-i18n="vidTitle">{en.vidTitle}</h3>
+      <h3 class="ba__title" data-i18n="vidTitle">{t.vidTitle}</h3>
       <span class="ba__hint" id="detail-vid-tag">{tag}</span>
     </div>
     <div class="vid__row" id="detail-vid-row">
@@ -139,7 +141,7 @@ const Title = project ? "h1" : "h2";
   <div class="detail__shots" id="detail-shots"></div>
 
   <div class="view__foot detail__foot">
-    <p data-i18n="detailFoot">{en.detailFoot}</p>
+    <p data-i18n="detailFoot">{t.detailFoot}</p>
     <div class="detail__actions">
       <button type="button" class="btn btn--ghost" data-close="detail">
         <span data-i18n="detailBack">Back to projects</span>

@@ -1,6 +1,6 @@
 ---
 import ContactForm from "./ContactForm.jsx";
-import { COPY, EMAIL, FOUNDERS, INSTAGRAM } from "../data/copy";
+import { COPY, EMAIL, FOUNDERS, INSTAGRAM, langOfPath } from "../data/copy";
 
 interface Props {
   /** A copy at the end of a full-screen view: same section, no #contact anchor. */
@@ -56,7 +56,7 @@ const en = COPY.en;
     <div class="contact__form">
       {/* idle, not visible: the island carries its own translated labels, so
           it must hydrate before the visitor scrolls it into view */}
-      <ContactForm client:idle />
+      <ContactForm client:idle lang={langOfPath(Astro.url.pathname)} />
     </div>
   </div>
 </section>

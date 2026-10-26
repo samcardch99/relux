@@ -1,5 +1,5 @@
 ---
-import { COPY, EMAIL, FOUNDERS, INSTAGRAM } from "../data/copy";
+import { COPY, EMAIL, FOUNDERS, INSTAGRAM, PRIVACY_PATH, langOfPath } from "../data/copy";
 
 const en = COPY.en;
 const primary = FOUNDERS[0];
@@ -9,7 +9,7 @@ const primary = FOUNDERS[0];
   <span class="footer__copy" data-i18n="footerCopy">{en.footerCopy}</span>
 
   <nav class="footer__links" aria-label="Footer">
-    <a href="/privacidad/" data-i18n="footerPrivacy">Privacy</a>
+    <a href={PRIVACY_PATH[langOfPath(Astro.url.pathname)]} data-i18n="footerPrivacy">Privacy</a>
     <a href={INSTAGRAM.url} target="_blank" rel="noopener">Instagram</a>
     <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
     <a href={`tel:${primary.tel}`}>{primary.phone}</a>

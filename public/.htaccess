@@ -12,6 +12,14 @@
   RewriteCond %{HTTP_HOST} ^relux-construction\.com$ [NC]
   RewriteCond %{REQUEST_URI} ^/test(?:/(.*))?$
   RewriteRule ^ https://relux-construction.com/%1 [R=301,L]
+
+  # Until 2026-10-26 the English pages lived at Spanish paths; Spanish now
+  # has its own under /es/, so the old addresses move to their English pages
+  RewriteRule ^trabajos/?$ /work/ [R=301,L]
+  RewriteRule ^nosotros/?$ /about/ [R=301,L]
+  RewriteRule ^proceso/?$ /process/ [R=301,L]
+  RewriteRule ^proyectos/(.*)$ /projects/$1 [R=301,L]
+  RewriteRule ^privacidad/?$ /privacy/ [R=301,L]
 </IfModule>
 
 # Unknown addresses get the site's own 404 page (src/pages/404.astro)

@@ -1,0 +1,11 @@
+---
+import ProjectPage from "../../../components/pages/ProjectPage.astro";
+import { WORK } from "../../../data/copy";
+
+/** One page per project listed on the site; project 8 is left out with it. */
+export function getStaticPaths() {
+  return WORK.map((p) => ({ params: { slug: p.slug }, props: { index: p.i } }));
+}
+---
+
+<ProjectPage lang="es" index={Astro.props.index} />

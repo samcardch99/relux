@@ -1,4 +1,17 @@
-import { COPY, DETAIL, PROJECTS, SHOTS, VIEW_PATHS, WORK, projectPath, type Lang } from "../data/copy";
+import {
+  COPY,
+  DETAIL,
+  HOME_PATH,
+  PAGE_TITLES,
+  PROJECTS,
+  SHOTS,
+  SITE_NAME,
+  VIEW_PATHS,
+  WORK,
+  counterpartPath,
+  projectPath,
+  type Lang,
+} from "../data/copy";
 import { SIZES, srcsetFor } from "../data/images";
 
 const STORAGE_KEY = "relux:lang";
@@ -53,21 +66,42 @@ document.querySelectorAll("img").forEach(watchImage);
    Language
    ────────────────────────────────────────────── */
 
-function initialLang(): Lang {
+/* Each page is built in one language (English at the root, Spanish under
+   /es/), and <html lang> says which. The toggle loads the same page in the
+   other language and remembers the choice; a visitor who never chose, whose
+   browser is in Spanish, is taken to the Spanish page on arrival. */
+const lang: Lang = document.documentElement.lang === "es" ? "es" : "en";
+
+function preferredLang(): Lang | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "en" || stored === "es") return stored;
   } catch {
     /* storage unavailable — fall through to the navigator hint */
   }
-  return navigator.language?.toLowerCase().startsWith("es") ? "es" : "en";
+  return navigator.language?.toLowerCase().startsWith("es") ? "es" : null;
 }
 
-let lang: Lang = "en";
+/** Load the current page (view, project and section included) in `next`. */
+function goToLang(next: Lang, replace = false) {
+  if (next === lang) return false;
+  // A page with no counterpart (the 404) leads to the other language's homepage
+  const path = counterpartPath(location.pathname) ?? HOME_PATH[next];
+  const url = path + location.hash;
+  if (replace) location.replace(url);
+  else location.assign(url);
+  return true;
+}
 
+// Only pages with a counterpart: the 404 stays put, so the visitor sees it
+{
+  const preferred = preferredLang();
+  if (preferred && counterpartPath(location.pathname)) goToLang(preferred, true);
+}
+
+/** Fill in what the server can't: the pressed toggle, the WhatsApp greeting,
+ *  the parts drawn in the browser (project detail, reviews) and the form. */
 function applyLang(next: Lang) {
-  lang = next;
-  document.documentElement.lang = next;
 
   const t = COPY[next] as unknown as Record<string, string>;
 
@@ -110,12 +144,6 @@ function applyLang(next: Lang) {
   if (hasHome || stack.length) document.title = titleFor(current());
   labelMenu();
 
-  try {
-    localStorage.setItem(STORAGE_KEY, next);
-  } catch {
-    /* non-fatal: the toggle still works for this visit */
-  }
-
   // The contact form is a React island and re-reads its copy from this event.
   window.dispatchEvent(new CustomEvent("relux:lang", { detail: { lang: next } }));
 }
@@ -123,7 +151,13 @@ function applyLang(next: Lang) {
 document.querySelectorAll<HTMLElement>("[data-lang]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const next = btn.dataset.lang;
-    if (next === "en" || next === "es") applyLang(next);
+    if (next !== "en" && next !== "es") return;
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* non-fatal: the toggle still works for this visit */
+    }
+    goToLang(next);
   });
 });
 
@@ -510,42 +544,33 @@ let pendingOpen: ViewName | null = null;
 
 function pathFor({ views, project }: Route) {
   const top = views[views.length - 1];
-  if (!top) return "/";
-  if (top === "detail") return project === null ? "/" : projectPath(project);
-  return VIEW_PATHS[top];
+  if (!top) return HOME_PATH[lang];
+  if (top === "detail") return project === null ? HOME_PATH[lang] : projectPath(project, lang);
+  return VIEW_PATHS[lang][top];
 }
 
 function routeFromPath(path: string): Route {
   const p = path.endsWith("/") ? path : `${path}/`;
-  for (const name of Object.keys(VIEW_PATHS) as (keyof typeof VIEW_PATHS)[]) {
-    if (VIEW_PATHS[name] === p) return { views: [name], project: null };
+  const paths = VIEW_PATHS[lang];
+  for (const name of Object.keys(paths) as (keyof typeof paths)[]) {
+    if (paths[name] === p) return { views: [name], project: null };
   }
-  const slug = p.match(/^\/proyectos\/([^/]+)\/$/)?.[1];
+  const slug = p.match(/^\/(?:projects|es\/proyectos)\/([^/]+)\/$/)?.[1];
   const project = WORK.find((w) => w.slug === slug);
   return project ? { views: ["detail"], project: project.i } : { views: [], project: null };
 }
 
 const current = (): Route => ({ views: [...stack], project: openDetail });
 
-/** Tab titles, matching the <title> each page is built with (src/pages). */
-const SITE_TITLE = "RE-LUX Construction";
-const VIEW_TITLES = {
-  en: { work: "All projects", about: "About RE-LUX", process: "Our process" },
-  es: { work: "Todos los proyectos", about: "Sobre RE-LUX", process: "Nuestro proceso" },
-} as const;
-const HOME_TITLES = {
-  en: "Kitchen Remodeling & Custom Cabinets in Miami",
-  es: "Remodelación de cocinas y muebles a medida en Miami",
-} as const;
-
+/** Tab titles, matching the <title> each page is built with (PAGE_TITLES). */
 function titleFor({ views, project }: Route) {
   const top = views[views.length - 1];
-  if (!top) return `${HOME_TITLES[lang]} | ${SITE_TITLE}`;
+  if (!top) return PAGE_TITLES[lang].home;
   if (top === "detail") {
     const t = COPY[lang] as unknown as Record<string, string>;
-    return project === null ? SITE_TITLE : `${t[PROJECTS[project].titleKey]} — ${SITE_TITLE}`;
+    return project === null ? SITE_NAME : `${t[PROJECTS[project].titleKey]} — ${SITE_NAME}`;
   }
-  return `${VIEW_TITLES[lang][top]} — ${SITE_TITLE}`;
+  return PAGE_TITLES[lang][top];
 }
 
 function record(push: boolean, hash = "") {
@@ -588,7 +613,7 @@ function closeTop() {
     return;
   }
   if (!hasHome) {
-    location.assign("/");
+    location.assign(HOME_PATH[lang]);
     return;
   }
   closeView(stack[stack.length - 1]);
@@ -602,7 +627,7 @@ function closeTop() {
 function switchToView(name: ViewName) {
   // A view's page carries only the views it opens itself; any other loads its page
   if (!views[name] && name !== "detail") {
-    location.assign(VIEW_PATHS[name]);
+    location.assign(VIEW_PATHS[lang][name]);
     return;
   }
   if (depth > 0) {
@@ -626,7 +651,7 @@ function closeAllAndGo(id: string) {
     return;
   }
   if (!hasHome) {
-    location.assign(id ? `/#${id}` : "/");
+    location.assign(HOME_PATH[lang] + (id ? `#${id}` : ""));
     return;
   }
   closeAllViews();
@@ -639,7 +664,7 @@ window.addEventListener("popstate", (event) => {
   depth = state?.relux ? state.depth : 0;
   const route = state?.relux ? state : routeFromPath(location.pathname);
   if (!hasHome && (!route.views.length || pendingGoto !== null)) {
-    location.assign(pendingGoto ? `/#${pendingGoto}` : "/");
+    location.assign(HOME_PATH[lang] + (pendingGoto ? `#${pendingGoto}` : ""));
     return;
   }
   applyRoute(route);
@@ -966,4 +991,4 @@ if (revRoot && revList.length > 1) {
 
 /* ── Go ── */
 
-applyLang(initialLang());
+applyLang(lang);

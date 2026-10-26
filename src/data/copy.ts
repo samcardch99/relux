@@ -728,17 +728,69 @@ export const WORK = [3, 1, 4, 2, 6, 0, 5, 11, 10, 12, 18, 9, 13, 17, 16, 15, 14]
 export const FEATURED = WORK.slice(0, 6);
 
 /**
- * Each full-screen view has its own address, so it can be shared and the
- * browser's Back button closes it. Every path below is also built as a real
- * page (src/pages), which opens with that view already on screen.
+ * Every page exists in both languages: English at the root, Spanish under
+ * /es/ (src/pages and src/pages/es). Each full-screen view has its own
+ * address, so it can be shared and the browser's Back button closes it; every
+ * path below is also built as a real page, which opens with that view already
+ * on screen. Project slugs are the same in both languages.
  */
+export const HOME_PATH = { en: "/", es: "/es/" } as const;
+
 export const VIEW_PATHS = {
-  work: "/trabajos/",
-  about: "/nosotros/",
-  process: "/proceso/",
+  en: { work: "/work/", about: "/about/", process: "/process/" },
+  es: { work: "/es/trabajos/", about: "/es/nosotros/", process: "/es/proceso/" },
 } as const;
 
-export const projectPath = (index: number) => `/proyectos/${PROJECTS[index].slug}/`;
+export const PRIVACY_PATH = { en: "/privacy/", es: "/es/privacidad/" } as const;
+
+/** Tab titles, shared by the pages (src/pages) and site.ts, which retitles the
+ *  tab as views open and close. */
+export const SITE_NAME = "RE-LUX Construction";
+export const PAGE_TITLES = {
+  en: {
+    home: `Kitchen Remodeling & Custom Cabinets in Miami | ${SITE_NAME}`,
+    work: `All projects — ${SITE_NAME}`,
+    about: `About RE-LUX — ${SITE_NAME}`,
+    process: `Our process — ${SITE_NAME}`,
+    privacy: `Privacy policy — ${SITE_NAME}`,
+  },
+  es: {
+    home: `Remodelación de cocinas y muebles a medida en Miami | ${SITE_NAME}`,
+    work: `Todos los proyectos — ${SITE_NAME}`,
+    about: `Sobre RE-LUX — ${SITE_NAME}`,
+    process: `Nuestro proceso — ${SITE_NAME}`,
+    privacy: `Política de privacidad — ${SITE_NAME}`,
+  },
+} as const;
+
+/** Homepage description, the one search results show under the title. */
+export const HOME_DESCRIPTION = {
+  en: "Interior remodeling and custom woodwork for homes and businesses across Miami. Kitchens, closets, bathrooms and complete interiors, designed and built by our own team.",
+  es: "Remodelación de interiores y carpintería a medida para casas y negocios en Miami. Cocinas, closets, baños e interiores completos, diseñados y fabricados por nuestro propio equipo.",
+} as const;
+
+export const projectPath = (index: number, lang: Lang = "en") =>
+  `${lang === "es" ? "/es/proyectos/" : "/projects/"}${PROJECTS[index].slug}/`;
+
+/** The language a path belongs to. */
+export const langOfPath = (path: string): Lang => (/^\/es(\/|$)/.test(path) ? "es" : "en");
+
+/**
+ * The same page in the other language, or null for a path that has none
+ * (the 404). Used for the hreflang links and by the EN/ES toggle.
+ */
+export function counterpartPath(path: string): string | null {
+  const p = path.endsWith("/") ? path : `${path}/`;
+  const from = langOfPath(p);
+  const to: Lang = from === "es" ? "en" : "es";
+  if (p === HOME_PATH[from]) return HOME_PATH[to];
+  if (p === PRIVACY_PATH[from]) return PRIVACY_PATH[to];
+  for (const name of Object.keys(VIEW_PATHS[from]) as (keyof (typeof VIEW_PATHS)["en"])[]) {
+    if (VIEW_PATHS[from][name] === p) return VIEW_PATHS[to][name];
+  }
+  const project = PROJECTS.find((pr) => projectPath(pr.i, from) === p);
+  return project ? projectPath(project.i, to) : null;
+}
 
 /**
  * Hero + the gallery shown inside each project detail view.

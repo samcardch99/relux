@@ -6,6 +6,7 @@
 import {
   COPY,
   DETAIL,
+  HOME_PATH,
   EMAIL,
   FOUNDERS,
   INSTAGRAM,
@@ -15,12 +16,12 @@ import {
   VIEW_PATHS,
   WORK,
   projectPath,
+  type Lang,
 } from "./copy";
 
 const SITE = "https://relux-construction.com";
 const ORG = `${SITE}/#organization`;
 const WEBSITE = `${SITE}/#website`;
-const en = COPY.en;
 const abs = (path: string) => new URL(path, SITE).href;
 const MIAMI = {
   "@type": "City",
@@ -73,19 +74,22 @@ export const siteGraph = {
   ],
 };
 
-/** The four services; homepage only. */
-export const servicesGraph = {
+/** The four services; homepage only, in its language. */
+export const servicesGraph = (lang: Lang) => ({
   "@context": "https://schema.org",
   "@graph": SERVICES.map((s) => ({
     "@type": "Service",
-    "@id": `${SITE}/#service-${s.n}`,
-    name: en[s.titleKey],
-    description: en[s.descKey],
-    url: `${SITE}/#services`,
+    "@id": `${abs(HOME_PATH[lang])}#service-${s.n}`,
+    name: COPY[lang][s.titleKey],
+    description: COPY[lang][s.descKey],
+    url: `${abs(HOME_PATH[lang])}#services`,
+    inLanguage: lang,
     provider: { "@id": ORG },
     areaServed: MIAMI,
   })),
-};
+});
+
+const HOME_CRUMB = { en: "Home", es: "Inicio" } as const;
 
 const crumbs = (items: [string, string][]) => ({
   "@type": "BreadcrumbList",
@@ -98,35 +102,38 @@ const crumbs = (items: [string, string][]) => ({
 });
 
 /** Breadcrumbs for the work, about and process pages. */
-export const viewSchema = (view: keyof typeof VIEW_PATHS, name: string) => ({
+export const viewSchema = (view: keyof (typeof VIEW_PATHS)["en"], name: string, lang: Lang) => ({
   "@context": "https://schema.org",
   ...crumbs([
-    ["Home", "/"],
-    [name, VIEW_PATHS[view]],
+    [HOME_CRUMB[lang], HOME_PATH[lang]],
+    [name, VIEW_PATHS[lang][view]],
   ]),
 });
 
 /** Breadcrumbs and the photo gallery of one project page. */
-export const projectSchema = (index: number) => {
+export const projectSchema = (index: number, lang: Lang) => {
+  const t = COPY[lang];
   const project = WORK.find((p) => p.i === index)!;
-  const url = abs(projectPath(index));
-  const name = en[project.titleKey];
-  const location = DETAIL.en[index].meta.find(([k]) => k === "Location")?.[1];
+  const url = abs(projectPath(index, lang));
+  const name = t[project.titleKey];
+  // Meta labels are per language; the location row is the one naming a place
+  const location = DETAIL[lang][index].meta.find(([k]) => k === "Location" || k === "Ubicación")?.[1];
   return {
     "@context": "https://schema.org",
     "@graph": [
       crumbs([
-        ["Home", "/"],
-        ["All projects", VIEW_PATHS.work],
-        [name, projectPath(index)],
+        [HOME_CRUMB[lang], HOME_PATH[lang]],
+        [t.workTitle + " " + t.workTitleEm, VIEW_PATHS[lang].work],
+        [name, projectPath(index, lang)],
       ]),
       {
         "@type": "ImageGallery",
         "@id": `${url}#gallery`,
         url,
         name: `${name} — RE-LUX Construction`,
-        description: DETAIL.en[index].summary,
-        about: en[project.tagKey],
+        description: DETAIL[lang][index].summary,
+        about: t[project.tagKey],
+        inLanguage: lang,
         image: abs(SHOTS[index].hero),
         ...(location && { contentLocation: { "@type": "Place", name: location } }),
         creator: { "@id": ORG },

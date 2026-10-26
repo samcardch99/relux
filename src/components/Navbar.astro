@@ -1,17 +1,18 @@
 ---
 import Logo from "./icons/Logo.astro";
-import { COPY, FOUNDERS, INSTAGRAM, VIEW_PATHS } from "../data/copy";
+import { COPY, FOUNDERS, INSTAGRAM, VIEW_PATHS, langOfPath } from "../data/copy";
 
 const en = COPY.en;
+const paths = VIEW_PATHS[langOfPath(Astro.url.pathname)];
 const primary = FOUNDERS[0];
 
 /* Work, About and Process open their own full-screen views (at their own
    addresses); Services scrolls to its section of the homepage. */
 const MENU = [
-  { href: VIEW_PATHS.about, open: "about", key: "navAbout", label: en.navAbout },
+  { href: paths.about, open: "about", key: "navAbout", label: en.navAbout },
   { href: "#services", key: "navServices", label: en.navServices },
-  { href: VIEW_PATHS.work, open: "work", key: "navProjects", label: en.navProjects },
-  { href: VIEW_PATHS.process, open: "process", key: "navProcess", label: en.navProcess },
+  { href: paths.work, open: "work", key: "navProjects", label: en.navProjects },
+  { href: paths.process, open: "process", key: "navProcess", label: en.navProcess },
 ] as const;
 ---
 
@@ -22,9 +23,9 @@ const MENU = [
 
   <nav class="nav__menu" aria-label="Main">
     <a href="#services" data-i18n="navServices">Services</a>
-    <a href={VIEW_PATHS.work} data-open="work" data-i18n="navProjects">Work</a>
-    <a href={VIEW_PATHS.about} data-open="about" data-i18n="navAbout">About</a>
-    <a href={VIEW_PATHS.process} data-open="process" data-i18n="navProcess">Process</a>
+    <a href={paths.work} data-open="work" data-i18n="navProjects">Work</a>
+    <a href={paths.about} data-open="about" data-i18n="navAbout">About</a>
+    <a href={paths.process} data-open="process" data-i18n="navProcess">Process</a>
   </nav>
 
   <div class="nav__right">

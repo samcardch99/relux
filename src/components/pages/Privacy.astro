@@ -1,30 +1,33 @@
 ---
 /**
- * Privacy policy, in both languages: the article matching <html lang> shows
- * (the site's toggle sets it). Written from what the site actually collects —
- * keep it in step when that changes (a new form field, analytics, a pixel).
+ * Privacy policy, one language per page (src/pages/privacy.astro and
+ * es/privacidad.astro). Written from what the site actually collects — keep
+ * it in step when that changes (a new form field, analytics, a pixel).
  */
-import Layout from "../layouts/Layout.astro";
-import Cursor from "../components/Cursor.astro";
-import Navbar from "../components/Navbar.astro";
-import WhatsApp from "../components/WhatsApp.astro";
-import Footer from "../components/Footer.astro";
-import { EMAIL, FOUNDERS } from "../data/copy";
+import Layout from "../../layouts/Layout.astro";
+import Cursor from "../Cursor.astro";
+import Navbar from "../Navbar.astro";
+import WhatsApp from "../WhatsApp.astro";
+import Footer from "../Footer.astro";
+import { EMAIL, FOUNDERS, PAGE_TITLES, type Lang } from "../../data/copy";
+
+const { lang } = Astro.props as { lang: Lang };
+const DESCRIPTION = {
+  en: "How RE-LUX Construction collects, uses and protects the information you share through relux-construction.com.",
+  es: "Cómo RE-LUX Construction recoge, usa y protege la información que compartes a través de relux-construction.com.",
+};
 
 const UPDATED = { en: "October 26, 2026", es: "26 de octubre de 2026" };
 const phone = FOUNDERS[0];
 ---
 
-<Layout
-  title="Privacy policy — RE-LUX Construction"
-  description="How RE-LUX Construction collects, uses and protects the information you share through relux-construction.com."
->
+<Layout title={PAGE_TITLES[lang].privacy} description={DESCRIPTION[lang]}>
   <Cursor />
   <Navbar />
   <WhatsApp />
 
   <main class="legal" data-standalone>
-    <article lang="en">
+    {lang === "en" && (<article>
       <span class="kicker">Last updated {UPDATED.en}</span>
       <h1 class="sec-head__title">Privacy <em>policy</em></h1>
 
@@ -107,9 +110,9 @@ const phone = FOUNDERS[0];
         <a href={`mailto:${EMAIL}`}>{EMAIL}</a> ·
         <a href={`tel:${phone.tel}`}>{phone.phone}</a>
       </p>
-    </article>
+    </article>)}
 
-    <article lang="es">
+    {lang === "es" && (<article>
       <span class="kicker">Última actualización: {UPDATED.es}</span>
       <h1 class="sec-head__title">Política de <em>privacidad</em></h1>
 
@@ -194,7 +197,7 @@ const phone = FOUNDERS[0];
         <a href={`mailto:${EMAIL}`}>{EMAIL}</a> ·
         <a href={`tel:${phone.tel}`}>{phone.phone}</a>
       </p>
-    </article>
+    </article>)}
   </main>
 
   <Footer />
@@ -204,11 +207,6 @@ const phone = FOUNDERS[0];
   .legal {
     max-width: 760px;
     padding: calc(var(--header-h) + 72px) var(--gutter) 100px;
-  }
-  /* The site's language toggle sets <html lang>; show the matching article */
-  :global(html[lang="es"]) .legal article[lang="en"],
-  :global(html:not([lang="es"])) .legal article[lang="es"] {
-    display: none;
   }
   .legal article {
     display: flex;

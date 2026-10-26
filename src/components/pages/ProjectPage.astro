@@ -1,0 +1,18 @@
+---
+/** One project at its own address, in either language. */
+import Site from "../Site.astro";
+import { COPY, DETAIL, SHOTS, SITE_NAME, WORK, type Lang } from "../../data/copy";
+import { projectSchema } from "../../data/schema";
+
+const { lang, index } = Astro.props as { lang: Lang; index: number };
+const project = WORK.find((p) => p.i === index)!;
+---
+
+<Site
+  view="detail"
+  project={index}
+  jsonLd={[projectSchema(index, lang)]}
+  title={`${COPY[lang][project.titleKey]} — ${SITE_NAME}`}
+  description={DETAIL[lang][index].summary}
+  image={SHOTS[index].hero}
+/>

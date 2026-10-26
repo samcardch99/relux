@@ -1,6 +1,6 @@
 ---
 import { responsive, SIZES } from "../data/images";
-import { COPY, projectPath, type PROJECTS } from "../data/copy";
+import { COPY, langOfPath, projectPath, type PROJECTS } from "../data/copy";
 import ArrowRight from "./icons/ArrowRight.astro";
 
 interface Props {
@@ -11,7 +11,7 @@ const { project } = Astro.props;
 const en = COPY.en;
 ---
 
-<a href={projectPath(project.i)} class="pcard" data-project={project.i}>
+<a href={projectPath(project.i, langOfPath(Astro.url.pathname))} class="pcard" data-project={project.i}>
   <div class="media pcard__media">
     <img
       {...responsive(project.img, SIZES.card)}

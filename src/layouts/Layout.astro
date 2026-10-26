@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import { siteGraph } from "../data/schema";
+import { counterpartPath, langOfPath } from "../data/copy";
 
 interface Props {
   title?: string;
@@ -25,6 +26,12 @@ const {
 } = Astro.props;
 
 const url = new URL(Astro.url.pathname, Astro.site);
+const lang = langOfPath(Astro.url.pathname);
+/** Both language versions of this page, for search engines (none on the 404). */
+const other = noindex ? null : counterpartPath(Astro.url.pathname);
+const alternates = other
+  ? { [lang]: url.href, [lang === "es" ? "en" : "es"]: new URL(other, Astro.site).href }
+  : null;
 /** Google Analytics 4, only once its measurement ID is set (secret PUBLIC_GA_ID
  *  in GitHub, passed to the build by publish.yml). Events: see site.ts. */
 const gaId = import.meta.env.PUBLIC_GA_ID;
@@ -32,7 +39,7 @@ const imageUrl = new URL(image, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,6 +53,16 @@ const imageUrl = new URL(image, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:image" content={imageUrl} />
+    <meta property="og:locale" content={lang === "es" ? "es_US" : "en_US"} />
+    {
+      alternates && (
+        <>
+          <link rel="alternate" hreflang="en" href={alternates.en} />
+          <link rel="alternate" hreflang="es" href={alternates.es} />
+          <link rel="alternate" hreflang="x-default" href={alternates.en} />
+        </>
+      )
+    }
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={url} />}
     <meta name="theme-color" content="#060505" />
     {[siteGraph, ...jsonLd].map((data) => (

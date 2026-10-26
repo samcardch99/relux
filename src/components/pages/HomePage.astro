@@ -1,0 +1,10 @@
+---
+/** The homepage, in either language (src/pages/index.astro, es/index.astro). */
+import Site from "../Site.astro";
+import { HOME_DESCRIPTION, PAGE_TITLES, type Lang } from "../../data/copy";
+import { servicesGraph } from "../../data/schema";
+
+const { lang } = Astro.props as { lang: Lang };
+---
+
+<Site jsonLd={[servicesGraph(lang)]} title={PAGE_TITLES[lang].home} description={HOME_DESCRIPTION[lang]} />
