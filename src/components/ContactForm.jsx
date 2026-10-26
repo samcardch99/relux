@@ -8,7 +8,7 @@ import { COPY } from "../data/copy.ts";
 
 /** Service <option> values stay in English so the delivered email reads the
  *  same whichever language the visitor used; only the label is translated. */
-const SERVICE_KEYS = ["s1Title", "s2Title", "s3Title", "s4Title"];
+const SERVICE_KEYS = ["s1Title", "s2Title", "s3Title", "s4Title", "svcCommercial", "svcOther"];
 
 /** `lang` is the page's, so the server renders the form in it (Contact.astro). */
 export default function ContactForm({ lang: pageLang = "en" }) {

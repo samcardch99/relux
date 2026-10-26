@@ -121,7 +121,7 @@ export const COPY = {
     storyTitleEm: "Detail,",
     storyTitle2: "Not Shortcuts",
     storyLead:
-      "RE-LUX Construction is a Miami firm working on high-end residential and commercial interiors — founded and run by two brothers who are on site with the crew.",
+      "RE-LUX Construction is a family business in Miami working on high-end residential and commercial interiors — founded and run by two brothers who are on site with the crew.",
     storyQuote: "“Tu proyecto, nuestro compromiso de lujo.”",
     aboutBtn: "More about us",
 
@@ -133,11 +133,11 @@ export const COPY = {
     aboutP1:
       "RE-LUX Construction was founded by Enmanuel and Randy Cagigas around a simple idea: the people who design the job should be the same people who build it. Nothing is subcontracted away and forgotten — kitchens, closets and paneling are drawn, fabricated in our own shop, and installed by the team that measured the space.",
     aboutP2:
-      "We work across Miami on homes and businesses: full interior remodels, floors, walls, bathrooms, finish carpentry and paint. Every job starts with drawings and material boards, so you approve exactly what will be built before anything is demolished.",
+      "We work across Miami on homes and businesses: full interior remodels, floors, walls, bathrooms, finish carpentry and paint, and commercial work such as the woodwork, quartz and glass at The Perry Marina in Key West or the Miami Hair Transplant clinic. Every job starts with drawings, 3D renders and material boards, so you approve exactly what will be built before anything is demolished.",
     aboutP3:
       "The result is what our clients keep coming back for — unique ideas, clean execution, and a finished space that reads as luxury, elegance and durability rather than a quick renovation.",
     aboutFoot:
-      "Tell us about the space and we will come back with drawings, materials and a clear price.",
+      "Tell us about the space and we will come back with drawings, materials and a clear, free estimate.",
 
     v1Title: "Technical precision",
     v1Desc:
@@ -147,7 +147,7 @@ export const COPY = {
       "Wood, stone, tile and hardware chosen with you and specified to last, not to hit a number.",
     v3Title: "One team, start to finish",
     v3Desc:
-      "The same crew from the first visit to the final walkthrough. One contact, one standard, no handoffs.",
+      "One company answers for the whole project, from the first design to the final walkthrough. One contact, one standard, no handoffs.",
 
     founderRole: "Founder",
     sinceLine: "RE-LUX Construction — Miami, Florida",
@@ -155,7 +155,7 @@ export const COPY = {
     procTitle: "HOW WE",
     procTitleEm: "WORK",
     procIntro:
-      "We design the whole job before we start. You approve drawings, materials and finishes, and only then do we build.",
+      "We design the whole job before we start. You approve drawings, 3D renders, materials and finishes, and only then do we build.",
     procBtn: "Process",
 
     pxTitle: "OUR",
@@ -248,6 +248,8 @@ export const COPY = {
     sent: "Message Sent",
     sentTitle: "Message sent",
     sentDesc: "We'll be in touch shortly.",
+    svcCommercial: "Commercial remodeling",
+    svcOther: "Other",
     errPhone: "Please enter a valid phone number",
     waLabel: "Chat on WhatsApp",
     waText: "Hi RE-LUX, I'd like to talk about a project.",
@@ -387,7 +389,7 @@ export const COPY = {
     storyTitleEm: "detalle,",
     storyTitle2: "no sobre atajos",
     storyLead:
-      "RE-LUX Construction es una firma de Miami dedicada a interiores residenciales y comerciales de alta gama, fundada y dirigida por dos hermanos que están en obra junto al equipo.",
+      "RE-LUX Construction es una empresa familiar de Miami dedicada a interiores residenciales y comerciales de alta gama, fundada y dirigida por dos hermanos que están en obra junto al equipo.",
     storyQuote: "“Tu proyecto, nuestro compromiso de lujo.”",
     aboutBtn: "Conocer más",
 
@@ -399,11 +401,11 @@ export const COPY = {
     aboutP1:
       "RE-LUX Construction nació de una idea simple de Enmanuel y Randy Cagigas: quien diseña el trabajo debe ser quien lo construye. Nada se subcontrata y se olvida — cocinas, closets y paneles se dibujan, se fabrican en nuestro propio taller y los instala el mismo equipo que midió el espacio.",
     aboutP2:
-      "Trabajamos en todo Miami, en casas y negocios: remodelación interior completa, pisos, paredes, baños, carpintería de acabado y pintura. Cada trabajo empieza con planos y muestras de materiales, para que apruebes exactamente lo que se va a construir antes de demoler nada.",
+      "Trabajamos en todo Miami, en casas y negocios: remodelación interior completa, pisos, paredes, baños, carpintería de acabado y pintura, y obra comercial como la madera, el cuarzo y la cristalería de The Perry Marina en Key West o la clínica Miami Hair Transplant. Cada trabajo empieza con planos, renders en 3D y muestras de materiales, para que apruebes exactamente lo que se va a construir antes de demoler nada.",
     aboutP3:
       "El resultado es lo que hace que nuestros clientes vuelvan: ideas únicas, ejecución limpia y un espacio terminado que se lee como lujo, elegancia y durabilidad, no como una reforma rápida.",
     aboutFoot:
-      "Cuéntanos cómo es el espacio y te respondemos con planos, materiales y un precio claro.",
+      "Cuéntanos cómo es el espacio y te respondemos con planos, materiales y un presupuesto claro y gratuito.",
 
     v1Title: "Precisión técnica",
     v1Desc:
@@ -413,7 +415,7 @@ export const COPY = {
       "Madera, piedra, cerámica y herrajes elegidos contigo y especificados para durar, no para cuadrar un número.",
     v3Title: "Un solo equipo",
     v3Desc:
-      "El mismo equipo desde la primera visita hasta la entrega final. Un contacto, un estándar, sin traspasos.",
+      "Una sola empresa responde por todo el proyecto, desde el primer diseño hasta la entrega final. Un contacto, un estándar, sin traspasos.",
 
     founderRole: "Fundador",
     sinceLine: "RE-LUX Construction — Miami, Florida",
@@ -421,7 +423,7 @@ export const COPY = {
     procTitle: "CÓMO",
     procTitleEm: "TRABAJAMOS",
     procIntro:
-      "Diseñamos todo el trabajo antes de comenzar. Apruebas planos, materiales y acabados, y solo entonces construimos.",
+      "Diseñamos todo el trabajo antes de comenzar. Apruebas planos, renders en 3D, materiales y acabados, y solo entonces construimos.",
     procBtn: "Proceso",
 
     pxTitle: "NUESTRO",
@@ -515,6 +517,8 @@ export const COPY = {
     sent: "Mensaje Enviado",
     sentTitle: "Mensaje enviado",
     sentDesc: "Te contactaremos en breve.",
+    svcCommercial: "Remodelación comercial",
+    svcOther: "Otro",
     errPhone: "Introduce un teléfono válido",
     waLabel: "Escríbenos por WhatsApp",
     waText: "Hola RE-LUX, me gustaría hablar sobre un proyecto.",
