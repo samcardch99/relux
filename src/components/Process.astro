@@ -1,4 +1,5 @@
 ---
+import { responsive } from "../data/images";
 import { PROCESS, COPY, IMG, FOCUS } from "../data/copy";
 import ArrowUpRight from "./icons/ArrowUpRight.astro";
 
@@ -22,7 +23,7 @@ const en = COPY.en;
 
   <div class="media process__band">
     <img
-      src={IMG.processBand}
+      {...responsive(IMG.processBand)}
       alt=""
       loading="lazy"
       aria-hidden="true"

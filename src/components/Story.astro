@@ -1,4 +1,5 @@
 ---
+import { responsive, SIZES } from "../data/images";
 import { IMG, FOUNDERS } from "../data/copy";
 import ArrowUpRight from "./icons/ArrowUpRight.astro";
 ---
@@ -7,7 +8,7 @@ import ArrowUpRight from "./icons/ArrowUpRight.astro";
   <div class="story__figure">
     <div class="media story__portrait">
       <img
-        src={IMG.owners}
+        {...responsive(IMG.owners, SIZES.half)}
         alt="Enmanuel and Randy Cagigas, founders of RE-LUX Construction"
         loading="lazy"
       />

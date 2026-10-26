@@ -1,4 +1,5 @@
 ---
+import { responsive, SIZES } from "../../data/images";
 import { COPY, VALUES, FOUNDERS, IMG, FOCUS } from "../../data/copy";
 import Contact from "../Contact.astro";
 import Footer from "../Footer.astro";
@@ -40,7 +41,7 @@ const founderFocus = [FOCUS.founder1, undefined];
 
   <div class="media aboutview__band">
     <img
-      src={IMG.ownersWide}
+      {...responsive(IMG.ownersWide)}
       alt="The RE-LUX team"
       loading="lazy"
       style={`object-position:${FOCUS.ownersWide}`}
@@ -83,7 +84,7 @@ const founderFocus = [FOCUS.founder1, undefined];
         <div class="founder">
           <div class="media founder__photo">
             <img
-              src={founderPhotos[i]}
+              {...responsive(founderPhotos[i], SIZES.half)}
               alt={f.name}
               loading="lazy"
               style={founderFocus[i] && `object-position:${founderFocus[i]}`}

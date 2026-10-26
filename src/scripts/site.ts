@@ -1,4 +1,5 @@
 import { COPY, DETAIL, PROJECTS, SHOTS, VIEW_PATHS, WORK, projectPath, type Lang } from "../data/copy";
+import { SIZES, srcsetFor } from "../data/images";
 
 const STORAGE_KEY = "relux:lang";
 
@@ -29,9 +30,18 @@ function watchImage(img: HTMLImageElement) {
   img.addEventListener("error", () => (img.dataset.failed = ""), { once: true });
 }
 
-function setImage(img: HTMLImageElement | null, src: string, alt = "") {
+/** `sizes` (SIZES in data/images) lets the browser pick a smaller copy. */
+function setImage(img: HTMLImageElement | null, src: string, alt = "", sizes: string = SIZES.full) {
   if (!img) return;
   delete img.dataset.failed;
+  // srcset first, so the browser never starts on the full-size file
+  const srcset = srcsetFor(src);
+  if (srcset) {
+    img.sizes = sizes;
+    img.srcset = srcset;
+  } else {
+    img.removeAttribute("srcset");
+  }
   img.src = src;
   img.alt = alt;
   watchImage(img);
@@ -231,7 +241,8 @@ function renderDetail(index: number) {
       setImage(
         document.getElementById(`detail-hero-${n + 1}`) as HTMLImageElement | null,
         src,
-        t[project.titleKey]
+        t[project.titleKey],
+        SIZES.half
       )
     );
   } else {
@@ -361,7 +372,7 @@ function renderShots(srcs: string[], tall: number[], captions: string[], title: 
     figure.append(frame, caption);
     // Uncaptioned photos still say what they show, for screen readers and search
     const t = COPY[lang] as unknown as Record<string, string>;
-    setImage(img, src, captions[i] || `${title} — ${t.altPhoto} ${i + 1}`);
+    setImage(img, src, captions[i] || `${title} — ${t.altPhoto} ${i + 1}`, SIZES.half);
     return { figure, frame, img, ratio: tall.includes(i) ? PORTRAIT : LANDSCAPE };
   });
 

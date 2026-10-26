@@ -1,4 +1,5 @@
 ---
+import { responsive, SIZES } from "../data/images";
 import { COPY, projectPath, type PROJECTS } from "../data/copy";
 import ArrowRight from "./icons/ArrowRight.astro";
 
@@ -13,7 +14,7 @@ const en = COPY.en;
 <a href={projectPath(project.i)} class="pcard" data-project={project.i}>
   <div class="media pcard__media">
     <img
-      src={project.img}
+      {...responsive(project.img, SIZES.card)}
       alt={en[project.titleKey]}
       data-i18n-alt={project.titleKey}
       loading="lazy"

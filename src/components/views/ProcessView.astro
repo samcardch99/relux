@@ -1,4 +1,5 @@
 ---
+import { responsive, SIZES } from "../../data/images";
 import { COPY, FOCUS, IMG, MACHINE_SPECS, SHOP } from "../../data/copy";
 import Contact from "../Contact.astro";
 import Footer from "../Footer.astro";
@@ -41,7 +42,7 @@ const shots = SHOP.filter((s) => s.img);
   <!-- Wide shot of the CNC line -->
   <div class="media processview__band">
     <img
-      src={IMG.workshopBand}
+      {...responsive(IMG.workshopBand)}
       alt="Biesse Rover Multi Up NG S 1531"
       loading="lazy"
       style={`object-position:${FOCUS.workshopBand}`}
@@ -58,7 +59,7 @@ const shots = SHOP.filter((s) => s.img);
       <div class="processview__media">
         <div class="media processview__main">
           <img
-            src={IMG.machineHero}
+            {...responsive(IMG.machineHero, SIZES.half)}
             alt="Biesse Rover Multi Up NG S 1531"
             loading="lazy"
             style={`object-position:${FOCUS.machineHero}`}
@@ -68,7 +69,7 @@ const shots = SHOP.filter((s) => s.img);
           {
             IMG.machine.map((src) => (
               <div class="media processview__shot">
-                <img src={src} alt={en.altMachine} data-i18n-alt="altMachine" loading="lazy" />
+                <img {...responsive(src, SIZES.half)} alt={en.altMachine} data-i18n-alt="altMachine" loading="lazy" />
               </div>
             ))
           }
@@ -107,7 +108,7 @@ const shots = SHOP.filter((s) => s.img);
           {shots.map((s) => (
             <li class="processview__item">
               <div class:list={["media processview__photo", { "is-tall": s.tall }]}>
-                <img src={s.img} alt={en[s.capKey]} data-i18n-alt={s.capKey} loading="lazy" />
+                <img {...responsive(s.img, SIZES.card)} alt={en[s.capKey]} data-i18n-alt={s.capKey} loading="lazy" />
               </div>
               <p data-i18n={s.capKey}>{en[s.capKey]}</p>
             </li>

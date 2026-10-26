@@ -1,4 +1,5 @@
 ---
+import { responsive, SIZES } from "../../data/images";
 import { COPY, DETAIL, PROJECTS, SHOTS } from "../../data/copy";
 import Contact from "../Contact.astro";
 import Footer from "../Footer.astro";
@@ -50,7 +51,7 @@ const Title = project ? "h1" : "h2";
   <div class:list={["media detail__hero", { "is-set": shots?.heroSet }]} id="detail-hero-box">
     <img
       id="detail-hero"
-      src={hero}
+      {...responsive(hero)}
       alt={title}
       fetchpriority={project ? "high" : undefined}
       hidden={!!shots?.heroSet}
@@ -58,7 +59,7 @@ const Title = project ? "h1" : "h2";
     />
     <div class="detail__set" id="detail-hero-set" hidden={!shots?.heroSet}>
       {[0, 1, 2].map((n) => (
-        <div class="media"><img id={`detail-hero-${n + 1}`} src={shots?.heroSet?.[n]} alt={title} /></div>
+        <div class="media"><img id={`detail-hero-${n + 1}`} {...(shots?.heroSet ? responsive(shots.heroSet[n], SIZES.half) : {})} alt={title} /></div>
       ))}
     </div>
     <div class="detail__hero-scrim"></div>

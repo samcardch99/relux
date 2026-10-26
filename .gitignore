@@ -30,3 +30,8 @@ pnpm-debug.log*
 # autobackups de Blender
 *.blend1
 *.blend2
+
+# versiones reducidas de las fotos y su indice: las genera
+# scripts/resize-images.mjs en cada dev/build
+public/assets/w/
+src/data/image-widths.json
