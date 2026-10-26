@@ -1345,10 +1345,10 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       summary:
         "A boutique mat pilates, barre and yoga studio in Wynwood, Miami, finished in soft whites and light wood, with arches lit from behind and a curved ceiling washed in warm light.",
       paras: [
-        "The studio runs along a wall of arched recesses, each lit from behind, under a curved soffit with cove lighting that keeps the room evenly warm for classes. A barre runs the length of the wall, and built-in shelving at the far end holds the props.",
+        "We built the whole interior. The studio runs along a wall of arched recesses, each lit from behind, under a curved soffit with cove lighting that keeps the room evenly warm for classes. A barre runs the length of the wall, and built-in shelving at the far end holds the props.",
         "At the entrance, a rounded reception desk sits in front of the backlit logo wall, with cubbies for shoes, an arched niche and a lounge by the French doors where clients wait before class.",
       ],
-      meta: [["Scope", "Studio, reception + lounge"], ["Materials", "White lacquer, light wood floors, LED cove lighting"], ["Location", "Wynwood, Miami, FL"]],
+      meta: [["Scope", "Complete interior: studio, reception + lounge"], ["Materials", "White lacquer, light wood floors, LED cove lighting"], ["Location", "Wynwood, Miami, FL"]],
       captions: [
         "The reception desk under the curved ceiling, in front of the lit logo wall.",
         "The rounded reception desk and its brass pendant lights.",
@@ -1667,10 +1667,10 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       summary:
         "Estudio boutique de mat pilates, barre y yoga en Wynwood, Miami, terminado en blancos suaves y madera clara, con arcos iluminados desde atrás y un techo curvo bañado de luz cálida.",
       paras: [
-        "La sala recorre una pared de arcos rehundidos, cada uno iluminado desde atrás, bajo un plafón curvo con luz indirecta que mantiene la sala cálida y uniforme durante las clases. Una barra recorre toda la pared, y al fondo unos estantes empotrados guardan los accesorios.",
+        "Construimos todo el interior. La sala recorre una pared de arcos rehundidos, cada uno iluminado desde atrás, bajo un plafón curvo con luz indirecta que mantiene la sala cálida y uniforme durante las clases. Una barra recorre toda la pared, y al fondo unos estantes empotrados guardan los accesorios.",
         "En la entrada, un mostrador de recepción redondeado se apoya frente a la pared del logo retroiluminado, con casilleros para el calzado, un nicho en arco y una sala de espera junto a las puertas francesas donde los clientes esperan antes de clase.",
       ],
-      meta: [["Alcance", "Estudio, recepción y sala de espera"], ["Materiales", "Laca blanca, pisos de madera clara, iluminación LED indirecta"], ["Ubicación", "Wynwood, Miami, FL"]],
+      meta: [["Alcance", "Interior completo: estudio, recepción y sala de espera"], ["Materiales", "Laca blanca, pisos de madera clara, iluminación LED indirecta"], ["Ubicación", "Wynwood, Miami, FL"]],
       captions: [
         "El mostrador de recepción bajo el techo curvo, frente a la pared del logo iluminado.",
         "El mostrador redondeado y sus lámparas colgantes de latón.",
