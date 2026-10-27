@@ -212,12 +212,10 @@ export const COPY = {
     shopTitle: "Where it gets built",
     shopIntro:
       "Materials arrive, get cut, assembled and checked here before they reach your home. Nothing leaves the shop until it matches the drawing.",
-    shopCap1: "Panels ready for machining.",
-    shopCap2: "Assembly bench.",
-    shopCap3: "Edge and finish check.",
-    shopCap4: "Cabinet boxes before installation.",
-    shopCap5: "Hardware and fittings.",
-    shopCap6: "Parts labeled by project.",
+    shopCap1: "Panel storage: sheets arrive and are racked by material.",
+    shopCap2: "CNC: each part is cut from the drawing file.",
+    shopCap3: "Edge banding on the Rover Edge Go.",
+    shopCap4: "Assembly: cabinets and drawers put together by hand.",
     w1Title: "Consultation & Site Visit",
     w1Desc:
       "We visit the space, measure it, and listen to how you actually want to use it.",
@@ -531,12 +529,10 @@ export const COPY = {
     shopTitle: "Donde se construye",
     shopIntro:
       "Aquí llegan los materiales, se cortan, se montan y se revisan antes de llegar a tu casa. Nada sale del taller hasta que coincide con el plano.",
-    shopCap1: "Paneles listos para mecanizar.",
-    shopCap2: "Banco de montaje.",
-    shopCap3: "Revisión de cantos y acabados.",
-    shopCap4: "Cascos de mueble antes de instalar.",
-    shopCap5: "Herrajes y accesorios.",
-    shopCap6: "Piezas etiquetadas por proyecto.",
+    shopCap1: "Almacén de tableros: llegan y se ordenan por material.",
+    shopCap2: "CNC: cada pieza se corta desde el archivo del plano.",
+    shopCap3: "Canteado en la Rover Edge Go.",
+    shopCap4: "Montaje: muebles y cajones armados a mano.",
     w1Title: "Consulta y Visita",
     w1Desc:
       "Visitamos el espacio, lo medimos y escuchamos cómo quieres usarlo de verdad.",
@@ -803,17 +799,16 @@ export const MACHINE_SPECS = [
 ] as const;
 
 /**
- * The workshop grid. Only shots with an `img` are shown — the design still
- * leaves all six slots empty, so for now the grid doesn't render at all.
- * `tall` cells are 4:5, the rest 4:3.
+ * The workshop grid: four phone-shot portraits in the order a job goes
+ * through the shop. The design's files are numbered differently (its
+ * shop-v3, v4, v2, v1); they are put in this order so each caption sits
+ * under its own photo.
  */
-export const SHOP: { capKey: CopyKey; tall: boolean; img?: string }[] = [
-  { capKey: "shopCap1", tall: true },
-  { capKey: "shopCap2", tall: false },
-  { capKey: "shopCap3", tall: false },
-  { capKey: "shopCap4", tall: true },
-  { capKey: "shopCap5", tall: false },
-  { capKey: "shopCap6", tall: false },
+export const SHOP: { capKey: CopyKey; img: string }[] = [
+  { capKey: "shopCap1", img: "/assets/shop-1.webp" },
+  { capKey: "shopCap2", img: "/assets/shop-2.webp" },
+  { capKey: "shopCap3", img: "/assets/shop-3.webp" },
+  { capKey: "shopCap4", img: "/assets/shop-4.webp" },
 ];
 
 export const VALUES = [

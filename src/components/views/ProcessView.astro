@@ -18,8 +18,8 @@ const { open = false, shareContact = false } = Astro.props;
 /** Open on load means this view is the page, so its title is the page's h1. */
 const Title = open ? "h1" : "h2";
 const en = COPY.en;
-/** Empty frames are left out; see SHOP. */
-const shots = SHOP.filter((s) => s.img);
+/** Four columns, two on phones (see the styles) */
+const SHOP_SIZES = "(max-width: 720px) 50vw, 25vw";
 ---
 
 <div class="view" id="view-process" role="dialog" aria-modal="true" aria-label="Our process" data-i18n-label="viewProcess" hidden={!open}>
@@ -102,20 +102,18 @@ const shots = SHOP.filter((s) => s.img);
       <p class="sec-head__intro" data-i18n="shopIntro">{en.shopIntro}</p>
     </div>
 
-    {
-      shots.length > 0 && (
-        <ul class="processview__grid">
-          {shots.map((s) => (
-            <li class="processview__item">
-              <div class:list={["media processview__photo", { "is-tall": s.tall }]}>
-                <img {...responsive(s.img, SIZES.card)} alt={en[s.capKey]} data-i18n-alt={s.capKey} loading="lazy" />
-              </div>
-              <p data-i18n={s.capKey}>{en[s.capKey]}</p>
-            </li>
-          ))}
-        </ul>
-      )
-    }
+    <ul class="processview__grid">
+      {
+        SHOP.map((s) => (
+          <li class="processview__item">
+            <div class="media processview__photo">
+              <img {...responsive(s.img, SHOP_SIZES)} alt={en[s.capKey]} data-i18n-alt={s.capKey} loading="lazy" />
+            </div>
+            <p data-i18n={s.capKey}>{en[s.capKey]}</p>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 
   <div class="view__foot processview__foot">
@@ -235,8 +233,8 @@ const shots = SHOP.filter((s) => s.img);
   }
   .processview__grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px 20px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px 16px;
     align-items: start;
     margin: 0;
     padding: 0;
@@ -247,11 +245,9 @@ const shots = SHOP.filter((s) => s.img);
     flex-direction: column;
     gap: 12px;
   }
+  /* Phone-shot portraits */
   .processview__photo {
-    aspect-ratio: 4 / 3;
-  }
-  .processview__photo.is-tall {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 9 / 16;
   }
   .processview__item p {
     font-size: var(--fs-xs);
@@ -269,9 +265,6 @@ const shots = SHOP.filter((s) => s.img);
     .processview__split {
       grid-template-columns: minmax(0, 1fr);
       gap: 32px;
-    }
-    .processview__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -294,17 +287,11 @@ const shots = SHOP.filter((s) => s.img);
       grid-template-columns: minmax(0, 1fr);
       gap: 6px;
     }
+    /* Two columns: four portraits stacked one per row would run several
+       screens long */
     .processview__grid {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
-      margin: 0 calc(var(--gutter) * -1);
-    }
-    .processview__item p {
-      padding: 0 var(--gutter);
-    }
-    .processview__photo,
-    .processview__photo.is-tall {
-      aspect-ratio: 4 / 5;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px 8px;
     }
   }
 </style>
