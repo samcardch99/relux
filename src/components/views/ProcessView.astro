@@ -18,8 +18,8 @@ const { open = false, shareContact = false } = Astro.props;
 /** Open on load means this view is the page, so its title is the page's h1. */
 const Title = open ? "h1" : "h2";
 const en = COPY.en;
-/** Four columns, two on phones (see the styles) */
-const SHOP_SIZES = "(max-width: 720px) 50vw, 25vw";
+/** Three columns, one on phones (see the styles) */
+const SHOP_SIZES = "(max-width: 720px) 100vw, 33vw";
 ---
 
 <div class="view" id="view-process" role="dialog" aria-modal="true" aria-label="Our process" data-i18n-label="viewProcess" hidden={!open}>
@@ -233,7 +233,7 @@ const SHOP_SIZES = "(max-width: 720px) 50vw, 25vw";
   }
   .processview__grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 32px 16px;
     align-items: start;
     margin: 0;
@@ -245,9 +245,8 @@ const SHOP_SIZES = "(max-width: 720px) 50vw, 25vw";
     flex-direction: column;
     gap: 12px;
   }
-  /* Phone-shot portraits */
   .processview__photo {
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 16 / 9;
   }
   .processview__item p {
     font-size: var(--fs-xs);
@@ -287,11 +286,9 @@ const SHOP_SIZES = "(max-width: 720px) 50vw, 25vw";
       grid-template-columns: minmax(0, 1fr);
       gap: 6px;
     }
-    /* Two columns: four portraits stacked one per row would run several
-       screens long */
     .processview__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px 8px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
     }
   }
 </style>

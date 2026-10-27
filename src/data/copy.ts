@@ -212,10 +212,9 @@ export const COPY = {
     shopTitle: "Where it gets built",
     shopIntro:
       "Materials arrive, get cut, assembled and checked here before they reach your home. Nothing leaves the shop until it matches the drawing.",
-    shopCap1: "Panel storage: sheets arrive and are racked by material.",
-    shopCap2: "CNC: each part is cut from the drawing file.",
-    shopCap3: "Edge banding on the Rover Edge Go.",
-    shopCap4: "Assembly: cabinets and drawers put together by hand.",
+    shopCap1: "The full shop: edge banding, CNC nesting and assembly, each in its own zone.",
+    shopCap2: "Edge banding on the Biesse Rover Edge Go.",
+    shopCap3: "Panel storage next to the CNC, so sheets go straight from the rack to the cut.",
     w1Title: "Consultation & Site Visit",
     w1Desc:
       "We visit the space, measure it, and listen to how you actually want to use it.",
@@ -529,10 +528,9 @@ export const COPY = {
     shopTitle: "Donde se construye",
     shopIntro:
       "Aquí llegan los materiales, se cortan, se montan y se revisan antes de llegar a tu casa. Nada sale del taller hasta que coincide con el plano.",
-    shopCap1: "Almacén de tableros: llegan y se ordenan por material.",
-    shopCap2: "CNC: cada pieza se corta desde el archivo del plano.",
-    shopCap3: "Canteado en la Rover Edge Go.",
-    shopCap4: "Montaje: muebles y cajones armados a mano.",
+    shopCap1: "El taller completo: canteado, corte CNC y montaje, cada uno en su zona.",
+    shopCap2: "Canteado en la Biesse Rover Edge Go.",
+    shopCap3: "Almacén de tableros junto a la CNC: del estante pasan directo al corte.",
     w1Title: "Consulta y Visita",
     w1Desc:
       "Visitamos el espacio, lo medimos y escuchamos cómo quieres usarlo de verdad.",
@@ -799,17 +797,11 @@ export const MACHINE_SPECS = [
   { k: "mSpecK4", v: "mSpecV4" },
 ] as const;
 
-/**
- * The workshop grid: four phone-shot portraits in the order a job goes
- * through the shop. The design's files are numbered differently (its
- * shop-v3, v4, v2, v1); they are put in this order so each caption sits
- * under its own photo.
- */
+/** The workshop grid: three 16:9 renders of the shop, from the design. */
 export const SHOP: { capKey: CopyKey; img: string }[] = [
-  { capKey: "shopCap1", img: "/assets/shop-1.webp" },
-  { capKey: "shopCap2", img: "/assets/shop-2.webp" },
-  { capKey: "shopCap3", img: "/assets/shop-3.webp" },
-  { capKey: "shopCap4", img: "/assets/shop-4.webp" },
+  { capKey: "shopCap1", img: "/assets/local-1.webp" },
+  { capKey: "shopCap2", img: "/assets/local-2.webp" },
+  { capKey: "shopCap3", img: "/assets/local-3.webp" },
 ];
 
 export const VALUES = [
