@@ -678,7 +678,8 @@ const IMG = {
   liz: [1, 4, 6, 7].map((n) => `/assets/liz-${n}.webp`),
   /** Projects 2–5, numbered as the design's photo files. */
   closet2: [1, 2, 3, 4, 5].map((n) => `/assets/wc-${n}.webp`),
-  bath2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/bath2-${n}.webp`),
+  /** Real photos only: 3 was a render and was dropped. */
+  bath2: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `/assets/bath2-${n}.webp`),
   kitchen3: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/k3-${n}.webp`),
   crystalLuxe: [1, 2, 3, 4, 5, 6, 7].map((n) => `/assets/cl-${n}.webp`),
   /** Project 20, the Laira Balance studio in Wynwood: real photos. The files keep
@@ -824,7 +825,7 @@ export const VALUES = [
 export const PROJECTS = [
   { i: 0, slug: "liz-kitchen", tagKey: "p1Tag", titleKey: "p1Title", img: IMG.liz[3] },
   { i: 1, slug: "walk-in-closet-grafito-y-nogal", tagKey: "p2Tag", titleKey: "p2Title", img: IMG.closet2[0] },
-  { i: 2, slug: "bano-principal-nogal-y-onix", tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath2[2] },
+  { i: 2, slug: "bano-principal-nogal-y-onix", tagKey: "p3Tag", titleKey: "p3Title", img: IMG.bath2[1] },
   { i: 3, slug: "cocina-nogal-isla-de-cuarcita", tagKey: "p4Tag", titleKey: "p4Title", img: IMG.kitchen3[4] },
   { i: 4, slug: "crystal-luxe-wellness-center", tagKey: "p5Tag", titleKey: "p5Title", img: IMG.crystalLuxe[0] },
   { i: 5, slug: "cocina-negro-mate", tagKey: "p6Tag", titleKey: "p6Title", img: IMG.blackKitchen[8], focus: FOCUS.blackKitchenCard },
@@ -982,7 +983,8 @@ export const SHOTS: ProjectShots[] = [
     shots: pick(IMG.closet2, 2, 5),
     tall: all(2),
   },
-  { hero: IMG.bath2[2], shots: pick(IMG.bath2, 2, 6, 7, 8, 9, 10, 4, 1, 5, 11), tall: [1, 4, 8, 9] },
+  // Positions in IMG.bath2, not file numbers: bath2-6, 7, 8, 9, 10, 4, 1, 5, 11
+  { hero: IMG.bath2[1], shots: pick(IMG.bath2, 5, 6, 7, 8, 9, 3, 1, 4, 10), tall: [0, 3, 7, 8] },
   { hero: IMG.kitchen3[4], heroFocus: FOCUS.kitchen3Hero, shots: pick(IMG.kitchen3, 3, 1, 6, 4, 2, 7), tall: [1, 2, 3, 4, 5] },
   {
     hero: IMG.crystalLuxe[0],
@@ -1097,7 +1099,6 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Scope", "Primary bathroom"], ["Materials", "Walnut, onyx, brushed brass"], ["Location", "Miami, FL"]],
       captions: [
-        "The vanity with the armchair and the shower behind the glass.",
         "Onyx vessel sink and brushed-brass faucet.",
         "Three backlit mirrors along the stone wall.",
         "Walk-in shower with a lit niche along the full wall.",
@@ -1419,7 +1420,6 @@ export const DETAIL: Record<Lang, DetailEntry[]> = {
       ],
       meta: [["Alcance", "Baño principal"], ["Materiales", "Nogal, ónix, latón cepillado"], ["Ubicación", "Miami, FL"]],
       captions: [
-        "El mueble del lavabo con el sillón y la ducha tras el cristal.",
         "Lavabo de ónix y grifería en latón cepillado.",
         "Tres espejos retroiluminados sobre la pared de piedra.",
         "Ducha walk-in con nicho iluminado a lo largo de la pared.",
