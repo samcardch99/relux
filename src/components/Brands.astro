@@ -1,0 +1,423 @@
+---
+import { BRANDS, COPY } from "../data/copy";
+
+const en = COPY.en;
+const first = BRANDS[0];
+const count = (n: number) => String(n).padStart(2, "0");
+---
+
+<section class="brands" id="brands">
+  <div class="sec-head brands__head">
+    <div class="brands__titles">
+      <span class="kicker brands__kicker" data-i18n="brKicker">{en.brKicker}</span>
+      <h2 class="sec-head__title">
+        <span data-i18n="brTitle">{en.brTitle}</span><br />
+        <em data-i18n="brTitleEm">{en.brTitleEm}</em>
+      </h2>
+    </div>
+    <p class="sec-head__intro" data-i18n="brIntro">{en.brIntro}</p>
+  </div>
+
+  {/* Read by screen readers and search engines; the carousel is visual only */}
+  <ul class="sr-only">
+    {
+      BRANDS.map((b) => (
+        <li>
+          {b.name}: <span data-i18n={b.catKey}>{en[b.catKey]}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  {/* A ring of cards around the one in the centre, which plays its photos and
+      then hands over to the next (script below). Past each cover, photos carry
+      data-src and load when their card first comes to the centre. */}
+  <div class="brands__stage" id="brands-stage" aria-hidden="true">
+    {
+      BRANDS.map((b, i) => (
+        <div
+          class:list={["brands__card", { "is-center": i === 0 }]}
+          data-name={b.name}
+          data-logo={b.logo?.src}
+          data-logo-h={b.logo?.h}
+        >
+          {b.photos.map((src, k) => (
+            <img
+              class:list={["brands__photo", { "is-on": k === 0 }]}
+              {...(k === 0 ? { src, loading: "lazy" } : { "data-src": src })}
+              alt=""
+            />
+          ))}
+          <span hidden data-brand-cat data-i18n={b.catKey}>{en[b.catKey]}</span>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="brands__ctrl">
+    <button type="button" class="brands__arrow" id="brands-prev" aria-label="Previous brand" data-i18n-label="brPrev">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5"></path>
+        <path d="m11 6-6 6 6 6"></path>
+      </svg>
+    </button>
+    <div class="brands__info" id="brands-info" aria-hidden="true">
+      <img class="brands__logo" id="brands-logo" src={first.logo?.src} alt="" style={`height:${first.logo?.h ?? 44}px`} hidden={!first.logo} />
+      <span class="brands__text">
+        <span class="brands__name" id="brands-name">{first.name}</span>
+        <span class="brands__cat" id="brands-cat" data-i18n={first.catKey}>{en[first.catKey]}</span>
+      </span>
+      <span class="brands__dots" id="brands-dots">
+        {first.photos.map((_, k) => <span class:list={{ "is-on": k === 0 }} />)}
+      </span>
+      <span class="brands__count" id="brands-count">{count(1)} / {count(BRANDS.length)}</span>
+    </div>
+    <button type="button" class="brands__arrow" id="brands-next" aria-label="Next brand" data-i18n-label="brNext">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14"></path>
+        <path d="m13 6 6 6-6 6"></path>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<style>
+  .brands {
+    padding: 128px var(--gutter);
+    overflow: hidden;
+    background: var(--color-ink);
+    border-top: 1px solid rgb(239 226 196 / 0.06);
+  }
+  .brands__head {
+    margin-bottom: 56px;
+  }
+  .brands__titles {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .brands__kicker {
+    letter-spacing: 0.36em;
+  }
+
+  /* --w, the card width, is set by the script from the stage's width; the
+     centre card shows at 1.14× and the stage leaves room for it */
+  .brands__stage {
+    --w: min(300px, 62vw);
+    position: relative;
+    height: calc(var(--w) * 4 / 3 * 1.14 + 70px);
+    touch-action: pan-y;
+  }
+  .brands__card {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    width: var(--w);
+    margin-left: calc(var(--w) / -2);
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--color-ink-3);
+    cursor: pointer;
+    transform-origin: 50% 40%;
+    will-change: transform, opacity;
+    transition:
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.9s ease,
+      filter 0.9s ease;
+  }
+  .brands__card.is-center {
+    cursor: default;
+  }
+  .brands__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition:
+      opacity 0.9s ease,
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .brands__photo.is-on {
+    opacity: 1;
+  }
+  .brands__card.is-center:hover .brands__photo {
+    transform: scale(1.05);
+  }
+
+  .brands__ctrl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 8px;
+  }
+  .brands__arrow {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 999px;
+    background: transparent;
+    border: 1px solid rgb(239 226 196 / 0.3);
+    color: var(--color-cream);
+    cursor: pointer;
+    transition:
+      border-color 0.35s ease,
+      color 0.35s ease;
+  }
+  .brands__arrow:hover,
+  .brands__arrow:focus-visible {
+    border-color: var(--color-sand);
+    color: var(--color-sand);
+  }
+  .brands__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 300px;
+    max-width: 56vw;
+    text-align: center;
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+  .brands__info.is-swapping {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .brands__logo {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  .brands__text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .brands__name {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.35;
+    color: var(--color-cream);
+  }
+  .brands__cat {
+    font-size: var(--fs-label-sm);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-stone);
+  }
+  .brands__dots {
+    display: flex;
+    gap: 6px;
+    height: 4px;
+    margin-top: 4px;
+  }
+  /* The script makes these spans, so they carry no scoped attribute */
+  .brands__dots > :global(span) {
+    width: 18px;
+    height: 2px;
+    background: rgb(239 226 196 / 0.2);
+    transition: background 0.4s ease;
+  }
+  .brands__dots > :global(span.is-on) {
+    background: var(--color-sand);
+  }
+  .brands__count {
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    color: rgb(239 226 196 / 0.55);
+  }
+
+  @media (max-width: 720px) {
+    .brands {
+      padding: 88px var(--gutter);
+    }
+    .brands__ctrl {
+      gap: 16px;
+    }
+  }
+</style>
+
+<script>
+  /* The centre card steps through its photos (1.7 s each), holds the last one
+     a little longer, then the ring turns to the next brand. The arrows, a
+     click on a side card or a swipe turn it by hand. It stands still for
+     visitors who prefer reduced motion and while it is off screen, and does
+     not turn while the pointer is over it or the keyboard is in the section. */
+  const section = document.getElementById("brands");
+  const stage = document.getElementById("brands-stage");
+  const info = document.getElementById("brands-info");
+  const logo = document.getElementById("brands-logo") as HTMLImageElement | null;
+  const nameEl = document.getElementById("brands-name");
+  const catEl = document.getElementById("brands-cat");
+  const dotsEl = document.getElementById("brands-dots");
+  const countEl = document.getElementById("brands-count");
+  const PHOTO = 1700;
+  const LAST = 2200;
+
+  if (section && stage) {
+    const cards = [...stage.querySelectorAll<HTMLElement>(".brands__card")];
+    const N = cards.length;
+    const photosOf = (c: HTMLElement) => [...c.querySelectorAll<HTMLImageElement>(".brands__photo")];
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    /** `turn` counts every step, so the ring always moves the short way round. */
+    let turn = 0;
+    let photo = 0;
+    let since = performance.now();
+    let timer = 0;
+    let onScreen = false;
+    let hovered = false;
+    let keyboard = false;
+    let swap = 0;
+    let shown = -1;
+
+    const wrap = (i: number) => ((i % N) + N) % N;
+
+    function load(c: HTMLElement) {
+      photosOf(c).forEach((img) => {
+        if (!img.dataset.src) return;
+        img.src = img.dataset.src;
+        delete img.dataset.src;
+      });
+    }
+
+    function showPhoto(c: HTMLElement, k: number) {
+      photosOf(c).forEach((img, n) => img.classList.toggle("is-on", n === k));
+      if (c === cards[wrap(turn)]) {
+        photo = k;
+        dotsEl?.querySelectorAll("span").forEach((d, n) => d.classList.toggle("is-on", n === k));
+      }
+    }
+
+    function fillInfo(c: HTMLElement) {
+      if (logo) {
+        logo.hidden = !c.dataset.logo;
+        if (c.dataset.logo) {
+          logo.src = c.dataset.logo;
+          logo.style.height = `${c.dataset.logoH}px`;
+        }
+      }
+      if (nameEl) nameEl.textContent = c.dataset.name ?? "";
+      // The card's own category is already in the page's language
+      if (catEl) catEl.textContent = c.querySelector("[data-brand-cat]")?.textContent ?? "";
+      if (dotsEl) {
+        const n = photosOf(c).length;
+        dotsEl.replaceChildren(...Array.from({ length: n }, () => document.createElement("span")));
+        dotsEl.style.visibility = n > 1 ? "visible" : "hidden";
+      }
+    }
+
+    function layout() {
+      const cur = wrap(turn);
+      const w = Math.round(Math.min(300, stage!.clientWidth * 0.62));
+      stage!.style.setProperty("--w", `${w}px`);
+      cards.forEach((c, i) => {
+        let off = i - cur;
+        if (off > N / 2) off -= N;
+        if (off < -N / 2) off += N;
+        const a = Math.abs(off);
+        const x = a === 0 ? 0 : Math.sign(off) * (w * 1.08 + (a - 1) * w * 0.86);
+        const scale = a === 0 ? 1.14 : a === 1 ? 0.86 : 0.76;
+        c.style.transform = `translateX(${x.toFixed(1)}px) scale(${scale})`;
+        c.style.opacity = a === 0 ? "1" : a === 1 ? "0.7" : a === 2 ? "0.35" : "0";
+        c.style.filter = a === 0 ? "none" : "brightness(0.6)";
+        c.style.zIndex = String(10 - a);
+        c.style.pointerEvents = a > 2 ? "none" : "auto";
+        c.classList.toggle("is-center", a === 0);
+      });
+      load(cards[cur]);
+      if (countEl) countEl.textContent = `${String(cur + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+      if (shown !== cur) {
+        const c = cards[cur];
+        const fill = () => {
+          fillInfo(c);
+          showPhoto(c, 0);
+          info?.classList.remove("is-swapping");
+        };
+        // Fade the caption out and back in, except on the first draw
+        if (shown < 0) fill();
+        else {
+          info?.classList.add("is-swapping");
+          clearTimeout(swap);
+          swap = window.setTimeout(fill, 300);
+        }
+        shown = cur;
+      }
+    }
+
+    function step(d: number) {
+      cards.forEach((c) => showPhoto(c, 0));
+      turn += d;
+      photo = 0;
+      since = performance.now();
+      layout();
+    }
+
+    function tick() {
+      const now = performance.now();
+      const n = photosOf(cards[wrap(turn)]).length;
+      if (now - since < PHOTO) return;
+      if (photo < n - 1) {
+        showPhoto(cards[wrap(turn)], photo + 1);
+        since = now;
+      } else if (!hovered && !keyboard && now - since >= LAST) step(1);
+    }
+
+    function run() {
+      clearInterval(timer);
+      if (onScreen && !still.matches) {
+        since = performance.now();
+        timer = window.setInterval(tick, 200);
+      }
+    }
+
+    cards.forEach((c, i) =>
+      c.addEventListener("click", () => {
+        const cur = wrap(turn);
+        if (i === cur) return;
+        let off = i - cur;
+        if (off > N / 2) off -= N;
+        if (off < -N / 2) off += N;
+        step(off);
+      })
+    );
+    document.getElementById("brands-prev")?.addEventListener("click", () => step(-1));
+    document.getElementById("brands-next")?.addEventListener("click", () => step(1));
+
+    // Swipe on touch screens
+    let startX = 0;
+    stage.addEventListener("pointerdown", (e) => (startX = e.clientX));
+    stage.addEventListener("pointerup", (e) => {
+      const dx = e.clientX - startX;
+      if (e.pointerType !== "mouse" && Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+    });
+
+    stage.addEventListener("mouseenter", () => (hovered = true));
+    stage.addEventListener("mouseleave", () => {
+      hovered = false;
+      since = performance.now();
+    });
+    section.addEventListener("focusin", (e) => (keyboard = (e.target as Element).matches(":focus-visible")));
+    section.addEventListener("focusout", () => (keyboard = false));
+
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      run();
+    }).observe(section);
+    still.addEventListener("change", run);
+    window.addEventListener("resize", layout);
+    layout();
+  }
+</script>

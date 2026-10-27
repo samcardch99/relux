@@ -153,6 +153,21 @@ export const COPY = {
     caseTitle: "BUILT &",
     caseTitleEm: "DELIVERED",
     caseIntro: "Finished projects, photographed on site after handover.",
+    brKicker: "Commercial clients",
+    brTitle: "Brands that",
+    brTitleEm: "trust RE-LUX",
+    brIntro:
+      "Clinics, restaurants, studios and hospitality spaces across South Florida that we designed, built and fitted out.",
+    brSpa: "Spa",
+    brDental: "Dental clinic",
+    brHair: "Hair clinic",
+    brWellness: "Wellness studio",
+    brRestaurant: "Restaurant",
+    brHotel: "Hotel & marina",
+    brAesthetics: "Aesthetics studio",
+    brCafe: "Café",
+    brPrev: "Previous brand",
+    brNext: "Next brand",
     c1Meta: "Kitchens",
     c2Meta: "Walk-in closets",
     c3Meta: "Bathrooms",
@@ -215,6 +230,7 @@ export const COPY = {
     shopCap1: "The full shop: edge banding, CNC nesting and assembly, each in its own zone.",
     shopCap2: "Edge banding on the Biesse Rover Edge Go.",
     shopCap3: "Panel storage next to the CNC, so sheets go straight from the rack to the cut.",
+    tlKicker: "Inside the shop",
     w1Title: "Consultation & Site Visit",
     w1Desc:
       "We visit the space, measure it, and listen to how you actually want to use it.",
@@ -469,6 +485,21 @@ export const COPY = {
     caseTitle: "CONSTRUIDO Y",
     caseTitleEm: "ENTREGADO",
     caseIntro: "Proyectos terminados, fotografiados en obra tras la entrega.",
+    brKicker: "Clientes comerciales",
+    brTitle: "Marcas que",
+    brTitleEm: "confían en RE-LUX",
+    brIntro:
+      "Clínicas, restaurantes, estudios y espacios de hospitalidad en el sur de Florida que diseñamos, construimos y equipamos.",
+    brSpa: "Spa",
+    brDental: "Clínica dental",
+    brHair: "Clínica capilar",
+    brWellness: "Estudio de bienestar",
+    brRestaurant: "Restaurante",
+    brHotel: "Hotel y marina",
+    brAesthetics: "Estudio de estética",
+    brCafe: "Cafetería",
+    brPrev: "Marca anterior",
+    brNext: "Marca siguiente",
     c1Meta: "Cocinas",
     c2Meta: "Walk-in closets",
     c3Meta: "Baños",
@@ -531,6 +562,7 @@ export const COPY = {
     shopCap1: "El taller completo: canteado, corte CNC y montaje, cada uno en su zona.",
     shopCap2: "Canteado en la Biesse Rover Edge Go.",
     shopCap3: "Almacén de tableros junto a la CNC: del estante pasan directo al corte.",
+    tlKicker: "Dentro del taller",
     w1Title: "Consulta y Visita",
     w1Desc:
       "Visitamos el espacio, lo medimos y escuchamos cómo quieres usarlo de verdad.",
@@ -722,9 +754,9 @@ const IMG = {
   family: "/assets/family-tall.webp",
   /** Homepage in-house fabrication section: the Biesse Rover. */
   cncHome: "/assets/cnc-biesse.webp",
-  /** Process view: a render of the CNC (stands in for the machine video) and two details. */
-  machineHero: "/assets/machine-hero.webp",
-  machine: ["/assets/machine-1.webp", "/assets/machine-2.webp"],
+  /** Process view: three renders of the CNC, the first standing in for the machine video. */
+  machineHero: "/assets/machine-r1.webp",
+  machine: ["/assets/machine-r2.webp", "/assets/machine-r3.webp"],
   /** Process view: the wide shot of the whole CNC line under the heading. */
   workshopBand: "/assets/workshop-band.webp",
 } as const;
@@ -742,9 +774,7 @@ export const FOCUS = {
   ownersWide: "center center",
   /** The design pans the first founder's portrait slightly up inside its frame. */
   founder1: "center 45%",
-  /** Both panned in the design: the CNC head kept to its bottom edge, the
-     line held a little above centre in the wide band. */
-  machineHero: "center bottom",
+  /** Panned in the design: the line held a little above centre in the wide band. */
   workshopBand: "center 35%",
 } as const;
 
@@ -802,6 +832,33 @@ export const SHOP: { capKey: CopyKey; img: string }[] = [
   { capKey: "shopCap1", img: "/assets/local-1.webp" },
   { capKey: "shopCap2", img: "/assets/local-2.webp" },
   { capKey: "shopCap3", img: "/assets/local-3.webp" },
+];
+
+/** Process view, "Inside the shop": real photos of the shop floor, all 9:16; the first leads at double size. */
+export const TALLER = Array.from({ length: 17 }, (_, i) => `/assets/taller-${String(i + 1).padStart(2, "0")}.webp`);
+
+/**
+ * Homepage "Brands that trust RE-LUX": commercial clients, each with its
+ * photos (brand-<key>-1 is the cover, the rest play in turn) and its logo,
+ * or no logo where the name is set in type instead.
+ */
+const brand = (key: string, name: string, catKey: CopyKey, photos: number, logoH?: number) => ({
+  key,
+  name,
+  catKey,
+  photos: Array.from({ length: photos }, (_, i) => `/assets/brand-${key}-${i + 1}.webp`),
+  logo: logoH ? { src: `/assets/brand-logo-${key}.webp`, h: logoH } : undefined,
+});
+
+export const BRANDS = [
+  brand("beauty", "Beauty Empire Spa", "brSpa", 4, 46),
+  brand("justsmile", "Just Smile", "brDental", 5, 34),
+  brand("hair", "Miami Hair Transplant", "brHair", 5, 46),
+  brand("laira", "Laira Balance", "brWellness", 6, 44),
+  brand("noah", "Noah Peruvian Fusion", "brRestaurant", 5, 50),
+  brand("perry", "The Perry Hotel & Marina", "brHotel", 7, 54),
+  brand("esculta", "ESCULTA", "brAesthetics", 4),
+  brand("miam", "MIAM Café", "brCafe", 4, 36),
 ];
 
 export const VALUES = [

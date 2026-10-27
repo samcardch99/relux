@@ -53,19 +53,34 @@ const en = COPY.en;
   .pcard__media {
     aspect-ratio: 4 / 5;
   }
+  /* Hover: the photo brightens and slowly zooms, the text lifts a little */
   .pcard__media > img {
-    filter: brightness(0.84);
-    transition: filter 0.5s ease;
+    filter: brightness(0.82);
+    transition:
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.6s ease;
   }
   .pcard:hover .pcard__media > img,
   .pcard:focus-visible .pcard__media > img {
-    filter: brightness(0.98);
+    transform: scale(1.07);
+    filter: brightness(1);
+  }
+  /* Touch screens never hover, so they get the photo at full brightness */
+  @media (hover: none) {
+    .pcard__media > img {
+      filter: none;
+    }
   }
 
   .pcard__body {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .pcard:hover .pcard__body,
+  .pcard:focus-visible .pcard__body {
+    transform: translateY(-4px);
   }
 
   .pcard__title {

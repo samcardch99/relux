@@ -1,6 +1,6 @@
 ---
 import { responsive, SIZES } from "../../data/images";
-import { COPY, FOCUS, IMG, MACHINE_SPECS, SHOP } from "../../data/copy";
+import { COPY, FOCUS, IMG, MACHINE_SPECS, SHOP, TALLER } from "../../data/copy";
 import Contact from "../Contact.astro";
 import Footer from "../Footer.astro";
 import ArrowBack from "../icons/ArrowBack.astro";
@@ -20,6 +20,9 @@ const Title = open ? "h1" : "h2";
 const en = COPY.en;
 /** Three columns, one on phones (see the styles) */
 const SHOP_SIZES = "(max-width: 720px) 100vw, 33vw";
+/** Shop-floor photos: four columns, three on tablets, two on phones; the first is twice as wide. */
+const TALLER_SIZES = "(max-width: 720px) 50vw, (max-width: 1080px) 33vw, 25vw";
+const TALLER_LEAD_SIZES = "(max-width: 1080px) 100vw, 50vw";
 ---
 
 <div class="view" id="view-process" role="dialog" aria-modal="true" aria-label="Our process" data-i18n-label="viewProcess" hidden={!open}>
@@ -62,7 +65,6 @@ const SHOP_SIZES = "(max-width: 720px) 100vw, 33vw";
             {...responsive(IMG.machineHero, SIZES.half)}
             alt="Biesse Rover Multi Up NG S 1531"
             loading="lazy"
-            style={`object-position:${FOCUS.machineHero}`}
           />
         </div>
         <div class="processview__pair">
@@ -114,6 +116,19 @@ const SHOP_SIZES = "(max-width: 720px) 100vw, 33vw";
         ))
       }
     </ul>
+
+    <div class="processview__floor">
+      <span class="processview__kicker" data-i18n="tlKicker">{en.tlKicker}</span>
+      <ul class="processview__tl">
+        {
+          TALLER.map((src, i) => (
+            <li class="media processview__tl-item">
+              <img {...responsive(src, i === 0 ? TALLER_LEAD_SIZES : TALLER_SIZES)} alt={en.tlKicker} data-i18n-alt="tlKicker" loading="lazy" />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 
   <div class="view__foot processview__foot">
@@ -255,6 +270,30 @@ const SHOP_SIZES = "(max-width: 720px) 100vw, 33vw";
     color: rgb(239 226 196 / 0.5);
   }
 
+  /* Shop floor: 9:16 photos four to a row, the first at twice the size */
+  .processview__floor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .processview__tl {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .processview__tl-item {
+    aspect-ratio: 9 / 16;
+  }
+  .processview__tl-item:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+
   .processview__foot {
     padding-top: 80px;
     border-top: 1px solid rgb(239 226 196 / 0.1);
@@ -264,6 +303,14 @@ const SHOP_SIZES = "(max-width: 720px) 100vw, 33vw";
     .processview__split {
       grid-template-columns: minmax(0, 1fr);
       gap: 32px;
+    }
+    /* Three columns; the last photo widens to close the final row */
+    .processview__tl {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .processview__tl-item:last-child {
+      grid-column: span 2;
+      aspect-ratio: auto;
     }
   }
 
@@ -289,6 +336,18 @@ const SHOP_SIZES = "(max-width: 720px) 100vw, 33vw";
     .processview__grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 28px;
+    }
+    .processview__tl {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .processview__tl-item:first-child {
+      grid-row: span 1;
+      aspect-ratio: 9 / 8;
+    }
+    .processview__tl-item:last-child {
+      grid-column: span 1;
+      aspect-ratio: 9 / 16;
     }
   }
 </style>
