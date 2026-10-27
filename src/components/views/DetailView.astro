@@ -215,8 +215,9 @@ const Title = project ? "h1" : "h2";
     display: none;
   }
 
-  /* Three 4:5 portraits at the banner's height. Where the screen is too
-     narrow for that, the banner gets shorter instead of cropping them. */
+  /* Three 4:5 portraits side by side, up to 78% of the screen's height so
+     they don't shrink on short laptop screens. Where the screen is too
+     narrow for that, the strip gets shorter instead of cropping them. */
   .detail__hero.is-set {
     container-type: inline-size;
     height: auto;
@@ -228,7 +229,7 @@ const Title = project ? "h1" : "h2";
     display: flex;
     justify-content: center;
     gap: var(--set-gap);
-    height: min(calc(62svh / var(--zoom, 1)), calc((100cqw - 2 * var(--set-gap)) / 3 * 1.25));
+    height: min(calc(78svh / var(--zoom, 1)), calc((100cqw - 2 * var(--set-gap)) / 3 * 1.25));
   }
   .detail__set > .media {
     height: 100%;
@@ -459,18 +460,22 @@ const Title = project ? "h1" : "h2";
     .detail__hero {
       height: 240px;
     }
-    /* Too narrow for three whole portraits: they keep the banner's height
-       and the strip scrolls sideways instead. */
+    /* Too narrow for three side by side: the first portrait takes the full
+       width and the other two share a row under it */
     .detail__set {
-      height: 240px;
-      justify-content: flex-start;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      height: auto;
     }
     .detail__set > .media {
-      flex: none;
-      scroll-snap-align: start;
+      height: auto;
+    }
+    .detail__set > .media:first-child {
+      grid-column: 1 / -1;
+    }
+    /* The fade would darken the two smaller photos at the bottom */
+    .detail__hero.is-set .detail__hero-scrim {
+      display: none;
     }
     .detail__intro {
       grid-template-columns: minmax(0, 1fr);
