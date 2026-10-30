@@ -753,12 +753,12 @@ const IMG = {
   /** Homepage "family business" section: the whole team. */
   family: "/assets/family-tall.webp",
   /** Homepage in-house fabrication section: the Biesse Rover. */
-  cncHome: "/assets/cnc-biesse.webp",
+  cncHome: "/assets/cnc-biesse-studio.webp",
   /** Process view: three renders of the CNC, the first standing in for the machine video. */
   machineHero: "/assets/machine-r1.webp",
   machine: ["/assets/machine-r2.webp", "/assets/machine-r3.webp"],
   /** Process view: the wide shot of the whole CNC line under the heading. */
-  workshopBand: "/assets/workshop-band.webp",
+  workshopBand: "/assets/workshop-line.webp",
 } as const;
 
 /** Crops the design's author set by panning the image inside its slot. */
@@ -775,7 +775,7 @@ export const FOCUS = {
   /** The design pans the first founder's portrait slightly up inside its frame. */
   founder1: "center 45%",
   /** Panned in the design: the line held a little above centre in the wide band. */
-  workshopBand: "center 35%",
+  workshopBand: "center",
 } as const;
 
 export { IMG };
@@ -839,15 +839,15 @@ export const TALLER = Array.from({ length: 17 }, (_, i) => `/assets/taller-${Str
 
 /**
  * Homepage "Brands that trust RE-LUX": commercial clients, each with its
- * photos (brand-<key>-1 is the cover, the rest play in turn) and its logo,
- * or no logo where the name is set in type instead.
+ * photos (brand-<key>-1 is the cover, the rest play in turn) and its logo
+ * (ESCULTA's is an SVG mark).
  */
-const brand = (key: string, name: string, catKey: CopyKey, photos: number, logoH?: number) => ({
+const brand = (key: string, name: string, catKey: CopyKey, photos: number, logoH?: number, logoExt = "webp") => ({
   key,
   name,
   catKey,
   photos: Array.from({ length: photos }, (_, i) => `/assets/brand-${key}-${i + 1}.webp`),
-  logo: logoH ? { src: `/assets/brand-logo-${key}.webp`, h: logoH } : undefined,
+  logo: logoH ? { src: `/assets/brand-logo-${key}.${logoExt}`, h: logoH } : undefined,
 });
 
 export const BRANDS = [
@@ -857,7 +857,7 @@ export const BRANDS = [
   brand("laira", "Laira Balance", "brWellness", 6, 44),
   brand("noah", "Noah Peruvian Fusion", "brRestaurant", 5, 50),
   brand("perry", "The Perry Hotel & Marina", "brHotel", 7, 54),
-  brand("esculta", "ESCULTA", "brAesthetics", 4),
+  brand("esculta", "ESCULTA", "brAesthetics", 4, 46, "svg"),
   brand("miam", "MIAM Café", "brCafe", 4, 36),
 ];
 
