@@ -1,0 +1,58 @@
+# relux-construction.com is the only public address: www and the old test
+# subdomain (test.relux-construction.com, also reachable as /test/) redirect
+# to it, keeping the path.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  RewriteCond %{HTTP_HOST} ^(www|test)\.relux-construction\.com$ [NC]
+  RewriteRule ^(.*)$ https://relux-construction.com/$1 [R=301,L]
+
+  # Matched on the full URI: the test/ folder carries its own copy of this
+  # file, which is the one that runs for /test/ paths
+  RewriteCond %{HTTP_HOST} ^relux-construction\.com$ [NC]
+  RewriteCond %{REQUEST_URI} ^/test(?:/(.*))?$
+  RewriteRule ^ https://relux-construction.com/%1 [R=301,L]
+
+  # Until 2026-10-26 the English pages lived at Spanish paths; Spanish now
+  # has its own under /es/, so the old addresses move to their English pages
+  RewriteRule ^trabajos/?$ /work/ [R=301,L]
+  RewriteRule ^nosotros/?$ /about/ [R=301,L]
+  RewriteRule ^proceso/?$ /process/ [R=301,L]
+  RewriteRule ^proyectos/(.*)$ /projects/$1 [R=301,L]
+  RewriteRule ^privacidad/?$ /privacy/ [R=301,L]
+
+  # The project folders have no index of their own: send them to the gallery
+  # (otherwise the server answers 403 Forbidden)
+  RewriteRule ^projects/?$ /work/ [R=301,L]
+  RewriteRule ^es/proyectos/?$ /es/trabajos/ [R=301,L]
+</IfModule>
+
+# Unknown addresses get the site's own 404 page (src/pages/404.astro)
+ErrorDocument 404 /404.html
+
+# Security headers. HSTS stays on this host only (no includeSubDomains) until
+# every subdomain is known to serve HTTPS. The CSP lists every outside origin
+# the site uses: Google Analytics, EmailJS (contact form) and Google's
+# reviewer photos. Inline scripts and styles stay allowed (Astro's islands,
+# the zoom script, style attributes); add any new outside origin here first.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://api.emailjs.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; font-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+</IfModule>
+
+# Caching. Pages revalidate on every visit, so a new deploy shows at once;
+# scripts and styles (Astro's bundles) carry a content hash in their name and
+# fonts never change,
+# so the browser can keep them for a year without asking.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "max-age=0, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
